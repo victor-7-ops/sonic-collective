@@ -1,0 +1,26 @@
+---
+const links=[['Performances','/sessions/'],['Artists','/artists/'],['About','/about/'],['Privacy','/privacy/']];
+const socials=[
+  ['YouTube','https://www.youtube.com/@Sonic_Collective-PH'],
+  ['Facebook','https://www.facebook.com/profile.php?id=61577313503520'],
+  ['Instagram','https://www.instagram.com/sonic_collective/'],
+  ['TikTok','https://www.tiktok.com/@sonic_collective'],
+  ['X','https://x.com/CollectiveSonic'],
+];
+---
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="site-footer__top">
+      <p class="eyebrow" style="color:var(--mint)">Independent voices. Shared frequencies.</p>
+      <nav class="site-footer__links" aria-label="Footer navigation">
+        {links.map(([label,href])=><a href={href}>{label}</a>)}
+      </nav>
+    </div>
+    <nav class="site-footer__links" aria-label="Social media and contact">
+      {socials.map(([label,href])=><a href={href} target="_blank" rel="noreferrer">{label} ↗</a>)}
+      <a href="mailto:soniccollective.contact@gmail.com?subject=Sonic%20Collective%20collaboration">Email for collaborations</a>
+    </nav>
+    <p class="site-footer__wordmark display">SONIC COLLECTIVE</p>
+    <div class="site-footer__bottom"><span>Independent voices. Shared frequencies.</span><span>SONIC COLLECTIVE © 2026</span></div>
+  </div>
+</footer>

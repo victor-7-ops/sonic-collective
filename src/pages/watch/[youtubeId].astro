@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import RemoteWatchPlayer from '../../components/RemoteWatchPlayer.astro';
+import { getDiscoveryCatalog } from '../../lib/discovery';
+import { performanceUrl, youtubeUrl } from '../../lib/urls';
+import PerformanceCard from '../../components/PerformanceCard.astro';
+import legacyWatchRoutes from '../../data/legacy-watch-routes.json';
+import '../../styles/discovery.css';
+export async function getStaticPaths(){
+  const catalog=await getDiscoveryCatalog();
+  const oldRoutes=legacyWatchRoutes as {youtubeId:string;performanceId:string}[];
+  return [...catalog.imported.map((video)=>({params:{youtubeId:video.youtubeId},props:{youtubeId:video.youtubeId}})),...oldRoutes.map((route)=>({params:{youtubeId:route.youtubeId},props:{youtubeId:route.youtubeId,legacyPerformanceId:route.performanceId}}))];
+}
+const {youtubeId,legacyPerformanceId}=Astro.props as {youtubeId:string;legacyPerformanceId?:string};
+const catalog=await getDiscoveryCatalog();
+const legacy=legacyPerformanceId?catalog.performances.find((item)=>item.id===legacyPerformanceId):undefined;
+const video=legacy?undefined:catalog.imported.find((item)=>item.youtubeId===youtubeId)!;
+const title=legacy?`${legacy.title} | Sonic Collective`:`${video!.title} | Sonic Collective`;
+const description=legacy?`This older upload page now points to the canonical performance page.`:`${video!.title}, published on the Sonic Collective YouTube channel. Watch the original video on YouTube.`;
+const related=video?.seriesId?catalog.performances.filter((item)=>item.seriesId===video!.seriesId).slice(0,3):[];
+const playbackRecords=[...catalog.performances.map(({id,title,youtubeId})=>({id,title,youtubeId,embeddable:catalog.availability[youtubeId]!=='unavailable'&&catalog.availability[youtubeId]!=='external-only'})),...catalog.imported.map(({id,title,youtubeId,embeddable})=>({id,title,youtubeId,embeddable}))];
+---
+<BaseLayout title={title} description={description} canonicalPath={legacy?performanceUrl(legacy.id):`/watch/${video!.youtubeId}/`} currentPath="/sessions/" playbackRecords={playbackRecords}>
+  {legacy&&<section class="performance-page"><div class="performance-page__inner"><h1>{legacy.title}</h1><p>This upload now has a curated performance page.</p><a class="button button--quiet" href={performanceUrl(legacy.id)}>Go to the performance page ↗</a><script is:inline data-redirect={performanceUrl(legacy.id)}>location.replace(document.currentScript?.getAttribute('data-redirect')||'/sessions/');</script></div></section>}
+  {video&&<article class="performance-page"><div class="performance-page__inner">
+    <nav aria-label="Breadcrumb"><a href="/sessions/">All performances</a> <span aria-hidden="true">/</span> {video.title}</nav>
+    <div style="margin-top:24px"><RemoteWatchPlayer id={video.id} youtubeId={video.youtubeId} title={video.title} thumbnailUrl={video.image.kind==='youtube'?video.image.url:''} embeddable={video.embeddable} /></div>
+    <section class="performance-details"><p class="eyebrow">{video.seriesId==='sessions'?'Sonic Session':video.seriesId==='covers'?'Sonic Cover':'Channel upload'}</p>
+      <h1 class="performance-title">{video.title}</h1><p>Published by <a href="https://www.youtube.com/@Sonic_Collective-PH" target="_blank" rel="noopener noreferrer">Sonic Collective ↗</a></p>
+      {video.publishedAt&&<p><time datetime={video.publishedAt}>{new Date(video.publishedAt).toLocaleDateString('en',{dateStyle:'long',timeZone:'UTC'})}</time></p>}
+      {!video.embeddable&&<p role="status">This video cannot be embedded. Use the direct YouTube link to watch it.</p>}
+      <p><a class="button button--quiet" href={youtubeUrl(video.youtubeId)} target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></p>
+    </section>
+    {related.length>0&&<section class="related-performances"><h2>More from this series</h2><div class="catalog-grid">{related.map((item)=><PerformanceCard performance={item} artistNames={item.artistIds.map((id)=>catalog.raw.artists.find((artist)=>artist.id===id)?.name??'').filter(Boolean)} playable={catalog.availability[item.youtubeId]!=='external-only'} />)}</div></section>}
+  </div></article>}
+</BaseLayout>

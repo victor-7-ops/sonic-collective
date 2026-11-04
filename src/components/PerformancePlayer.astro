@@ -1,0 +1,15 @@
+---
+import type { Performance } from '../lib/schemas';
+import MediaImage from './MediaImage.astro';
+import { youtubeUrl } from '../lib/urls';
+interface Props { performance: Performance; playable?:boolean; }
+const { performance,playable=true } = Astro.props;
+---
+<section class="performance-player" aria-label="Performance video">
+  <div class="performance-player__poster" data-player-id={performance.id} data-video-id={performance.youtubeId}>
+    <MediaImage base={performance.thumbnail} alt={performance.thumbnailAlt} eager />
+    {playable&&<a class="performance-player__play" href={youtubeUrl(performance.youtubeId)} target="_blank" rel="noopener noreferrer" data-play-performance={performance.id} aria-label={`Play ${performance.title} here`}>▶ <span>Play performance</span></a>}
+  </div>
+  {playable&&<p class="performance-player__status" data-player-status role="status" aria-live="polite"></p>}
+  <a class="button button--light" href={youtubeUrl(performance.youtubeId)} target="_blank" rel="noopener noreferrer">{playable?'Watch on YouTube ↗':'Check video on YouTube ↗'}</a>
+</section>

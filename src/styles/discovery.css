@@ -1,0 +1,41 @@
+.discovery-page { padding: clamp(38px,7vw,88px) 0 100px; }
+.discovery-page__inner { width: min(1200px,calc(100% - 40px)); margin-inline:auto; }
+.discovery-page h1 { font-size:clamp(42px,7vw,88px); line-height:.98; letter-spacing:-.055em; margin:0 0 22px; }
+.discovery-lede { max-width:58ch; color:var(--ink-muted); font-size:18px; margin:0 0 36px; }
+.catalog-filters { display:grid; grid-template-columns:minmax(220px,1.5fr) minmax(160px,.7fr) minmax(140px,.6fr) auto; align-items:end; gap:14px; margin:0 0 18px; padding:22px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-lg); }
+.catalog-filters label { display:grid; gap:8px; color:var(--ink); font-size:14px; font-weight:650; }
+.catalog-filters input,.catalog-filters select { min-width:0; min-height:48px; width:100%; padding:10px 12px; border:1px solid #a9aea8; border-radius:9px; background:white; color:var(--ink); font:inherit; }
+.catalog-filters input:focus-visible,.catalog-filters select:focus-visible { outline:3px solid var(--mint-strong); outline-offset:2px; }
+.catalog-filters__count { grid-column:1/-1; margin:0; color:var(--ink-muted); font-size:14px; }
+.catalog-note { color:var(--ink-muted); margin:0 0 26px; font-size:14px; }
+.catalog-grid,.artist-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:24px; }
+.catalog-grid [hidden],.catalog-empty[hidden] { display:none!important; }
+.catalog-empty { margin:26px 0; padding:32px; border-radius:var(--radius-lg); background:var(--surface); }
+.catalog-empty h2 { margin:0 0 8px; }
+.catalog-empty p { margin:0 0 18px; }
+.profile-heading { display:grid; grid-template-columns:minmax(190px,.8fr) minmax(0,1.2fr); gap:clamp(28px,6vw,72px); align-items:center; margin:0 0 72px; }
+.profile-heading .media-frame { width:100%; border-radius:var(--radius-lg); }
+.profile-heading h1 { margin-bottom:18px; }
+.profile-heading__aliases { color:var(--ink-muted); }
+.profile-appearances h2,.related-performances h2 { font-size:clamp(28px,4vw,44px); margin:0 0 24px; letter-spacing:-.035em; }
+.profile-appearances { margin:0 0 72px; }
+.artist-external-links { display:flex; gap:12px; flex-wrap:wrap; margin-top:24px; }
+.performance-page { padding:42px 0 100px; }
+.performance-page__inner { width:min(1120px,calc(100% - 40px)); margin-inline:auto; }
+.performance-player { display:grid; justify-items:start; gap:16px; margin:0 0 34px; }
+.performance-player__poster { position:relative; display:grid; place-items:center; width:100%; min-height:200px; aspect-ratio:16/9; overflow:hidden; border-radius:var(--radius-lg); background:#101715; }
+.performance-player__poster picture,.performance-player__poster img { width:100%; height:100%; position:absolute; inset:0; }
+.performance-player__poster img { object-fit:contain; }
+.performance-player__play { position:relative; display:grid; justify-items:center; gap:10px; padding:20px 26px; border-radius:12px; color:white; background:rgb(10 17 14 / 82%); font-size:34px; text-decoration:none; }
+.performance-player__play span { font-size:14px; font-weight:700; }
+.performance-player__status { position:absolute; bottom:4px; left:12px; color:white; }
+.performance-title { margin:0 0 10px; font-size:clamp(40px,6vw,72px); line-height:1; letter-spacing:-.05em; }
+.performance-byline { display:flex; gap:10px; flex-wrap:wrap; color:var(--ink-muted); font-size:18px; }
+.performance-byline a { color:var(--ink); }
+.performance-details { margin-bottom:72px; }
+.related-performances { padding-top:44px; border-top:1px solid var(--line); }
+.share-row { display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-top:24px; }
+.share-row input { min-width:min(420px,100%); min-height:44px; padding:8px 12px; border:1px solid var(--line); border-radius:8px; }
+.share-row input[hidden] { display:none; }
+@media(max-width:760px) { .catalog-filters { grid-template-columns:1fr 1fr; padding:16px; } .catalog-filters__search { grid-column:1/-1; } .catalog-grid,.artist-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; } .profile-heading { grid-template-columns:1fr; } .profile-heading .media-frame { max-width:520px; } }
+@media(max-width:440px) { .catalog-filters { grid-template-columns:1fr; } .catalog-filters__search { grid-column:auto; } .catalog-grid,.artist-grid { grid-template-columns:1fr; } }

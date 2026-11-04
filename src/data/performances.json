@@ -1,0 +1,291 @@
+[
+  {
+    "id": "blair-kokoro-no-soba-ni",
+    "title": "Kokoro no Soba ni",
+    "aliases": [
+      "Belle",
+      "Lend Me Your Voice"
+    ],
+    "artistIds": [
+      "blair"
+    ],
+    "seriesId": "sessions",
+    "youtubeId": "sBkITDDRLfw",
+    "thumbnail": "/media/performances/blair-kokoro-no-soba-ni",
+    "thumbnailAlt": "Kokoro no Soba ni performance artwork",
+    "featuredOrder": 1,
+    "approvedForSite": true
+  },
+  {
+    "id": "playscape-vision-usseewa",
+    "title": "Usseewa",
+    "aliases": [
+      "Ado",
+      "うっせぇわ"
+    ],
+    "artistIds": [
+      "playscape-vision"
+    ],
+    "seriesId": "sessions",
+    "youtubeId": "l6jOj6cOdoM",
+    "thumbnail": "/media/performances/playscape-vision-usseewa",
+    "thumbnailAlt": "Usseewa performance artwork",
+    "featuredOrder": 2,
+    "approvedForSite": true
+  },
+  {
+    "id": "playscape-vision-eien-no-akuruhi",
+    "title": "Eien no Akuruhi",
+    "aliases": [
+      "Ado",
+      "永遠のあくる日"
+    ],
+    "artistIds": [
+      "playscape-vision"
+    ],
+    "seriesId": "sessions",
+    "youtubeId": "4lvJRmvuQ6s",
+    "thumbnail": "/media/performances/playscape-vision-eien-no-akuruhi",
+    "thumbnailAlt": "Eien no Akuruhi performance artwork",
+    "featuredOrder": 3,
+    "approvedForSite": true
+  },
+  {
+    "id": "franzel-ako-nalang-bi",
+    "title": "Ako Nalang Bi",
+    "aliases": [],
+    "artistIds": [
+      "franzel-n-d-flayahs"
+    ],
+    "seriesId": "sessions",
+    "youtubeId": "g6Kg7I2XSd4",
+    "thumbnail": "/media/performances/franzel-ako-nalang-bi",
+    "thumbnailAlt": "Ako Nalang Bi performance artwork",
+    "featuredOrder": 4,
+    "approvedForSite": true
+  },
+  {
+    "id": "jade-ampingan",
+    "title": "Ampingan",
+    "aliases": [],
+    "artistIds": [
+      "jade-makawili"
+    ],
+    "seriesId": "sessions",
+    "youtubeId": "A0EOj8aeNVw",
+    "thumbnail": "/media/performances/jade-ampingan",
+    "thumbnailAlt": "Ampingan performance artwork",
+    "featuredOrder": 5,
+    "approvedForSite": true
+  },
+  {
+    "id": "kalii-sexwax-sail-away",
+    "title": "Sexwax X Sail Away",
+    "aliases": [],
+    "artistIds": [
+      "kalii-skrums"
+    ],
+    "seriesId": "sessions",
+    "youtubeId": "8_FWvC1BLKE",
+    "thumbnail": "/media/performances/kalii-sexwax-sail-away",
+    "thumbnailAlt": "Sexwax X Sail Away performance artwork",
+    "featuredOrder": 6,
+    "approvedForSite": true
+  },
+  {
+    "id": "kalii-zober",
+    "title": "Zober",
+    "aliases": [],
+    "artistIds": [
+      "kalii-skrums"
+    ],
+    "seriesId": "sessions",
+    "youtubeId": "ny33jxxqFv8",
+    "thumbnail": "/media/performances/kalii-zober",
+    "thumbnailAlt": "Zober performance artwork",
+    "featuredOrder": 7,
+    "approvedForSite": true
+  },
+  {
+    "id": "rena-bianca-click",
+    "title": "Click",
+    "aliases": [
+      "ClariS"
+    ],
+    "artistIds": [
+      "rena",
+      "bianca"
+    ],
+    "seriesId": "covers",
+    "youtubeId": "dYGDXH9xzlA",
+    "thumbnail": "/media/performances/rena-bianca-click",
+    "thumbnailAlt": "Click performance artwork",
+    "featuredOrder": 8,
+    "approvedForSite": true
+  },
+  {
+    "id": "bianca-your-idol",
+    "title": "Your Idol",
+    "aliases": [],
+    "artistIds": [
+      "bianca"
+    ],
+    "seriesId": "covers",
+    "youtubeId": "pdJi4gDwlnI",
+    "thumbnail": "/media/performances/bianca-your-idol",
+    "thumbnailAlt": "Your Idol performance artwork",
+    "featuredOrder": 9,
+    "approvedForSite": true
+  },
+  {
+    "id": "nathan-sparkle",
+    "title": "Sparkle",
+    "aliases": [
+      "RADWIMPS",
+      "スパークル"
+    ],
+    "artistIds": [
+      "nathan-steve"
+    ],
+    "seriesId": "covers",
+    "youtubeId": "CL4bSIy4AYg",
+    "thumbnail": "/media/performances/nathan-sparkle",
+    "thumbnailAlt": "Sparkle performance artwork",
+    "featuredOrder": 10,
+    "approvedForSite": true
+  },
+  {
+    "id": "rena-kirameki",
+    "title": "Kirameki",
+    "aliases": [
+      "Kerameki",
+      "キラメキ"
+    ],
+    "artistIds": [
+      "rena"
+    ],
+    "seriesId": "covers",
+    "youtubeId": "PnI-kRS5OdQ",
+    "thumbnail": "/media/performances/rena-kirameki",
+    "thumbnailAlt": "Kirameki performance artwork",
+    "featuredOrder": 11,
+    "approvedForSite": true
+  },
+  {
+    "id": "nathan-kimi-ni-todoke",
+    "title": "Kimi ni Todoke",
+    "aliases": [
+      "Kimi No Todoke",
+      "きみにとどけ"
+    ],
+    "artistIds": [
+      "nathan-steve"
+    ],
+    "seriesId": "covers",
+    "youtubeId": "cpdep5VAh3A",
+    "thumbnail": "/media/performances/nathan-kimi-ni-todoke",
+    "thumbnailAlt": "Kimi ni Todoke performance artwork",
+    "featuredOrder": 12,
+    "approvedForSite": true
+  },
+  {
+    "id": "bianca-orange",
+    "title": "Orange",
+    "aliases": [
+      "7!!"
+    ],
+    "artistIds": [
+      "bianca"
+    ],
+    "seriesId": "covers",
+    "youtubeId": "XxdymAo4arQ",
+    "thumbnail": "/media/performances/bianca-orange",
+    "thumbnailAlt": "Orange performance artwork",
+    "featuredOrder": 13,
+    "approvedForSite": true
+  },
+  {
+    "id": "gerald-rena-tenbyou",
+    "title": "Tenbyou no Uta",
+    "aliases": [
+      "Tenbyou",
+      "点描の唄"
+    ],
+    "artistIds": [
+      "gerald",
+      "rena"
+    ],
+    "seriesId": "covers",
+    "youtubeId": "0o1r7ykkfqE",
+    "thumbnail": "/media/performances/gerald-rena-tenbyou",
+    "thumbnailAlt": "Tenbyou no Uta performance artwork",
+    "featuredOrder": 14,
+    "approvedForSite": true
+  },
+  {
+    "id": "gerald-kirameki",
+    "title": "Kirameki",
+    "aliases": [
+      "Kerameki",
+      "キラメキ"
+    ],
+    "artistIds": [
+      "gerald"
+    ],
+    "seriesId": "covers",
+    "youtubeId": "aHw9fLZ_4Co",
+    "thumbnail": "/media/performances/gerald-kirameki",
+    "thumbnailAlt": "Kirameki performance artwork",
+    "featuredOrder": 15,
+    "approvedForSite": true
+  },
+  {
+    "id": "zera-nanairo",
+    "title": "Nanairo Symphony",
+    "aliases": [
+      "Nanairo",
+      "七色シンフォニー"
+    ],
+    "artistIds": [
+      "zera"
+    ],
+    "seriesId": "covers",
+    "youtubeId": "CGgCV-I0ACE",
+    "thumbnail": "/media/performances/zera-nanairo",
+    "thumbnailAlt": "Nanairo Symphony performance artwork",
+    "featuredOrder": 16,
+    "approvedForSite": true
+  },
+  {
+    "id": "zera-hotaru",
+    "title": "Hotaru",
+    "aliases": [
+      "蛍"
+    ],
+    "artistIds": [
+      "zera"
+    ],
+    "seriesId": "covers",
+    "youtubeId": "RhDTMRnfT1E",
+    "thumbnail": "/media/performances/zera-hotaru",
+    "thumbnailAlt": "Hotaru performance artwork",
+    "featuredOrder": 17,
+    "approvedForSite": true
+  },
+  {
+    "id": "rena-inochi-no-namae",
+    "title": "Inochi no Namae",
+    "aliases": [
+      "いのちの名前"
+    ],
+    "artistIds": [
+      "rena"
+    ],
+    "seriesId": "covers",
+    "youtubeId": "QTdSU6ZDYkw",
+    "thumbnail": "/media/performances/rena-inochi-no-namae",
+    "thumbnailAlt": "Inochi no Namae performance artwork",
+    "featuredOrder": 18,
+    "approvedForSite": true
+  }
+]

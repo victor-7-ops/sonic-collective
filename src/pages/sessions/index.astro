@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CatalogCard from '../../components/CatalogCard.astro';
+import CatalogFilters from '../../components/CatalogFilters.astro';
+import { getDiscoveryCatalog } from '../../lib/discovery';
+import { filterCatalogItems, parseCatalogQuery } from '../../lib/search';
+import '../../styles/discovery.css';
+const catalog=await getDiscoveryCatalog();
+const query=parseCatalogQuery(Astro.url.searchParams);
+const results=filterCatalogItems(catalog.catalogItems,query);
+const data=JSON.stringify(catalog.catalogItems.map(({id,title,searchText,seriesId,source,featuredOrder,publishedAt})=>({id,title,searchText,seriesId,source,featuredOrder,publishedAt}))).replace(/</g,'\\u003c');
+const playbackRecords=[...catalog.performances.map(({id,title,youtubeId})=>({id,title,youtubeId,embeddable:catalog.availability[youtubeId]!=='unavailable'&&catalog.availability[youtubeId]!=='external-only'})),...catalog.imported.map(({id,title,youtubeId,embeddable})=>({id,title,youtubeId,embeddable}))];
+---
+<BaseLayout title="All performances | Sonic Collective" description="Search the Sonic Collective performance archive across Sonic Sessions, Covers, and channel uploads." canonicalPath="/sessions/" currentPath="/sessions/" playbackRecords={playbackRecords}>
+  <section class="discovery-page" data-catalog-root><div class="discovery-page__inner">
+    <p class="eyebrow">The archive</p><h1>All performances</h1>
+    <p class="discovery-lede">Explore Sonic Sessions, Covers, and the latest public channel uploads.</p>
+    <CatalogFilters query={query} count={results.length} />
+    <div class="catalog-empty" data-empty-state hidden><h2>No performances found</h2><p>Try another song, artist, or upload title, or clear the filters.</p><button class="button button--primary" type="button" data-clear-filters>Clear filters</button></div>
+    <div class="catalog-grid" data-catalog-grid>{catalog.catalogItems.map((item)=><div data-catalog-card={item.id} hidden={!results.some((result)=>result.id===item.id)}><CatalogCard item={item} /></div>)}</div>
+    <script type="application/json" data-catalog-data set:html={data}></script>
+  </div></section>
+  <script>import '../../../scripts/catalog.ts';</script>
+</BaseLayout>

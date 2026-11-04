@@ -1,0 +1,8 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+Astro.response.status=404;
+---
+<BaseLayout title="Page not found | Sonic Collective" description="This Sonic Collective page could not be found.">
+  <section class="page-intro wrap"><p class="eyebrow">404</p><h1>That page isn’t here.</h1></section>
+  <section class="page-copy wrap"><p>Find your way back to the music.</p><p><a href="/">Home</a> · <a href="/sessions/">Explore performances</a></p></section>
+</BaseLayout>

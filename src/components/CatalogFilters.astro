@@ -1,0 +1,21 @@
+---
+interface Props { query: { q: string; series: string; sort: string }; count: number; }
+const { query, count } = Astro.props;
+---
+<form class="catalog-filters" data-filter-form>
+  <label class="catalog-filters__search">Search performances
+    <input type="search" name="q" value={query.q} maxlength="100" placeholder="Song or artist" autocomplete="off" />
+  </label>
+  <label>Series
+    <select name="series">
+      <option value="all" selected={query.series === 'all'}>All series</option>
+      <option value="sessions" selected={query.series === 'sessions'}>Sonic Sessions</option>
+      <option value="covers" selected={query.series === 'covers'}>Covers</option>
+    </select>
+  </label>
+  <label>Sort
+    <select name="sort"><option value="featured" selected={query.sort === 'featured'}>Featured</option><option value="newest" selected={query.sort === 'newest'}>Newest</option><option value="az" selected={query.sort === 'az'}>A–Z</option></select>
+  </label>
+  <button type="reset" class="button button--quiet" data-clear-filters>Clear filters</button>
+  <p class="catalog-filters__count" role="status" aria-live="polite" data-result-count>{count} {count === 1 ? 'performance' : 'performances'}</p>
+</form>

@@ -1,0 +1,22 @@
+---
+import type { Artist, Clip, Performance } from '../lib/schemas';
+import { performanceUrl } from '../lib/urls';
+interface Props { clips: Clip[]; performances: Performance[]; artists: Artist[]; }
+const {clips,performances,artists}=Astro.props;
+---
+<section class="moments section" aria-labelledby="moments-title" data-reveal>
+  <div class="wrap">
+    <div class="section-heading"><div><p class="eyebrow">In the moment</p><h2 class="section-title" id="moments-title">A little closer to the song.</h2></div></div>
+    <div class="moments__controls"><button type="button" data-rail-prev="moments" aria-label="Scroll clips backward">← Previous</button><button type="button" data-rail-next="moments" aria-label="Scroll clips forward">Next →</button></div>
+    <div class="moments__rail" data-rail="moments">
+      {clips.map((clip)=>{const performance=performances.find(p=>p.id===clip.performanceId);const artistNames=performance?.artistIds.map(id=>artists.find(a=>a.id===id)?.name??'').filter(Boolean)??[];return performance&&<article class="moment-card" data-clip-id={clip.id} data-clip-card>
+        <div class="moment-card__media media-frame">
+          <img class="moment-card__poster" src={clip.poster} alt="" width={clip.width} height={clip.height} loading="lazy" decoding="async" />
+          <video class="moment-card__video" data-short-video data-src={clip.src} poster={clip.poster} width={clip.width} height={clip.height} playsinline preload="none" hidden aria-label={`${performance.title} short by ${artistNames.join(' and ')}`}></video>
+          <button class="moment-card__play" type="button" data-short-play hidden aria-label={`Play short: ${performance.title} by ${artistNames.join(' and ')}`}>▶ <span>Play short</span></button>
+        </div>
+        <div class="moment-card__caption"><strong>{performance.title}</strong><span>{artistNames.join(' & ')}</span><a href={performanceUrl(performance.id)}>Watch full performance ↗</a><p class="moment-card__status" data-short-status role="status" aria-live="polite"></p></div>
+      </article>})}
+    </div>
+  </div>
+</section>

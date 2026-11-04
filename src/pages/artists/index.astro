@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArtistCard from '../../components/ArtistCard.astro';
+import { getDiscoveryCatalog } from '../../lib/discovery';
+import '../../styles/discovery.css';
+const catalog = await getDiscoveryCatalog();
+const artists = catalog.artists.slice().sort((a,b) => a.name.localeCompare(b.name, 'en', { sensitivity:'base', numeric:true }) || a.id.localeCompare(b.id));
+const appearances = new Map(artists.map((artist) => [artist.id, catalog.performances.filter((p) => catalog.availability[p.youtubeId]!=='unavailable'&&p.artistIds.includes(artist.id)).length]));
+---
+<BaseLayout title="Artists | Sonic Collective" description="Meet the artists featured in Sonic Collective performances." canonicalPath="/artists/" currentPath="/artists/" playbackRecords={catalog.performances.map(({id,title,youtubeId})=>({id,title,youtubeId,embeddable:catalog.availability[youtubeId]!=='unavailable'&&catalog.availability[youtubeId]!=='external-only'}))}>
+  <section class="discovery-page"><div class="discovery-page__inner">
+    <p class="eyebrow">Featured voices</p><h1>Artists</h1><p class="discovery-lede">The artists behind the songs in our growing performance archive.</p>
+    <div class="artist-grid">{artists.map((artist) => <ArtistCard artist={artist} appearanceCount={appearances.get(artist.id) ?? 0} />)}</div>
+  </div></section>
+</BaseLayout>

@@ -1,0 +1,19 @@
+.performance-player__poster picture[hidden] { display:none; }
+.performance-player__play[hidden] { display:none; }
+.performance-player__status:empty { display:none; }
+.performance-player__status { margin:0; color:var(--ink-muted); }
+.yt-player-frame { position:absolute; inset:0; width:100%; height:100%; border:0; background:#101715; }
+.performance-card__quick-watch { margin-top:10px; min-height:40px; padding:8px 12px; border:1px solid var(--line); border-radius:999px; color:var(--ink); background:transparent; font:inherit; font-size:13px; font-weight:700; cursor:pointer; }
+.performance-card__quick-watch:hover { background:var(--surface); }
+.quick-watch { width:min(900px,calc(100% - 28px)); max-width:900px; max-height:calc(100dvh - 32px); padding:clamp(18px,4vw,34px); border:0; border-radius:20px; color:var(--ink); background:var(--canvas); box-shadow:0 24px 80px rgb(0 0 0 / 35%); }
+.quick-watch::backdrop { background:rgb(7 13 11 / 78%); backdrop-filter:blur(4px); }
+.quick-watch__header { display:flex; align-items:start; justify-content:space-between; gap:18px; margin-bottom:20px; }
+.quick-watch__header .eyebrow { margin:0 0 8px; }
+.quick-watch__header h2 { margin:0; font-size:clamp(24px,5vw,38px); line-height:1.05; }
+.quick-watch__close { display:grid; place-items:center; flex:0 0 44px; width:44px; height:44px; border:1px solid var(--line); border-radius:50%; color:var(--ink); background:transparent; font-size:28px; cursor:pointer; }
+.quick-watch__surface { position:relative; display:grid; place-items:center; width:100%; min-height:200px; aspect-ratio:16/9; overflow:hidden; margin-bottom:18px; border-radius:12px; background:#101715; color:white; }
+.quick-watch__status { max-width:64ch; min-height:24px; margin:0 0 14px; }
+.quick-watch__external[hidden] { display:none; }
+.player-retry { margin:12px; padding:10px 16px; border:1px solid currentColor; border-radius:999px; color:inherit; background:transparent; font:inherit; font-weight:700; cursor:pointer; }
+.performance-player__status .player-retry { display:block; }
+@media(max-width:420px) { .quick-watch { width:calc(100% - 16px); padding:16px; border-radius:14px; } }

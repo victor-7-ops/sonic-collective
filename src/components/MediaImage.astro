@@ -1,0 +1,14 @@
+---
+import manifest from '../data/media-manifest.json';
+interface Props { base: string; alt: string; sizes?: string; eager?: boolean; focalPoint?: string; class?: string; }
+const {base,alt,sizes='(max-width: 640px) 100vw, (max-width: 1100px) 50vw, 33vw',eager=false,focalPoint='center',class:className=''}=Astro.props;
+const entry=manifest[base as keyof typeof manifest];
+const webp=entry?.variants.filter(v=>v.format==='webp')??[];
+const jpg=entry?.variants.filter(v=>v.format==='jpg')??[];
+const fallback=jpg.at(-1)??webp.at(-1);
+const srcSet=(variants:typeof webp)=>variants.map(v=>`${v.src} ${v.width}w`).join(', ');
+---
+{fallback&&<picture class={className} style={`--media-fit:${entry.fit};--media-position:${focalPoint}`}>
+  {webp.length>0&&<source type="image/webp" srcset={srcSet(webp)} sizes={sizes} />}
+  <img src={fallback.src} srcset={srcSet(jpg.length?jpg:webp)} sizes={sizes} width={fallback.width} height={fallback.height} alt={alt} loading={eager?'eager':'lazy'} decoding="async" fetchpriority={eager?'high':'auto'} />
+</picture>}

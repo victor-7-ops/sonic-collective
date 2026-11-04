@@ -1,0 +1,14 @@
+---
+import { youtubeUrl } from '../lib/urls';
+import RemoteThumbnail from './RemoteThumbnail.astro';
+interface Props { id:string; youtubeId:string; title:string; thumbnailUrl:string; embeddable:boolean; }
+const {id,youtubeId,title,thumbnailUrl,embeddable}=Astro.props;
+---
+<section class="performance-player" aria-label="Performance video">
+  <div class="performance-player__poster" data-player-id={id} data-video-id={youtubeId}>
+    <RemoteThumbnail url={thumbnailUrl} alt={`Thumbnail for ${title}`} />
+    {embeddable&&<a class="performance-player__play" href={youtubeUrl(youtubeId)} target="_blank" rel="noopener noreferrer" data-play-performance={id} aria-label={`Play ${title} here`}>▶ <span>Play performance</span></a>}
+  </div>
+  {embeddable&&<p class="performance-player__status" data-player-status role="status" aria-live="polite"></p>}
+  <a class="button button--light" href={youtubeUrl(youtubeId)} target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a>
+</section>

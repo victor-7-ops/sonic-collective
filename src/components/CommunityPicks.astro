@@ -1,0 +1,16 @@
+---
+interface Pick { id: string; title: string; channel: string; channelUrl: string; youtubeId: string; }
+interface Props { picks: Pick[]; }
+const { picks } = Astro.props;
+---
+<section class="community-picks section" aria-labelledby="community-picks-title">
+  <div class="wrap">
+    <div class="section-heading"><div><p class="eyebrow">From other channels</p><h2 class="section-title" id="community-picks-title">Around the community.</h2></div></div>
+    <div class="community-picks__grid">
+      {picks.map((pick) => <article class="community-pick">
+        <h3><a href={`https://www.youtube.com/watch?v=${encodeURIComponent(pick.youtubeId)}`} target="_blank" rel="noopener noreferrer">{pick.title} ↗</a></h3>
+        <p>By <a href={pick.channelUrl} target="_blank" rel="noopener noreferrer">{pick.channel}</a></p>
+      </article>)}
+    </div>
+  </div>
+</section>

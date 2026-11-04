@@ -1,0 +1,33 @@
+{
+  "name": "Sonic Collective",
+  "channelUrl": "https://www.youtube.com/@Sonic_Collective-PH",
+  "hero": {
+    "performanceId": "playscape-vision-usseewa",
+    "poster": "/media/performances/playscape-vision-usseewa",
+    "portraitClipId": "rena-inochi-no-namae-short",
+    "portraitPerformanceId": "rena-inochi-no-namae",
+    "portraitPoster": "/media/hero/rena-inochi-poster.webp",
+    "portraitLoopSrc": "/media/hero/rena-inochi-loop.mp4"
+  },
+  "featuredPerformanceIds": [
+    "blair-kokoro-no-soba-ni",
+    "jade-ampingan",
+    "playscape-vision-usseewa",
+    "bianca-your-idol",
+    "nathan-sparkle",
+    "rena-inochi-no-namae"
+  ],
+  "featuredCoverIds": [
+    "bianca-your-idol",
+    "nathan-sparkle",
+    "rena-inochi-no-namae"
+  ],
+  "featuredArtistIds": [
+    "blair",
+    "jade-makawili",
+    "kalii-skrums",
+    "rena",
+    "bianca",
+    "nathan-steve"
+  ]
+}

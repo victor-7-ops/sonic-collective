@@ -1,0 +1,12 @@
+[
+  {
+    "id": "sessions",
+    "title": "Sonic Sessions",
+    "description": "Live performances from the collective."
+  },
+  {
+    "id": "covers",
+    "title": "Sonic Covers",
+    "description": "Familiar songs, individual voices."
+  }
+]

@@ -1,0 +1,17 @@
+---
+import type { Performance } from '../lib/schemas';
+import MediaImage from './MediaImage.astro';
+interface Props { performance: Performance; artistNames: string[]; playable?:boolean; }
+const {performance,artistNames,playable=true}=Astro.props;
+const href=`/sessions/${encodeURIComponent(performance.id)}/`;
+---
+<article class="performance-card">
+  <a class="card-link" href={href} aria-label={`${performance.title} by ${artistNames.join(' and ')}`}>
+    <MediaImage class="performance-card__image media-frame" base={performance.thumbnail} alt={performance.thumbnailAlt} />
+  </a>
+  <div class="performance-card__body">
+    <div class="performance-card__meta"><h2 class="performance-card__title"><a class="card-link" href={href}>{artistNames.join(' & ')||'Artist'}</a></h2><small>{performance.seriesId==='sessions'?'Session':'Cover'}</small></div>
+    <div class="performance-card__meta"><a href={href}>{performance.title}</a>{performance.episode&&<small>Ep. {String(performance.episode).padStart(2,'0')}</small>}</div>
+    {playable&&<button class="performance-card__quick-watch" type="button" data-watch-id={performance.id} hidden aria-label={`Quick watch ${performance.title}`}>Quick watch</button>}
+  </div>
+</article>

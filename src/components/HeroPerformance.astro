@@ -1,0 +1,22 @@
+---
+import type { Performance, SiteConfig } from '../lib/schemas';
+import MediaImage from './MediaImage.astro';
+import { performanceUrl } from '../lib/urls';
+interface Props { performance: Performance; site: SiteConfig; playable?:boolean; }
+const {performance,site,playable=true}=Astro.props;
+---
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__layout wrap">
+    <div class="hero__copy">
+      <p class="eyebrow" style="color:var(--mint)">Independent voices. Shared frequencies.</p>
+      <h1 class="display hero__title" id="hero-title">SONIC<br />COLLECTIVE</h1>
+      <p class="hero__intro">A space for the voices you know.<br />And the ones you’re about to discover.</p>
+      <a class="hero__action" href={playable?performanceUrl(performance.id):site.channelUrl} aria-label={playable?'Watch '+performance.title+' performance':'Visit Sonic Collective on YouTube'}><span class="hero__play" aria-hidden="true">▶</span><span>{playable?'Watch performance':'Visit our channel'}</span></a>
+      <button class="motion-toggle" type="button" data-motion-toggle aria-pressed="false" hidden>Pause motion</button>
+    </div>
+    <figure class="hero__feature" data-decorative-drift>
+      <MediaImage class="hero__image media-frame" base={site.hero.poster} alt={performance.thumbnailAlt} sizes="(max-width: 760px) 100vw, 55vw" eager={true} />
+      <figcaption class="hero__caption"><span class="eyebrow">In the spotlight</span><strong>Playscape Vision</strong><span> / {performance.title}</span></figcaption>
+    </figure>
+  </div>
+</section>

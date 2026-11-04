@@ -1,0 +1,8 @@
+@import './tokens.css';
+@import './playback.css';
+@import './motion.css';
+.temporary-hero { display: flex; min-height: min(760px, 88vh); align-items: center; padding-block: 140px 72px; background: var(--dark); color: var(--canvas); }
+.temporary-hero__content h1 { margin: 0; font-size: clamp(72px, 12vw, 144px); }
+.temporary-hero__content > p:last-child { max-width: 35ch; font-size: 18px; }
+.temporary-card { max-width: 480px; padding-block: 36px 72px; }
+.site-header--overlay .site-nav__links a { color: var(--canvas); }

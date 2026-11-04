@@ -1,0 +1,7 @@
+---
+interface Props { url: string; alt: string; width?: number; height?: number; class?: string; }
+const {url,alt,width=640,height=360,class:className}=Astro.props;
+const image=new URL(url);
+if(image.protocol!=='https:'||image.hostname!=='i.ytimg.com')throw new TypeError('Remote thumbnail host is not allowed');
+---
+<img src={url} alt={alt} width={width} height={height} loading="lazy" decoding="async" referrerpolicy="no-referrer" class={className} />

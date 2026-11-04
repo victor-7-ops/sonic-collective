@@ -1,0 +1,21 @@
+---
+interface Props { theme?: 'light'|'dark'; currentPath?: string; }
+const {theme='light',currentPath=''}=Astro.props;
+const links: [string,string][]=[['Performances','/sessions/'],['Artists','/artists/'],['About','/about/']];
+---
+<header class:list={['site-header',theme==='dark'&&'site-header--overlay']}>
+  <div class="site-header__inner wrap">
+    <a class="brand" href="/" aria-label="Sonic Collective home">
+      <img class="brand__logo" src={theme==='dark'?'/media/brand/sonic-collective-logo-white.png':'/media/brand/sonic-collective-logo.png'} alt="" width="60" height="78" />
+    </a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <button class="site-nav__toggle" type="button" aria-expanded="true" aria-controls="site-nav-panel">Explore <span aria-hidden="true">⌄</span></button>
+      <div class="site-nav__links" id="site-nav-panel" data-expanded="true">
+        {links.map(([label,href])=><a href={href} aria-current={currentPath===href?'page':undefined}>{label}</a>)}
+        <a class="site-nav__youtube" href="https://www.youtube.com/@Sonic_Collective-PH" target="_blank" rel="noreferrer">YouTube <span aria-hidden="true">↗</span></a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+

@@ -1,0 +1,130 @@
+[
+  {
+    "id": "blair",
+    "name": "Blair",
+    "aliases": [],
+    "kind": "solo",
+    "portrait": "/media/artists/blair",
+    "portraitAlt": "Blair performance artwork",
+    "focalPoint": "50% 40%",
+    "portraitLayout": "landscape",
+    "links": []
+  },
+  {
+    "id": "playscape-vision",
+    "name": "Playscape Vision",
+    "aliases": [],
+    "kind": "group",
+    "portrait": "/media/artists/playscape-vision",
+    "portraitAlt": "Playscape Vision performance artwork",
+    "focalPoint": "60% 42%",
+    "portraitLayout": "landscape",
+    "links": []
+  },
+  {
+    "id": "franzel-n-d-flayahs",
+    "name": "Franzel N'D Flayahs",
+    "aliases": [
+      "Franzel"
+    ],
+    "kind": "group",
+    "portrait": "/media/artists/franzel-n-d-flayahs",
+    "portraitAlt": "Franzel N'D Flayahs performance artwork",
+    "focalPoint": "45% 42%",
+    "portraitLayout": "landscape",
+    "links": []
+  },
+  {
+    "id": "jade-makawili",
+    "name": "Jade Makawili",
+    "aliases": [
+      "Jade"
+    ],
+    "kind": "solo",
+    "portrait": "/media/artists/jade-makawili",
+    "portraitAlt": "Jade Makawili performance artwork",
+    "focalPoint": "52% 40%",
+    "portraitLayout": "landscape",
+    "links": []
+  },
+  {
+    "id": "kalii-skrums",
+    "name": "Kalii Skrums",
+    "aliases": [
+      "Kalii"
+    ],
+    "kind": "group",
+    "portrait": "/media/artists/kalii-skrums",
+    "portraitAlt": "Kalii Skrums performance artwork",
+    "focalPoint": "47% 40%",
+    "portraitLayout": "landscape",
+    "links": []
+  },
+  {
+    "id": "rena",
+    "name": "Rena",
+    "aliases": [
+      "レナ"
+    ],
+    "kind": "solo",
+    "portrait": "/media/artists/rena",
+    "portraitAlt": "Rena performance artwork",
+    "focalPoint": "50% 35%",
+    "portraitLayout": "landscape",
+    "links": []
+  },
+  {
+    "id": "bianca",
+    "name": "Bianca",
+    "aliases": [
+      "Biance",
+      "ビアンカ"
+    ],
+    "kind": "solo",
+    "portrait": "/media/artists/bianca",
+    "portraitAlt": "Bianca performance artwork",
+    "focalPoint": "52% 35%",
+    "portraitLayout": "landscape",
+    "links": []
+  },
+  {
+    "id": "nathan-steve",
+    "name": "Nathan Steve",
+    "aliases": [
+      "Nathan",
+      "ネイサン"
+    ],
+    "kind": "solo",
+    "portrait": "/media/artists/nathan-steve",
+    "portraitAlt": "Nathan Steve performance artwork",
+    "focalPoint": "52% 35%",
+    "portraitLayout": "landscape",
+    "links": []
+  },
+  {
+    "id": "gerald",
+    "name": "Gerald",
+    "aliases": [
+      "ジェラルド"
+    ],
+    "kind": "solo",
+    "portrait": "/media/artists/gerald",
+    "portraitAlt": "Gerald performance artwork",
+    "focalPoint": "48% 35%",
+    "portraitLayout": "landscape",
+    "links": []
+  },
+  {
+    "id": "zera",
+    "name": "Zera",
+    "aliases": [
+      "ゼラ"
+    ],
+    "kind": "solo",
+    "portrait": "/media/artists/zera",
+    "portraitAlt": "Zera performance artwork",
+    "focalPoint": "48% 35%",
+    "portraitLayout": "landscape",
+    "links": []
+  }
+]

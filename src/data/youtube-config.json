@@ -1,0 +1,6 @@
+{
+  "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+  "playlistRules": [],
+  "limits": { "pageSize": 50, "videoBatchSize": 50, "requestTimeoutMs": 15000, "transientRetries": 2, "unexpectedRemovalFraction": 0.25, "refreshMaintenanceDays": 7, "maxMetadataAgeDays": 30 },
+  "thumbnailHosts": ["i.ytimg.com"]
+}

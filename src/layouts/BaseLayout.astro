@@ -1,0 +1,45 @@
+---
+import '../styles/global.css';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import QuickWatchDialog from '../components/QuickWatchDialog.astro';
+import { canonicalUrl } from '../lib/urls';
+interface Props { title: string; description: string; canonicalPath?: string; image?: string; theme?: 'light'|'dark'; currentPath?: string; playbackRecords?: { id: string; title: string; youtubeId: string; embeddable?:boolean }[]; }
+const {title,description,canonicalPath,image='/media/performances/playscape-vision-usseewa-960.webp',theme='light',currentPath=Astro.url.pathname,playbackRecords=[]}=Astro.props;
+const indexable=import.meta.env.PUBLIC_INDEXABLE==='true';
+const canonical=canonicalPath?canonicalUrl(canonicalPath,import.meta.env.SITE):undefined;
+const ogImage=canonicalUrl(image,import.meta.env.SITE);
+const publicPlaybackData=JSON.stringify(playbackRecords).replace(/</g,'\\u003c');
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="robots" content={indexable?'index,follow':'noindex,nofollow'} />
+    <link rel="icon" type="image/png" href="/media/brand/sonic-collective-logo.png" />
+    <meta name="theme-color" content={theme==='dark'?'#17211f':'#f3f1e9'} />
+    <title>{title}</title>
+    {canonical&&<link rel="canonical" href={canonical} />}
+    <meta property="og:type" content="website" />
+    {canonical&&<meta property="og:url" content={canonical} />}
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {ogImage&&<meta property="og:image" content={ogImage} />}
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <SiteHeader theme={theme} currentPath={currentPath} />
+    <main id="main-content"><slot /></main>
+    <SiteFooter />
+    <script type="application/json" id="playback-records" set:html={publicPlaybackData}></script>
+    <QuickWatchDialog />
+    <script>import '../../scripts/navigation.ts';</script>
+    <script>import '../../scripts/player.ts';</script>
+  </body>
+</html>
+
+
+
+

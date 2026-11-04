@@ -1,0 +1,926 @@
+{
+  "/media/performances/blair-kokoro-no-soba-ni": {
+    "fit": "contain",
+    "aspectRatio": 1.7777777777777777,
+    "variants": [
+      {
+        "src": "/media/performances/blair-kokoro-no-soba-ni-640.webp",
+        "width": 640,
+        "height": 360,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/blair-kokoro-no-soba-ni-960.webp",
+        "width": 960,
+        "height": 540,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/blair-kokoro-no-soba-ni-1440.webp",
+        "width": 1440,
+        "height": 810,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/blair-kokoro-no-soba-ni-960.jpg",
+        "width": 960,
+        "height": 540,
+        "format": "jpg"
+      }
+    ]
+  },
+  "/media/performances/playscape-vision-usseewa": {
+    "fit": "contain",
+    "aspectRatio": 1.7777777777777777,
+    "variants": [
+      {
+        "src": "/media/performances/playscape-vision-usseewa-640.webp",
+        "width": 640,
+        "height": 360,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/playscape-vision-usseewa-960.webp",
+        "width": 960,
+        "height": 540,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/playscape-vision-usseewa-1440.webp",
+        "width": 1440,
+        "height": 810,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/playscape-vision-usseewa-960.jpg",
+        "width": 960,
+        "height": 540,
+        "format": "jpg"
+      }
+    ]
+  },
+  "/media/performances/playscape-vision-eien-no-akuruhi": {
+    "fit": "contain",
+    "aspectRatio": 1.7777777777777777,
+    "variants": [
+      {
+        "src": "/media/performances/playscape-vision-eien-no-akuruhi-640.webp",
+        "width": 640,
+        "height": 360,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/playscape-vision-eien-no-akuruhi-960.webp",
+        "width": 960,
+        "height": 540,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/playscape-vision-eien-no-akuruhi-1440.webp",
+        "width": 1440,
+        "height": 810,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/playscape-vision-eien-no-akuruhi-960.jpg",
+        "width": 960,
+        "height": 540,
+        "format": "jpg"
+      }
+    ]
+  },
+  "/media/performances/franzel-ako-nalang-bi": {
+    "fit": "contain",
+    "aspectRatio": 1.7777777777777777,
+    "variants": [
+      {
+        "src": "/media/performances/franzel-ako-nalang-bi-640.webp",
+        "width": 640,
+        "height": 360,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/franzel-ako-nalang-bi-960.webp",
+        "width": 960,
+        "height": 540,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/franzel-ako-nalang-bi-1440.webp",
+        "width": 1440,
+        "height": 810,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/franzel-ako-nalang-bi-960.jpg",
+        "width": 960,
+        "height": 540,
+        "format": "jpg"
+      }
+    ]
+  },
+  "/media/performances/jade-ampingan": {
+    "fit": "contain",
+    "aspectRatio": 1.7777777777777777,
+    "variants": [
+      {
+        "src": "/media/performances/jade-ampingan-640.webp",
+        "width": 640,
+        "height": 360,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/jade-ampingan-960.webp",
+        "width": 960,
+        "height": 540,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/jade-ampingan-1440.webp",
+        "width": 1440,
+        "height": 810,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/jade-ampingan-960.jpg",
+        "width": 960,
+        "height": 540,
+        "format": "jpg"
+      }
+    ]
+  },
+  "/media/performances/kalii-sexwax-sail-away": {
+    "fit": "contain",
+    "aspectRatio": 1.7777777777777777,
+    "variants": [
+      {
+        "src": "/media/performances/kalii-sexwax-sail-away-640.webp",
+        "width": 640,
+        "height": 360,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/kalii-sexwax-sail-away-960.webp",
+        "width": 960,
+        "height": 540,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/kalii-sexwax-sail-away-1440.webp",
+        "width": 1440,
+        "height": 810,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/kalii-sexwax-sail-away-960.jpg",
+        "width": 960,
+        "height": 540,
+        "format": "jpg"
+      }
+    ]
+  },
+  "/media/performances/kalii-zober": {
+    "fit": "contain",
+    "aspectRatio": 1.7777777777777777,
+    "variants": [
+      {
+        "src": "/media/performances/kalii-zober-640.webp",
+        "width": 640,
+        "height": 360,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/kalii-zober-960.webp",
+        "width": 960,
+        "height": 540,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/kalii-zober-1440.webp",
+        "width": 1440,
+        "height": 810,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/kalii-zober-960.jpg",
+        "width": 960,
+        "height": 540,
+        "format": "jpg"
+      }
+    ]
+  },
+  "/media/performances/rena-bianca-click": {
+    "fit": "contain",
+    "aspectRatio": 1.7777777777777777,
+    "variants": [
+      {
+        "src": "/media/performances/rena-bianca-click-640.webp",
+        "width": 640,
+        "height": 360,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/rena-bianca-click-960.webp",
+        "width": 960,
+        "height": 540,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/rena-bianca-click-1440.webp",
+        "width": 1440,
+        "height": 810,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/rena-bianca-click-960.jpg",
+        "width": 960,
+        "height": 540,
+        "format": "jpg"
+      }
+    ]
+  },
+  "/media/performances/bianca-your-idol": {
+    "fit": "contain",
+    "aspectRatio": 1.7777777777777777,
+    "variants": [
+      {
+        "src": "/media/performances/bianca-your-idol-640.webp",
+        "width": 640,
+        "height": 360,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/bianca-your-idol-960.webp",
+        "width": 960,
+        "height": 540,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/bianca-your-idol-1440.webp",
+        "width": 1440,
+        "height": 810,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/bianca-your-idol-960.jpg",
+        "width": 960,
+        "height": 540,
+        "format": "jpg"
+      }
+    ]
+  },
+  "/media/performances/nathan-sparkle": {
+    "fit": "contain",
+    "aspectRatio": 1.7777777777777777,
+    "variants": [
+      {
+        "src": "/media/performances/nathan-sparkle-640.webp",
+        "width": 640,
+        "height": 360,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/nathan-sparkle-960.webp",
+        "width": 960,
+        "height": 540,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/nathan-sparkle-1440.webp",
+        "width": 1440,
+        "height": 810,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/nathan-sparkle-960.jpg",
+        "width": 960,
+        "height": 540,
+        "format": "jpg"
+      }
+    ]
+  },
+  "/media/performances/rena-kirameki": {
+    "fit": "contain",
+    "aspectRatio": 1.7777777777777777,
+    "variants": [
+      {
+        "src": "/media/performances/rena-kirameki-640.webp",
+        "width": 640,
+        "height": 360,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/rena-kirameki-960.webp",
+        "width": 960,
+        "height": 540,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/rena-kirameki-1440.webp",
+        "width": 1440,
+        "height": 810,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/rena-kirameki-960.jpg",
+        "width": 960,
+        "height": 540,
+        "format": "jpg"
+      }
+    ]
+  },
+  "/media/performances/nathan-kimi-ni-todoke": {
+    "fit": "contain",
+    "aspectRatio": 1.7777777777777777,
+    "variants": [
+      {
+        "src": "/media/performances/nathan-kimi-ni-todoke-640.webp",
+        "width": 640,
+        "height": 360,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/nathan-kimi-ni-todoke-960.webp",
+        "width": 960,
+        "height": 540,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/nathan-kimi-ni-todoke-1440.webp",
+        "width": 1440,
+        "height": 810,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/nathan-kimi-ni-todoke-960.jpg",
+        "width": 960,
+        "height": 540,
+        "format": "jpg"
+      }
+    ]
+  },
+  "/media/performances/bianca-orange": {
+    "fit": "contain",
+    "aspectRatio": 1.7777777777777777,
+    "variants": [
+      {
+        "src": "/media/performances/bianca-orange-640.webp",
+        "width": 640,
+        "height": 360,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/bianca-orange-960.webp",
+        "width": 960,
+        "height": 540,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/bianca-orange-1440.webp",
+        "width": 1440,
+        "height": 810,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/bianca-orange-960.jpg",
+        "width": 960,
+        "height": 540,
+        "format": "jpg"
+      }
+    ]
+  },
+  "/media/performances/gerald-rena-tenbyou": {
+    "fit": "contain",
+    "aspectRatio": 1.7777777777777777,
+    "variants": [
+      {
+        "src": "/media/performances/gerald-rena-tenbyou-640.webp",
+        "width": 640,
+        "height": 360,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/gerald-rena-tenbyou-960.webp",
+        "width": 960,
+        "height": 540,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/gerald-rena-tenbyou-1440.webp",
+        "width": 1440,
+        "height": 810,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/gerald-rena-tenbyou-960.jpg",
+        "width": 960,
+        "height": 540,
+        "format": "jpg"
+      }
+    ]
+  },
+  "/media/performances/gerald-kirameki": {
+    "fit": "contain",
+    "aspectRatio": 1.7777777777777777,
+    "variants": [
+      {
+        "src": "/media/performances/gerald-kirameki-640.webp",
+        "width": 640,
+        "height": 360,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/gerald-kirameki-960.webp",
+        "width": 960,
+        "height": 540,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/gerald-kirameki-1440.webp",
+        "width": 1440,
+        "height": 810,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/gerald-kirameki-960.jpg",
+        "width": 960,
+        "height": 540,
+        "format": "jpg"
+      }
+    ]
+  },
+  "/media/performances/zera-nanairo": {
+    "fit": "contain",
+    "aspectRatio": 1.7777777777777777,
+    "variants": [
+      {
+        "src": "/media/performances/zera-nanairo-640.webp",
+        "width": 640,
+        "height": 360,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/zera-nanairo-960.webp",
+        "width": 960,
+        "height": 540,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/zera-nanairo-1440.webp",
+        "width": 1440,
+        "height": 810,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/zera-nanairo-960.jpg",
+        "width": 960,
+        "height": 540,
+        "format": "jpg"
+      }
+    ]
+  },
+  "/media/performances/zera-hotaru": {
+    "fit": "contain",
+    "aspectRatio": 1.7777777777777777,
+    "variants": [
+      {
+        "src": "/media/performances/zera-hotaru-640.webp",
+        "width": 640,
+        "height": 360,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/zera-hotaru-960.webp",
+        "width": 960,
+        "height": 540,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/zera-hotaru-1440.webp",
+        "width": 1440,
+        "height": 810,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/zera-hotaru-960.jpg",
+        "width": 960,
+        "height": 540,
+        "format": "jpg"
+      }
+    ]
+  },
+  "/media/performances/rena-inochi-no-namae": {
+    "fit": "contain",
+    "aspectRatio": 1.7777777777777777,
+    "variants": [
+      {
+        "src": "/media/performances/rena-inochi-no-namae-640.webp",
+        "width": 640,
+        "height": 360,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/rena-inochi-no-namae-960.webp",
+        "width": 960,
+        "height": 540,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/rena-inochi-no-namae-1440.webp",
+        "width": 1440,
+        "height": 810,
+        "format": "webp"
+      },
+      {
+        "src": "/media/performances/rena-inochi-no-namae-960.jpg",
+        "width": 960,
+        "height": 540,
+        "format": "jpg"
+      }
+    ]
+  },
+  "/media/artists/blair": {
+    "fit": "contain",
+    "aspectRatio": 1.7777777777777777,
+    "variants": [
+      {
+        "src": "/media/artists/blair-480.webp",
+        "width": 480,
+        "height": 270,
+        "format": "webp"
+      },
+      {
+        "src": "/media/artists/blair-800.webp",
+        "width": 800,
+        "height": 450,
+        "format": "webp"
+      },
+      {
+        "src": "/media/artists/blair-800.jpg",
+        "width": 800,
+        "height": 450,
+        "format": "jpg"
+      }
+    ]
+  },
+  "/media/artists/playscape-vision": {
+    "fit": "contain",
+    "aspectRatio": 1.7777777777777777,
+    "variants": [
+      {
+        "src": "/media/artists/playscape-vision-480.webp",
+        "width": 480,
+        "height": 270,
+        "format": "webp"
+      },
+      {
+        "src": "/media/artists/playscape-vision-800.webp",
+        "width": 800,
+        "height": 450,
+        "format": "webp"
+      },
+      {
+        "src": "/media/artists/playscape-vision-800.jpg",
+        "width": 800,
+        "height": 450,
+        "format": "jpg"
+      }
+    ]
+  },
+  "/media/artists/franzel-n-d-flayahs": {
+    "fit": "contain",
+    "aspectRatio": 1.7777777777777777,
+    "variants": [
+      {
+        "src": "/media/artists/franzel-n-d-flayahs-480.webp",
+        "width": 480,
+        "height": 270,
+        "format": "webp"
+      },
+      {
+        "src": "/media/artists/franzel-n-d-flayahs-800.webp",
+        "width": 800,
+        "height": 450,
+        "format": "webp"
+      },
+      {
+        "src": "/media/artists/franzel-n-d-flayahs-800.jpg",
+        "width": 800,
+        "height": 450,
+        "format": "jpg"
+      }
+    ]
+  },
+  "/media/artists/jade-makawili": {
+    "fit": "contain",
+    "aspectRatio": 1.7777777777777777,
+    "variants": [
+      {
+        "src": "/media/artists/jade-makawili-480.webp",
+        "width": 480,
+        "height": 270,
+        "format": "webp"
+      },
+      {
+        "src": "/media/artists/jade-makawili-800.webp",
+        "width": 800,
+        "height": 450,
+        "format": "webp"
+      },
+      {
+        "src": "/media/artists/jade-makawili-800.jpg",
+        "width": 800,
+        "height": 450,
+        "format": "jpg"
+      }
+    ]
+  },
+  "/media/artists/kalii-skrums": {
+    "fit": "contain",
+    "aspectRatio": 1.7777777777777777,
+    "variants": [
+      {
+        "src": "/media/artists/kalii-skrums-480.webp",
+        "width": 480,
+        "height": 270,
+        "format": "webp"
+      },
+      {
+        "src": "/media/artists/kalii-skrums-800.webp",
+        "width": 800,
+        "height": 450,
+        "format": "webp"
+      },
+      {
+        "src": "/media/artists/kalii-skrums-800.jpg",
+        "width": 800,
+        "height": 450,
+        "format": "jpg"
+      }
+    ]
+  },
+  "/media/artists/rena": {
+    "fit": "contain",
+    "aspectRatio": 1.7777777777777777,
+    "variants": [
+      {
+        "src": "/media/artists/rena-480.webp",
+        "width": 480,
+        "height": 270,
+        "format": "webp"
+      },
+      {
+        "src": "/media/artists/rena-800.webp",
+        "width": 800,
+        "height": 450,
+        "format": "webp"
+      },
+      {
+        "src": "/media/artists/rena-800.jpg",
+        "width": 800,
+        "height": 450,
+        "format": "jpg"
+      }
+    ]
+  },
+  "/media/artists/bianca": {
+    "fit": "contain",
+    "aspectRatio": 1.7777777777777777,
+    "variants": [
+      {
+        "src": "/media/artists/bianca-480.webp",
+        "width": 480,
+        "height": 270,
+        "format": "webp"
+      },
+      {
+        "src": "/media/artists/bianca-800.webp",
+        "width": 800,
+        "height": 450,
+        "format": "webp"
+      },
+      {
+        "src": "/media/artists/bianca-800.jpg",
+        "width": 800,
+        "height": 450,
+        "format": "jpg"
+      }
+    ]
+  },
+  "/media/artists/nathan-steve": {
+    "fit": "contain",
+    "aspectRatio": 1.7777777777777777,
+    "variants": [
+      {
+        "src": "/media/artists/nathan-steve-480.webp",
+        "width": 480,
+        "height": 270,
+        "format": "webp"
+      },
+      {
+        "src": "/media/artists/nathan-steve-800.webp",
+        "width": 800,
+        "height": 450,
+        "format": "webp"
+      },
+      {
+        "src": "/media/artists/nathan-steve-800.jpg",
+        "width": 800,
+        "height": 450,
+        "format": "jpg"
+      }
+    ]
+  },
+  "/media/artists/gerald": {
+    "fit": "contain",
+    "aspectRatio": 1.7777777777777777,
+    "variants": [
+      {
+        "src": "/media/artists/gerald-480.webp",
+        "width": 480,
+        "height": 270,
+        "format": "webp"
+      },
+      {
+        "src": "/media/artists/gerald-800.webp",
+        "width": 800,
+        "height": 450,
+        "format": "webp"
+      },
+      {
+        "src": "/media/artists/gerald-800.jpg",
+        "width": 800,
+        "height": 450,
+        "format": "jpg"
+      }
+    ]
+  },
+  "/media/artists/zera": {
+    "fit": "contain",
+    "aspectRatio": 1.7777777777777777,
+    "variants": [
+      {
+        "src": "/media/artists/zera-480.webp",
+        "width": 480,
+        "height": 270,
+        "format": "webp"
+      },
+      {
+        "src": "/media/artists/zera-800.webp",
+        "width": 800,
+        "height": 450,
+        "format": "webp"
+      },
+      {
+        "src": "/media/artists/zera-800.jpg",
+        "width": 800,
+        "height": 450,
+        "format": "jpg"
+      }
+    ]
+  },
+  "/media/clips/rena-bianca-click-short-poster.webp": {
+    "fit": "contain",
+    "aspectRatio": 0.5625,
+    "variants": [
+      {
+        "src": "/media/clips/rena-bianca-click-short-poster.webp",
+        "width": 540,
+        "height": 960,
+        "format": "webp"
+      }
+    ]
+  },
+  "/media/clips/bianca-your-idol-short-poster.webp": {
+    "fit": "contain",
+    "aspectRatio": 0.5625,
+    "variants": [
+      {
+        "src": "/media/clips/bianca-your-idol-short-poster.webp",
+        "width": 540,
+        "height": 960,
+        "format": "webp"
+      }
+    ]
+  },
+  "/media/clips/nathan-sparkle-short-poster.webp": {
+    "fit": "contain",
+    "aspectRatio": 0.5625,
+    "variants": [
+      {
+        "src": "/media/clips/nathan-sparkle-short-poster.webp",
+        "width": 540,
+        "height": 960,
+        "format": "webp"
+      }
+    ]
+  },
+  "/media/clips/rena-kirameki-short-poster.webp": {
+    "fit": "contain",
+    "aspectRatio": 0.5625,
+    "variants": [
+      {
+        "src": "/media/clips/rena-kirameki-short-poster.webp",
+        "width": 540,
+        "height": 960,
+        "format": "webp"
+      }
+    ]
+  },
+  "/media/clips/nathan-kimi-ni-todoke-short-poster.webp": {
+    "fit": "contain",
+    "aspectRatio": 0.5625,
+    "variants": [
+      {
+        "src": "/media/clips/nathan-kimi-ni-todoke-short-poster.webp",
+        "width": 540,
+        "height": 960,
+        "format": "webp"
+      }
+    ]
+  },
+  "/media/clips/bianca-orange-short-poster.webp": {
+    "fit": "contain",
+    "aspectRatio": 0.5625,
+    "variants": [
+      {
+        "src": "/media/clips/bianca-orange-short-poster.webp",
+        "width": 540,
+        "height": 960,
+        "format": "webp"
+      }
+    ]
+  },
+  "/media/clips/gerald-rena-tenbyou-short-poster.webp": {
+    "fit": "contain",
+    "aspectRatio": 0.5625,
+    "variants": [
+      {
+        "src": "/media/clips/gerald-rena-tenbyou-short-poster.webp",
+        "width": 540,
+        "height": 960,
+        "format": "webp"
+      }
+    ]
+  },
+  "/media/clips/gerald-kirameki-short-poster.webp": {
+    "fit": "contain",
+    "aspectRatio": 0.5625,
+    "variants": [
+      {
+        "src": "/media/clips/gerald-kirameki-short-poster.webp",
+        "width": 540,
+        "height": 960,
+        "format": "webp"
+      }
+    ]
+  },
+  "/media/clips/zera-nanairo-short-poster.webp": {
+    "fit": "contain",
+    "aspectRatio": 0.5625,
+    "variants": [
+      {
+        "src": "/media/clips/zera-nanairo-short-poster.webp",
+        "width": 540,
+        "height": 960,
+        "format": "webp"
+      }
+    ]
+  },
+  "/media/clips/zera-hotaru-short-poster.webp": {
+    "fit": "contain",
+    "aspectRatio": 0.5625,
+    "variants": [
+      {
+        "src": "/media/clips/zera-hotaru-short-poster.webp",
+        "width": 540,
+        "height": 960,
+        "format": "webp"
+      }
+    ]
+  },
+  "/media/clips/rena-inochi-no-namae-short-poster.webp": {
+    "fit": "contain",
+    "aspectRatio": 0.5625,
+    "variants": [
+      {
+        "src": "/media/clips/rena-inochi-no-namae-short-poster.webp",
+        "width": 540,
+        "height": 960,
+        "format": "webp"
+      }
+    ]
+  },
+  "/media/hero/rena-inochi-poster": {
+    "fit": "contain",
+    "aspectRatio": 0.5625,
+    "variants": [
+      {
+        "src": "/media/hero/rena-inochi-poster.webp",
+        "width": 1080,
+        "height": 1920,
+        "format": "webp"
+      }
+    ]
+  }
+}

@@ -1,0 +1,166 @@
+{
+  "mediaRoot": "C:\\Users\\VictorAlexis Gadiana\\Downloads\\sonic-collective",
+  "logoSource": "sonic-collective(logo).jpg",
+  "artists": [
+    {
+      "id": "blair",
+      "portraitPerformanceId": "blair-kokoro-no-soba-ni"
+    },
+    {
+      "id": "playscape-vision",
+      "portraitPerformanceId": "playscape-vision-eien-no-akuruhi"
+    },
+    {
+      "id": "franzel-n-d-flayahs",
+      "portraitPerformanceId": "franzel-ako-nalang-bi"
+    },
+    {
+      "id": "jade-makawili",
+      "portraitPerformanceId": "jade-ampingan"
+    },
+    {
+      "id": "kalii-skrums",
+      "portraitPerformanceId": "kalii-zober"
+    },
+    {
+      "id": "rena",
+      "portraitPerformanceId": "rena-inochi-no-namae"
+    },
+    {
+      "id": "bianca",
+      "portraitPerformanceId": "bianca-your-idol"
+    },
+    {
+      "id": "nathan-steve",
+      "portraitPerformanceId": "nathan-sparkle"
+    },
+    {
+      "id": "gerald",
+      "portraitPerformanceId": "gerald-kirameki"
+    },
+    {
+      "id": "zera",
+      "portraitPerformanceId": "zera-hotaru"
+    }
+  ],
+  "performances": [
+    {
+      "id": "blair-kokoro-no-soba-ni",
+      "thumbnailSource": "THUMBNAILS-20261103T173503Z-1-001/THUMBNAILS/BLAIR - BELLE LEND ME YOUR VOICE SONIC SESSIONS THUMBNAIL.png"
+    },
+    {
+      "id": "playscape-vision-usseewa",
+      "thumbnailSource": "THUMBNAILS-20261103T173503Z-1-001/THUMBNAILS/PLAYSCAPE VISION - ADO - USSEEWA SONIC SESSIONS THUMBNAIL.png"
+    },
+    {
+      "id": "playscape-vision-eien-no-akuruhi",
+      "thumbnailSource": "THUMBNAILS-20261103T173503Z-1-001/THUMBNAILS/YT ELEN NO AKURUHI PLAYSCAPE SONIC SESSIONS THUMBNAIL.png"
+    },
+    {
+      "id": "franzel-ako-nalang-bi",
+      "thumbnailSource": "THUMBNAILS-20261103T173503Z-1-001/THUMBNAILS/FRANZEL SONIC SESSIONS THUMBNAIL.png"
+    },
+    {
+      "id": "jade-ampingan",
+      "thumbnailSource": "THUMBNAILS-20261103T173503Z-1-001/THUMBNAILS/JADE SONIC SESSIONS THUMBNAIL.jpg"
+    },
+    {
+      "id": "kalii-sexwax-sail-away",
+      "thumbnailSource": "THUMBNAILS-20261103T173503Z-1-001/THUMBNAILS/KALII SKRUMS SONIC SESSIONS THUMBNAIL.jpg"
+    },
+    {
+      "id": "kalii-zober",
+      "thumbnailSource": "THUMBNAILS-20261103T173503Z-1-001/THUMBNAILS/ZOBER SONIC SESSIONS THUMBNAIL.jpg"
+    },
+    {
+      "id": "rena-bianca-click",
+      "thumbnailSource": "YOUTUBE/BIANCA & RENA THUMBNAIL EP 1 (SONIC COVERS).jpg"
+    },
+    {
+      "id": "bianca-your-idol",
+      "thumbnailSource": "YOUTUBE/BIANCA THUMBNAIL EP 2 (SONIC COVERS).jpg"
+    },
+    {
+      "id": "nathan-sparkle",
+      "thumbnailSource": "YOUTUBE/NATHAN THUMBNAIL EP 3 (SONIC COVERS).jpg"
+    },
+    {
+      "id": "rena-kirameki",
+      "thumbnailSource": "YOUTUBE/RENA THUMBNAIL EP 4 (SONIC COVERS).jpg"
+    },
+    {
+      "id": "nathan-kimi-ni-todoke",
+      "thumbnailSource": "YOUTUBE/NATHAN THUMBNAIL EP 5 (SONIC COVERS).jpg"
+    },
+    {
+      "id": "bianca-orange",
+      "thumbnailSource": "YOUTUBE/BIANCA THUMBNAIL EP 6 (SONIC COVERS).jpg"
+    },
+    {
+      "id": "gerald-rena-tenbyou",
+      "thumbnailSource": "YOUTUBE/RENA & GERALD THUMBNAIL EP 7 (SONIC COVERS).jpg"
+    },
+    {
+      "id": "gerald-kirameki",
+      "thumbnailSource": "YOUTUBE/GERALD THUMBNAIL EP 8 (SONIC COVERS).jpg"
+    },
+    {
+      "id": "zera-nanairo",
+      "thumbnailSource": "YOUTUBE/ZERA THUMBNAIL EP 9 (SONIC COVERS).jpg"
+    },
+    {
+      "id": "zera-hotaru",
+      "thumbnailSource": "YOUTUBE/ZERA THUMBNAIL EP 11 (SONIC COVERS).jpg"
+    },
+    {
+      "id": "rena-inochi-no-namae",
+      "thumbnailSource": "YOUTUBE/RENA THUMBNAIL EP 14 (SONIC COVERS).jpg"
+    }
+  ],
+  "clips": [
+    {
+      "id": "rena-bianca-click-short",
+      "source": "SHORTS-20261103T174201Z-1-001/SHORTS/Click - Bianca & Rena (9x16).mp4"
+    },
+    {
+      "id": "bianca-your-idol-short",
+      "source": "SHORTS-20261103T174201Z-1-001/SHORTS/Your Idol - Bianca (9X16).mp4"
+    },
+    {
+      "id": "nathan-sparkle-short",
+      "source": "SHORTS-20261103T174201Z-1-001/SHORTS/Sparkle - Nathan Steve (9x16).mp4"
+    },
+    {
+      "id": "rena-kirameki-short",
+      "source": "SHORTS-20261103T174201Z-1-001/SHORTS/Kerameki - Rena (9x16).mp4"
+    },
+    {
+      "id": "nathan-kimi-ni-todoke-short",
+      "source": "SHORTS-20261103T174201Z-1-001/SHORTS/Kimi No Todoke - Nathan Steve (16x9).mp4"
+    },
+    {
+      "id": "bianca-orange-short",
+      "source": "SHORTS-20261103T174201Z-1-001/SHORTS/Orange - Biance (9x16).mp4"
+    },
+    {
+      "id": "gerald-rena-tenbyou-short",
+      "source": "SHORTS-20261103T174201Z-1-001/SHORTS/Tenbyou - Rena & Gerald (9x16).mp4"
+    },
+    {
+      "id": "gerald-kirameki-short",
+      "source": "SHORTS-20261103T174201Z-1-001/SHORTS/Kerameki - Gerald (9x16).mp4"
+    },
+    {
+      "id": "zera-nanairo-short",
+      "source": "SHORTS-20261103T174201Z-1-001/SHORTS/Nanairo (Zera) 9x16.mp4"
+    },
+    {
+      "id": "zera-hotaru-short",
+      "source": "SHORTS-20261103T174201Z-1-001/SHORTS/Zera - Hotaru (9x16).mp4"
+    },
+    {
+      "id": "rena-inochi-no-namae-short",
+      "source": "SHORTS-20261103T174201Z-1-001/SHORTS/Rena - Inochi No Namae (9x16).mp4"
+    }
+  ]
+}

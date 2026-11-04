@@ -1,0 +1,11 @@
+---
+import type { CatalogItem } from '../lib/discovery';
+import CatalogCard from './CatalogCard.astro';
+interface Props { items:CatalogItem[]; }
+const {items}=Astro.props;
+---
+{items.length>0&&<section class="latest-uploads section" aria-labelledby="latest-uploads-title" data-reveal>
+  <div class="wrap"><div class="section-heading"><div><p class="eyebrow">Fresh from the channel</p><h2 class="section-title" id="latest-uploads-title">Latest uploads.</h2></div><a class="text-link" href="/sessions/">All performances ↗</a></div>
+    <div class="catalog-grid">{items.map((item)=><CatalogCard item={item} />)}</div>
+  </div>
+</section>}

@@ -1,0 +1,112 @@
+[
+  {
+    "id": "rena-bianca-click-short",
+    "performanceId": "rena-bianca-click",
+    "poster": "/media/clips/rena-bianca-click-short-poster.webp",
+    "src": "/media/clips/rena-bianca-click-short.mp4",
+    "width": 540,
+    "height": 960,
+    "durationSeconds": 31.614917,
+    "approvedForSite": true
+  },
+  {
+    "id": "bianca-your-idol-short",
+    "performanceId": "bianca-your-idol",
+    "poster": "/media/clips/bianca-your-idol-short-poster.webp",
+    "src": "/media/clips/bianca-your-idol-short.mp4",
+    "width": 540,
+    "height": 960,
+    "durationSeconds": 32.78275,
+    "approvedForSite": true
+  },
+  {
+    "id": "nathan-sparkle-short",
+    "performanceId": "nathan-sparkle",
+    "poster": "/media/clips/nathan-sparkle-short-poster.webp",
+    "src": "/media/clips/nathan-sparkle-short.mp4",
+    "width": 540,
+    "height": 960,
+    "durationSeconds": 23.5235,
+    "approvedForSite": true
+  },
+  {
+    "id": "rena-kirameki-short",
+    "performanceId": "rena-kirameki",
+    "poster": "/media/clips/rena-kirameki-short-poster.webp",
+    "src": "/media/clips/rena-kirameki-short.mp4",
+    "width": 540,
+    "height": 960,
+    "durationSeconds": 28.5285,
+    "approvedForSite": true
+  },
+  {
+    "id": "nathan-kimi-ni-todoke-short",
+    "performanceId": "nathan-kimi-ni-todoke",
+    "poster": "/media/clips/nathan-kimi-ni-todoke-short-poster.webp",
+    "src": "/media/clips/nathan-kimi-ni-todoke-short.mp4",
+    "width": 540,
+    "height": 960,
+    "durationSeconds": 16.016,
+    "approvedForSite": true
+  },
+  {
+    "id": "bianca-orange-short",
+    "performanceId": "bianca-orange",
+    "poster": "/media/clips/bianca-orange-short-poster.webp",
+    "src": "/media/clips/bianca-orange-short.mp4",
+    "width": 540,
+    "height": 960,
+    "durationSeconds": 30.28025,
+    "approvedForSite": true
+  },
+  {
+    "id": "gerald-rena-tenbyou-short",
+    "performanceId": "gerald-rena-tenbyou",
+    "poster": "/media/clips/gerald-rena-tenbyou-short-poster.webp",
+    "src": "/media/clips/gerald-rena-tenbyou-short.mp4",
+    "width": 540,
+    "height": 960,
+    "durationSeconds": 26.651625,
+    "approvedForSite": true
+  },
+  {
+    "id": "gerald-kirameki-short",
+    "performanceId": "gerald-kirameki",
+    "poster": "/media/clips/gerald-kirameki-short-poster.webp",
+    "src": "/media/clips/gerald-kirameki-short.mp4",
+    "width": 540,
+    "height": 960,
+    "durationSeconds": 21.187833,
+    "approvedForSite": true
+  },
+  {
+    "id": "zera-nanairo-short",
+    "performanceId": "zera-nanairo",
+    "poster": "/media/clips/zera-nanairo-short-poster.webp",
+    "src": "/media/clips/zera-nanairo-short.mp4",
+    "width": 540,
+    "height": 960,
+    "durationSeconds": 26.401375,
+    "approvedForSite": true
+  },
+  {
+    "id": "zera-hotaru-short",
+    "performanceId": "zera-hotaru",
+    "poster": "/media/clips/zera-hotaru-short-poster.webp",
+    "src": "/media/clips/zera-hotaru-short.mp4",
+    "width": 540,
+    "height": 960,
+    "durationSeconds": 24.27425,
+    "approvedForSite": true
+  },
+  {
+    "id": "rena-inochi-no-namae-short",
+    "performanceId": "rena-inochi-no-namae",
+    "poster": "/media/clips/rena-inochi-no-namae-short-poster.webp",
+    "src": "/media/clips/rena-inochi-no-namae-short.mp4",
+    "width": 540,
+    "height": 960,
+    "durationSeconds": 35.78575,
+    "approvedForSite": true
+  }
+]

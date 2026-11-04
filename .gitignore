@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.astro/
+.local/
+.sites-runtime/
+*.zip
+*.tmp
+*.report
+.env
+.env.*
+!.env.example
+.dev.vars*
