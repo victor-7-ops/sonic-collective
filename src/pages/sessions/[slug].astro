@@ -37,7 +37,7 @@ const playbackRecords=catalog.performances.map(({id,title,youtubeId})=>({id,titl
     </section>
     {related.length>0&&<section class="related-performances"><h2>More performances</h2><div class="catalog-grid">{related.map((item)=>{
       const shared=item.artistIds.some((id)=>performance.artistIds.includes(id));const sameSeries=item.seriesId===performance.seriesId;
-      return <div>{shared&&<p class="eyebrow">Artist</p>}{sameSeries&&<p class="eyebrow">Same series</p>}<PerformanceCard performance={item} artistNames={artistNamesFor(item,catalog.raw.artists)} playable={catalog.availability[item.youtubeId]!=='external-only'} /></div>;
+      return <div>{shared&&<p class="eyebrow">Artist</p>}{sameSeries&&<p class="eyebrow">Same series</p>}<PerformanceCard performance={item} artistNames={artistNamesFor(item,catalog.raw.artists)} playable={catalog.availability[item.youtubeId]!=='external-only'} preview={catalog.clips.find((clip)=>clip.performanceId===item.id)} /></div>;
     })}</div></section>}
   </div></article>
 </BaseLayout>

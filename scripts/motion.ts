@@ -1,5 +1,5 @@
 import { mediaCoordinator } from '../src/lib/media-coordinator';
-import { readMotionPause, shouldAutoPlayDecorativeMedia, writeMotionPause } from '../src/lib/motion-policy';
+import { readMotionPause, writeMotionPause } from '../src/lib/motion-policy';
 
 type ConnectionInfo = EventTarget & { saveData?: boolean };
 const connection = (navigator as Navigator & { connection?: ConnectionInfo }).connection;
@@ -15,43 +15,9 @@ let teaserInView = false;
 let teaserManualPause = false;
 let teaserActive = false;
 let internalTeaserPause = false;
-let revealObserver: IntersectionObserver | undefined;
-let revealTimeout = 0;
 
 const storage = () => window.sessionStorage;
 const getSaveData = () => connection?.saveData === true;
-const autoEligible = () => shouldAutoPlayDecorativeMedia({
-  reducedMotion: reducedQuery.matches,
-  saveData: getSaveData(),
-  userPaused: userPaused || teaserManualPause,
-  inViewport: teaserInView,
-  documentVisible: document.visibilityState === 'visible',
-});
-
-function revealAll(): void {
-  if (revealTimeout) window.clearTimeout(revealTimeout);
-  revealObserver?.disconnect(); revealObserver = undefined;
-  document.querySelectorAll<HTMLElement>('[data-reveal]').forEach((element) => { element.dataset.revealState = 'visible'; });
-}
-
-function setupReveals(): void {
-  if (reducedQuery.matches || userPaused || !('IntersectionObserver' in window)) { revealAll(); return; }
-  const items = [...document.querySelectorAll<HTMLElement>('[data-reveal]')].filter((item) => item.dataset.revealState !== 'visible');
-  if (!items.length) return;
-  items.forEach((item) => { item.dataset.revealState = 'waiting'; });
-  try {
-    revealObserver = new IntersectionObserver((entries) => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) {
-          (entry.target as HTMLElement).dataset.revealState = 'visible';
-          revealObserver?.unobserve(entry.target);
-        }
-      }
-    }, { rootMargin: '80px 0px', threshold: 0.01 });
-    items.forEach((item) => revealObserver?.observe(item));
-    revealTimeout = window.setTimeout(revealAll, 1500);
-  } catch { revealAll(); }
-}
 
 function renderMotionState(): void {
   const reduced = reducedQuery.matches;
@@ -64,7 +30,6 @@ function renderMotionState(): void {
     motionToggle.setAttribute('aria-pressed', String(reduced || userPaused));
     motionToggle.textContent = reduced ? 'Reduced motion enabled' : userPaused ? 'Resume motion' : 'Pause motion';
   }
-  if (reduced || userPaused) revealAll(); else setupReveals();
 }
 
 function renderTeaserButton(): void {
@@ -101,7 +66,7 @@ function claimTeaser(): boolean {
   return mediaCoordinator.getActiveOwner() === 'rena-teaser';
 }
 
-async function startTeaser(manual: boolean): Promise<void> {
+async function startTeaser(): Promise<void> {
   if (!teaserVideo || !teaserToggle) return;
   if (teaserActive) {
     if (teaserVideo.paused) {
@@ -110,8 +75,7 @@ async function startTeaser(manual: boolean): Promise<void> {
     }
     return;
   }
-  if (!manual && !autoEligible()) return;
-  if (manual) teaserManualPause = false;
+  teaserManualPause = false;
   if (!claimTeaser()) return;
   const source = teaserVideo.dataset.src;
   if (!source) { mediaCoordinator.release('rena-teaser'); return; }
@@ -136,8 +100,7 @@ async function startTeaser(manual: boolean): Promise<void> {
 
 function evaluateTeaser(): void {
   if (!teaserVideo) return;
-  if (autoEligible()) { void startTeaser(false); }
-  else if (teaserActive && (!documentVisible() || !teaserInView || reducedQuery.matches || getSaveData() || userPaused)) {
+  if (teaserActive && (!documentVisible() || !teaserInView || reducedQuery.matches || getSaveData() || userPaused)) {
     if (reducedQuery.matches || getSaveData()) teaserManualPause = true;
     stopTeaser('Preview paused by motion, visibility, or data preferences.');
   }
@@ -162,7 +125,7 @@ document.addEventListener('visibilitychange', evaluateTeaser);
 if (teaser && teaserVideo) {
   teaserToggle?.addEventListener('click', () => {
     if (teaserActive) { teaserManualPause = true; stopTeaser('Preview paused. Select Resume preview to continue.'); }
-    else { teaserManualPause = false; void startTeaser(true); }
+    else { teaserManualPause = false; void startTeaser(); }
   });
   teaserVideo.addEventListener('pause', () => {
     if (!teaserActive || internalTeaserPause) return;

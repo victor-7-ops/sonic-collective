@@ -31,6 +31,6 @@ const playbackRecords=[...catalog.performances.map(({id,title,youtubeId})=>({id,
       {!video.embeddable&&<p role="status">This video cannot be embedded. Use the direct YouTube link to watch it.</p>}
       <p><a class="button button--quiet" href={youtubeUrl(video.youtubeId)} target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></p>
     </section>
-    {related.length>0&&<section class="related-performances"><h2>More from this series</h2><div class="catalog-grid">{related.map((item)=><PerformanceCard performance={item} artistNames={item.artistIds.map((id)=>catalog.raw.artists.find((artist)=>artist.id===id)?.name??'').filter(Boolean)} playable={catalog.availability[item.youtubeId]!=='external-only'} />)}</div></section>}
+    {related.length>0&&<section class="related-performances"><h2>More from this series</h2><div class="catalog-grid">{related.map((item)=><PerformanceCard performance={item} artistNames={item.artistIds.map((id)=>catalog.raw.artists.find((artist)=>artist.id===id)?.name??'').filter(Boolean)} playable={catalog.availability[item.youtubeId]!=='external-only'} preview={catalog.clips.find((clip)=>clip.performanceId===item.id)} />)}</div></section>}
   </div></article>}
 </BaseLayout>

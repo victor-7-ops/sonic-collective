@@ -17,7 +17,7 @@ const playbackRecords=[...catalog.performances.map(({id,title,youtubeId})=>({id,
     <p class="discovery-lede">Explore Sonic Sessions, Covers, and the latest public channel uploads.</p>
     <CatalogFilters query={query} count={results.length} />
     <div class="catalog-empty" data-empty-state hidden><h2>No performances found</h2><p>Try another song, artist, or upload title, or clear the filters.</p><button class="button button--primary" type="button" data-clear-filters>Clear filters</button></div>
-    <div class="catalog-grid" data-catalog-grid>{catalog.catalogItems.map((item)=><div data-catalog-card={item.id} hidden={!results.some((result)=>result.id===item.id)}><CatalogCard item={item} /></div>)}</div>
+    <div class="catalog-grid" data-catalog-grid>{catalog.catalogItems.map((item)=><div data-catalog-card={item.id} hidden={!results.some((result)=>result.id===item.id)}><CatalogCard item={item} preview={item.source==='curated'?catalog.clips.find((clip)=>clip.performanceId===item.id):undefined} /></div>)}</div>
     <script type="application/json" data-catalog-data set:html={data}></script>
   </div></section>
   <script>import '../../../scripts/catalog.ts';</script>

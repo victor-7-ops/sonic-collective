@@ -1,11 +1,12 @@
 ---
 import type { CatalogItem } from '../lib/discovery';
+import type { Clip } from '../lib/schemas';
 import CatalogCard from './CatalogCard.astro';
-interface Props { items:CatalogItem[]; }
-const {items}=Astro.props;
+interface Props { items:CatalogItem[]; clips: Clip[]; }
+const {items,clips}=Astro.props;
 ---
 {items.length>0&&<section class="latest-uploads section" aria-labelledby="latest-uploads-title" data-reveal>
   <div class="wrap"><div class="section-heading"><div><p class="eyebrow">Fresh from the channel</p><h2 class="section-title" id="latest-uploads-title">Latest uploads.</h2></div><a class="text-link" href="/sessions/">All performances ↗</a></div>
-    <div class="catalog-grid">{items.map((item)=><CatalogCard item={item} />)}</div>
+    <div class="catalog-grid">{items.map((item)=><CatalogCard item={item} preview={item.source==='curated'?clips.find((clip)=>clip.performanceId===item.id):undefined} />)}</div>
   </div>
 </section>}

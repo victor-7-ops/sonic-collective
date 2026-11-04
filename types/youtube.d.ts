@@ -17,6 +17,7 @@ declare global {
       destroy(): void;
       pauseVideo(): void;
       playVideo(): void;
+      unMute(): void;
       getIframe(): HTMLIFrameElement;
     }
   }

@@ -1,8 +1,8 @@
 ---
-import type { Artist, Performance } from '../lib/schemas';
+import type { Artist, Clip, Performance } from '../lib/schemas';
 import PerformanceCard from './PerformanceCard.astro';
-interface Props { performances: Performance[]; artists: Artist[]; availability:Record<string,string>; }
-const {performances,artists,availability}=Astro.props;
+interface Props { performances: Performance[]; artists: Artist[]; availability:Record<string,string>; clips: Clip[]; }
+const {performances,artists,availability,clips}=Astro.props;
 const filters=[['all','All performances'],['sessions','Sonic Sessions'],['covers','Sonic Covers']];
 const names=(p:Performance)=>p.artistIds.map(id=>artists.find(a=>a.id===id)?.name??'').filter(Boolean);
 ---
@@ -12,9 +12,10 @@ const names=(p:Performance)=>p.artistIds.map(id=>artists.find(a=>a.id===id)?.nam
     <div class="archive__filters" aria-label="Filter featured performances">
       {filters.map(([value,label],index)=><button type="button" data-featured-filter={value} aria-pressed={index===0?'true':'false'}>{label}</button>)}
     </div>
-    <p class="sr-only" aria-live="polite" data-featured-count>{performances.length} performances shown</p>
+    <p role="status" data-featured-count>{performances.length} performances shown</p>
+    <p data-featured-empty hidden>No featured performances in this series. Choose All performances to reset the filter.</p>
     <div class="archive__grid">
-      {performances.map((performance)=><div class="archive__item" data-featured-item data-series={performance.seriesId}><PerformanceCard performance={performance} artistNames={names(performance)} playable={availability[performance.youtubeId]!=='external-only'} /></div>)}
+      {performances.map((performance)=><div class="archive__item" data-featured-item data-series={performance.seriesId}><PerformanceCard performance={performance} artistNames={names(performance)} playable={availability[performance.youtubeId]!=='external-only'} preview={clips.find((clip)=>clip.performanceId===performance.id)} /></div>)}
     </div>
   </div>
 </section>

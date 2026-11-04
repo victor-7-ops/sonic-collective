@@ -1,14 +1,19 @@
 ---
 import type { CatalogItem } from '../lib/discovery';
+import type { Clip } from '../lib/schemas';
 import MediaImage from './MediaImage.astro';
 import RemoteThumbnail from './RemoteThumbnail.astro';
-interface Props { item:CatalogItem; }
-const {item}=Astro.props;
+import PerformancePreview from './PerformancePreview.astro';
+interface Props { item:CatalogItem; preview?: Clip; }
+const {item,preview}=Astro.props;
 ---
 <article class="performance-card">
-  <a class="card-link" href={item.href} aria-label={item.artistLabel?`${item.title} by ${item.artistLabel}`:item.title}>
-    {item.image.kind==='local'?<MediaImage class="performance-card__image media-frame" base={item.image.base} alt={item.image.alt} />:<RemoteThumbnail class="performance-card__image media-frame" url={item.image.url} alt={item.image.alt} />}
-  </a>
+  <div class="performance-card__media">
+    <a class="card-link" href={item.href} aria-label={item.artistLabel?`${item.title} by ${item.artistLabel}`:item.title}>
+      {item.image.kind==='local'?<MediaImage class="performance-card__image media-frame" base={item.image.base} alt={item.image.alt} />:<RemoteThumbnail class="performance-card__image media-frame" url={item.image.url} alt={item.image.alt} />}
+    </a>
+    {preview&&<PerformancePreview clip={preview} label={item.title} />}
+  </div>
   <div class="performance-card__body">
     <div class="performance-card__meta"><h2 class="performance-card__title"><a class="card-link" href={item.href}>{item.artistLabel??'Sonic Collective'}</a></h2><small>{item.seriesId==='sessions'?'Session':item.seriesId==='covers'?'Cover':'Latest upload'}</small></div>
     <div class="performance-card__meta"><a href={item.href}>{item.title}</a></div>

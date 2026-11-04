@@ -28,6 +28,6 @@ const description = artist.bio ?? `${artist.name} appears in ${appearances.lengt
         {artist.links.length > 0 && <nav class="artist-external-links" aria-label={`${artist.name} verified links`}>{artist.links.map((link) => <a class="button button--quiet" href={link.url} target="_blank" rel="noopener noreferrer">{link.label} ↗</a>)}</nav>}
       </div>
     </section>
-    <section class="profile-appearances"><h2>Performances</h2><div class="catalog-grid">{appearances.map((performance) => <PerformanceCard performance={performance} artistNames={performance.artistIds.map((id) => catalog.raw.artists.find((item) => item.id === id)?.name ?? '').filter(Boolean)} playable={catalog.availability[performance.youtubeId]!=='external-only'} />)}</div></section>
+    <section class="profile-appearances"><h2>Performances</h2><div class="catalog-grid">{appearances.map((performance) => <PerformanceCard performance={performance} artistNames={performance.artistIds.map((id) => catalog.raw.artists.find((item) => item.id === id)?.name ?? '').filter(Boolean)} playable={catalog.availability[performance.youtubeId]!=='external-only'} preview={catalog.clips.find((clip)=>clip.performanceId===performance.id)} />)}</div></section>
   </div></article>
 </BaseLayout>

@@ -30,8 +30,16 @@ if (dataNode) {
 const sessions = new WeakMap<HTMLElement, Session>();
 let uniqueFrameId = 0;
 
-function createStatusControl(session: Session, message: string, retry: boolean): void {
+function createStatusControl(session: Session, message: string, retry: boolean, playWithSound = false): void {
   session.status.replaceChildren(document.createTextNode(message));
+  if (playWithSound) {
+    const button = document.createElement('button');
+    button.type = 'button'; button.className = 'player-retry'; button.textContent = 'Play with sound';
+    button.addEventListener('click', () => {
+      try { session.player?.unMute(); session.player?.playVideo(); } catch { /* Native player controls remain available. */ }
+    });
+    session.status.append(button);
+  }
   if (retry) {
     const button = document.createElement('button');
     button.type = 'button'; button.className = 'player-retry'; button.textContent = 'Retry playback';
@@ -49,7 +57,9 @@ function stopSession(session: Session, statusMessage = ''): void {
   try { player?.pauseVideo(); } catch { /* Player may already be disconnected. */ }
   try { player?.destroy(); } catch { /* Cleanup continues if the API has already torn down its iframe. */ }
   session.iframe?.remove(); session.iframe = undefined;
+  session.surface.querySelector('picture')?.classList.remove('performance-player__poster--fading');
   session.surface.querySelector('picture')?.removeAttribute('hidden');
+  session.surface.removeAttribute('data-player-ready');
   session.surface.querySelector<HTMLElement>('[data-play-performance]')?.removeAttribute('hidden');
   if (statusMessage) createStatusControl(session, statusMessage, false);
 }
@@ -77,6 +87,7 @@ function errorMessage(code: number): string {
   return 'The YouTube player reported an error. Retry or use the external watch link.';
 }
 
+
 async function startPlayback(session: Session): Promise<void> {
   if (session.loading) return;
   if (session.player) { session.player.playVideo(); return; }
@@ -85,7 +96,7 @@ async function startPlayback(session: Session): Promise<void> {
   if (mediaCoordinator.getActiveOwner() !== session.ownerId) return;
   const request = ++session.request;
   createStatusControl(session, 'Loading YouTube player…', false);
-  session.surface.querySelector('picture')?.setAttribute('hidden', '');
+  session.surface.removeAttribute('data-player-ready');
   session.surface.querySelector<HTMLElement>('[data-play-performance]')?.setAttribute('hidden', '');
 
   const frame = document.createElement('iframe');
@@ -117,18 +128,29 @@ async function startPlayback(session: Session): Promise<void> {
           if (session.request !== request) return;
           if (session.timer !== undefined) window.clearTimeout(session.timer);
           session.timer = undefined; session.loading = false;
+          session.surface.setAttribute('data-player-ready', 'true');
+          const poster = session.surface.querySelector('picture');
+          poster?.classList.add('performance-player__poster--fading');
+          window.setTimeout(() => { if (session.request === request) poster?.setAttribute('hidden', ''); }, 160);
           createStatusControl(session, 'Player ready. Use the YouTube controls to play.', false);
         },
         onStateChange: (event) => {
           if (session.request !== request) return;
           if (event.data === YT.PlayerState.PLAYING) { session.loading = false; createStatusControl(session, 'Playing.', false); }
           else if (event.data === YT.PlayerState.PAUSED) createStatusControl(session, 'Paused.', false);
-          else if (event.data === YT.PlayerState.ENDED) createStatusControl(session, 'Playback ended.', false);
+          else if (event.data === YT.PlayerState.ENDED) {
+            createStatusControl(session, 'Playback ended.', false);
+            if (session.surface.closest('.hero')) {
+              session.surface.closest('.hero')?.querySelector('[data-playback-teaser]')?.removeAttribute('hidden');
+              mediaCoordinator.release(session.ownerId);
+              stopSession(session);
+            }
+          }
           else if (event.data === YT.PlayerState.BUFFERING) createStatusControl(session, 'Buffering…', false);
           else if (event.data === YT.PlayerState.UNSTARTED) createStatusControl(session, 'Player ready. Use the YouTube controls to play.', false);
         },
         onAutoplayBlocked: () => {
-          if (session.request === request) { session.loading = false; createStatusControl(session, 'Automatic playback was blocked. Use the YouTube player controls, or watch on YouTube.', false); }
+          if (session.request === request) { session.loading = false; createStatusControl(session, 'Automatic playback was blocked. Use the YouTube player controls, or play with sound.', false, true); }
         },
         onError: (event) => failSession(session, request, errorMessage(event.data ?? 0), true, event.data),
       },
@@ -141,8 +163,9 @@ async function startPlayback(session: Session): Promise<void> {
 
 document.querySelectorAll<HTMLAnchorElement>('[data-play-performance]').forEach((link) => {
   const record = records.get(link.dataset.playPerformance ?? '');
-  const surface = link.closest<HTMLElement>('[data-player-id]');
-  const status = document.querySelector<HTMLElement>('[data-player-status]');
+  const scope = link.closest<HTMLElement>('.hero') ?? link.closest<HTMLElement>('.performance-player');
+  const surface = scope?.querySelector<HTMLElement>('[data-player-id]');
+  const status = scope?.querySelector<HTMLElement>('[data-player-status]');
   if (!record || !surface || !status) return;
   const session: Session = { surface, status, record, ownerId: `canonical:${record.id}`, canonical: true, request: 0, loading: false };
   sessions.set(surface, session);

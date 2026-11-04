@@ -1,22 +1,62 @@
 ---
-import type { Performance, SiteConfig } from '../lib/schemas';
+import type { Clip, Performance, SiteConfig } from '../lib/schemas';
 import MediaImage from './MediaImage.astro';
-import { performanceUrl } from '../lib/urls';
-interface Props { performance: Performance; site: SiteConfig; playable?:boolean; }
-const {performance,site,playable=true}=Astro.props;
+import { youtubeUrl } from '../lib/urls';
+interface Props { performance: Performance; site: SiteConfig; artistNames: string[]; playable: boolean; embeddable: boolean; next?: { clip?: Clip; performance: Performance }; }
+const {performance,site,artistNames,playable,embeddable,next}=Astro.props;
 ---
 <section class="hero" aria-labelledby="hero-title">
   <div class="hero__layout wrap">
-    <div class="hero__copy">
-      <p class="eyebrow" style="color:var(--mint)">Independent voices. Shared frequencies.</p>
-      <h1 class="display hero__title" id="hero-title">SONIC<br />COLLECTIVE</h1>
-      <p class="hero__intro">A space for the voices you know.<br />And the ones you’re about to discover.</p>
-      <a class="hero__action" href={playable?performanceUrl(performance.id):site.channelUrl} aria-label={playable?'Watch '+performance.title+' performance':'Visit Sonic Collective on YouTube'}><span class="hero__play" aria-hidden="true">▶</span><span>{playable?'Watch performance':'Visit our channel'}</span></a>
-      <button class="motion-toggle" type="button" data-motion-toggle aria-pressed="false" hidden>Pause motion</button>
+    <div class="hero__feature performance-player__poster" data-player-id={performance.id} data-video-id={performance.youtubeId}>
+      <MediaImage class="hero__image" base={performance.id===site.hero.performanceId?site.hero.poster:performance.thumbnail} alt={performance.thumbnailAlt} sizes="(max-width: 760px) 100vw, 64vw" eager={true} />
     </div>
-    <figure class="hero__feature" data-decorative-drift>
-      <MediaImage class="hero__image media-frame" base={site.hero.poster} alt={performance.thumbnailAlt} sizes="(max-width: 760px) 100vw, 55vw" eager={true} />
-      <figcaption class="hero__caption"><span class="eyebrow">In the spotlight</span><strong>Playscape Vision</strong><span> / {performance.title}</span></figcaption>
-    </figure>
+    <div class="hero__copy">
+      <p class="eyebrow hero__cue">In the spotlight</p>
+      <p class="hero__artist">{artistNames.join(' & ')}</p>
+      <h1 class="display hero__title" id="hero-title">{performance.title}</h1>
+      <a class="hero__action" href={playable?youtubeUrl(performance.youtubeId):site.channelUrl} data-play-performance={embeddable?performance.id:undefined}><span class="hero__play" aria-hidden="true">▶</span>{playable?'Watch performance':'Visit our channel'}</a>
+      {embeddable&&<p class="performance-player__status" data-player-status role="status"></p>}
+      <div class="hero__links"><a class="text-link" href="/sessions/">Browse sessions <span aria-hidden="true">↗</span></a>{embeddable&&<a class="text-link" href={youtubeUrl(performance.youtubeId)}>YouTube <span aria-hidden="true">↗</span></a>}<button class="motion-toggle" type="button" data-motion-toggle aria-pressed="false" hidden>Pause motion</button></div>
+      {next&&embeddable&&<section class="hero__up-next" data-playback-teaser aria-label="Up next" hidden>
+        <h2>Up next</h2>
+        <p>{next.performance.title}</p>
+        {next.clip&&<>
+          <video class="hero__up-next-video" src={next.clip.src} poster={next.clip.poster} preload="none" playsinline aria-label={`Teaser for ${next.performance.title}`}></video>
+          <button type="button" class="button button--quiet" data-play-teaser>Play teaser</button>
+        </>}
+        <a class="text-link" href={youtubeUrl(next.performance.youtubeId)}>Watch full performance ↗</a>
+      </section>}
+    </div>
   </div>
 </section>
+<script>
+  import { mediaCoordinator } from '../lib/media-coordinator';
+
+  const teaser = document.querySelector('[data-playback-teaser]');
+  const video = teaser?.querySelector('video');
+  const play = teaser?.querySelector<HTMLButtonElement>('[data-play-teaser]');
+  if (video && play) {
+    const owner = 'up-next-teaser';
+    const stop = () => {
+      video.pause();
+      mediaCoordinator.release(owner);
+    };
+    play.addEventListener('click', async () => {
+      play.disabled = true;
+      mediaCoordinator.claim(owner, stop);
+      try {
+        if (mediaCoordinator.getActiveOwner() !== owner) return;
+        video.currentTime = 0;
+        await video.play();
+        play.hidden = true;
+      } catch {
+        stop();
+        play.textContent = 'Tap to play teaser';
+      } finally {
+        play.disabled = false;
+      }
+    });
+    video.addEventListener('timeupdate', () => { if (video.currentTime >= 8) stop(); });
+    video.addEventListener('ended', stop);
+  }
+</script>

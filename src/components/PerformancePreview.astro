@@ -1,0 +1,9 @@
+---
+import type { Clip } from '../lib/schemas';
+interface Props { clip?: Clip; label: string; }
+const { clip, label } = Astro.props;
+---
+{clip&&<div class="performance-preview" data-card-preview>
+  <video class="performance-preview__video" data-preview-video data-src={clip.src} poster={clip.poster} width={clip.width} height={clip.height} playsinline muted preload="none" hidden aria-label={`Silent preview of ${label}`}></video>
+  <button class="performance-preview__button" type="button" data-preview-button hidden aria-pressed="false">Preview</button>
+</div>}

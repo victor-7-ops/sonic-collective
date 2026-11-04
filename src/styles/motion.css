@@ -1,8 +1,6 @@
-[data-decorative-drift] img { animation:hero-art-drift 24s ease-in-out infinite alternate; animation-play-state:paused; transform-origin:50% 50%; }
-html.motion-active [data-decorative-drift] img { animation-play-state:running; }
-@keyframes hero-art-drift { from { transform:scale(1) translate3d(0,0,0); } to { transform:scale(1.025) translate3d(-.35%,.25%,0); } }
-[data-reveal-state="waiting"] { opacity:0; transform:translateY(14px); }
-[data-reveal-state="visible"] { opacity:1; transform:translateY(0); transition:opacity 380ms ease,transform 380ms ease; }
-html.motion-paused [data-reveal-state="waiting"],html.motion-reduced [data-reveal-state="waiting"] { opacity:1; transform:none; }
-@media(prefers-reduced-motion:reduce) { [data-decorative-drift] img { animation:none!important; transform:none!important; } [data-reveal-state="waiting"] { opacity:1; transform:none; } }
-@media(max-width:760px) { .rena-teaser__video { max-height:190px; } }
+@keyframes studio-cue { from { transform: scaleX(0); } }
+@media (prefers-reduced-motion: no-preference) {
+  html.motion-active .hero__cue::before { animation: studio-cue 320ms ease-out both; }
+  html.motion-active .hero__play { transition: background-color 140ms ease-out; }
+  .hero__action:active .hero__play { background: var(--mint); }
+}
