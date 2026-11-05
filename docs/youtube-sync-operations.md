@@ -8,7 +8,7 @@ Live mode requires `YOUTUBE_API_KEY` in the runner environment before any reques
 
 `npm run youtube:hydrate -- --preview` is for local preview. A publication runner must supply `YOUTUBE_PUBLICATION_ORIGIN` and `YOUTUBE_FEED_URL` through its supported service context; the feed must be `/youtube-feed.json` on that exact origin. The hydrated baseline and proof are ignored under `.local/`. Credentials must not be put in either file or in command-line arguments.
 
-The API key and the hosted Sites runner are not configured by this project packet. No automatic schedule or live synchronization is active until those capabilities are verified separately.
+The GitHub Actions workflow supplies the API key and persists its validated public snapshot in the repository.
 
 Production publishes search metadata at https://sonic-collective.vercel.app. Preview deployments retain noindex by default.
 

@@ -4,7 +4,7 @@ import overrides from '../data/youtube-overrides.json';
 import { getRawCatalog } from './catalog';
 import { mergeCatalog } from './merge-catalog';
 import { performanceUrl } from './urls';
-import { emptySnapshot, makeSnapshot, validateSnapshot, type YoutubeSnapshot } from './youtube-import';
+import { makeSnapshot, validateSnapshot, type YoutubeSnapshot } from './youtube-import';
 import type { Artist } from './schemas';
 
 export type CatalogItem = {
