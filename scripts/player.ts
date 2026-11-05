@@ -140,10 +140,12 @@ async function startPlayback(session: Session): Promise<void> {
           else if (event.data === YT.PlayerState.PAUSED) createStatusControl(session, 'Paused.', false);
           else if (event.data === YT.PlayerState.ENDED) {
             createStatusControl(session, 'Playback ended.', false);
-            if (session.surface.closest('.hero')) {
-              session.surface.closest('.hero')?.querySelector('[data-playback-teaser]')?.removeAttribute('hidden');
+            const hero = session.surface.closest('.hero');
+            if (hero) {
+              hero.querySelector('[data-playback-teaser]')?.removeAttribute('hidden');
               mediaCoordinator.release(session.ownerId);
               stopSession(session);
+              hero.dispatchEvent(new Event('spotlight-ended'));
             }
           }
           else if (event.data === YT.PlayerState.BUFFERING) createStatusControl(session, 'Buffering…', false);

@@ -42,25 +42,37 @@ const loopSrc = previewClip?.performanceId === performance.id ? site.hero.portra
   const play = teaser?.querySelector<HTMLButtonElement>('[data-play-teaser]');
   if (video && play) {
     const owner = 'up-next-teaser';
+    let stopTimer: number | undefined;
     const stop = () => {
+      window.clearTimeout(stopTimer);
       video.pause();
+      play.hidden = false;
       mediaCoordinator.release(owner);
     };
-    play.addEventListener('click', async () => {
+    const start = async (automatic: boolean) => {
       play.disabled = true;
       mediaCoordinator.claim(owner, stop);
       try {
         if (mediaCoordinator.getActiveOwner() !== owner) return;
+        video.muted = automatic;
         video.currentTime = 0;
         await video.play();
+        if (mediaCoordinator.getActiveOwner() !== owner) return;
         play.hidden = true;
+        if (automatic) stopTimer = window.setTimeout(stop, 4500);
       } catch {
         stop();
-        play.textContent = 'Tap to play teaser';
+        if (!automatic) play.textContent = 'Tap to play teaser';
       } finally {
         play.disabled = false;
       }
+    };
+    play.addEventListener('click', () => void start(false));
+    teaser?.closest('.hero')?.addEventListener('spotlight-ended', () => {
+      if (document.hidden || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      void start(true);
     });
+    document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); });
     video.addEventListener('timeupdate', () => { if (video.currentTime >= 8) stop(); });
     video.addEventListener('ended', stop);
   }

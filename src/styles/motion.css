@@ -31,6 +31,21 @@
   from { opacity: .72; transform: translateY(var(--premiere-rise)); }
 }
 
+@keyframes premiere-lettering {
+  from { clip-path: inset(0 100% -0.2em 0); }
+  to { clip-path: inset(0 0 -0.2em 0); }
+}
+
+.hero__intro::after {
+  display: block;
+  width: 2.5rem;
+  height: 2px;
+  margin-top: .5rem;
+  background: var(--mint);
+  transform-origin: left;
+  content: '';
+}
+
 @keyframes premiere-trace {
   from { transform: scaleX(0); }
 }
@@ -51,8 +66,12 @@
   }
 
   html.motion-active .hero__cue { animation: premiere-type 320ms ease-out 100ms both; }
-  html.motion-active .hero__title { animation: premiere-type 500ms ease-out 170ms both; }
+  html.motion-active .hero__title { animation: premiere-lettering 560ms cubic-bezier(.2, .7, .2, 1) 130ms both; }
   html.motion-active .hero__intro { animation: premiere-type 460ms ease-out 270ms both; }
+  html.motion-active .hero__intro::after {
+    animation: premiere-trace 380ms ease-out 480ms both;
+  }
+
   html.motion-active .hero__feature .performance-player__play {
     animation: premiere-watch 380ms ease-out 520ms;
   }
