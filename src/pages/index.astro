@@ -32,8 +32,8 @@ const playbackRecords=[...catalog.performances.map(({id,title,youtubeId})=>({id,
 ---
 <BaseLayout title="Sonic Collective — Independent voices" description="A home for Filipino independent music, featuring Sonic Sessions and Sonic Covers." theme="dark" currentPath="/" playbackRecords={playbackRecords}>
   {hero&&<HeroPerformance performance={hero} site={catalog.site} artistNames={catalog.artists.filter(artist=>hero.artistIds.includes(artist.id)).map(artist=>artist.name)} playable={catalog.availability[hero.youtubeId]!=='unavailable'} embeddable={canEmbed(hero.youtubeId)} next={next} />}
-  <FeaturedArchive performances={featured} artists={catalog.artists} availability={catalog.availability} clips={catalog.clips} />
   {teaserClip&&teaserPerformance&&<RenaTeaser clip={teaserClip} performance={teaserPerformance} loopSrc={catalog.site.hero.portraitLoopSrc} />}
+  <FeaturedArchive performances={featured} artists={catalog.artists} availability={catalog.availability} clips={catalog.clips} />
   <LatestUploads items={latest} clips={catalog.clips} />
   <CoversSection performances={covers} artists={catalog.artists} availability={catalog.availability} clips={catalog.clips} />
   <ArtistStrip artists={featuredArtists} appearanceCounts={appearanceCounts} />
