@@ -22,6 +22,7 @@ const {item,preview}=Astro.props;
     {item.artistIds.length>0&&<p class="catalog-artists">{item.artistIds.map(id=><a href={artistUrl(id)}>{artists.find(artist=>artist.id===id)?.name} ↗</a>)}</p>}
     <div class="performance-card__meta"><small>{item.seriesId==='sessions'?'Session':item.seriesId==='covers'?'Cover':'Latest upload'}</small></div>
     <div class="performance-card__meta"><a href={item.href}>{item.title}</a></div>
+    {item.fullPerformance&&<a class="text-link" href={item.fullPerformance.href}>Watch full performance ↗</a>}
     {item.embeddable&&<button class="performance-card__quick-watch" type="button" data-watch-id={item.id} hidden aria-label={`Quick watch ${item.title}`}>Quick watch</button>}
   </div>
 </article>

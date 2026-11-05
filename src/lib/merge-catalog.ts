@@ -8,6 +8,7 @@ export const youtubeOverridesSchema = z.array(z.object({
   seriesId: z.enum(['sessions','covers']).nullable().optional(),
   thumbnailUrl: z.url().optional(),
   embeddable: z.boolean().optional(),
+  fullYoutubeId: z.string().regex(/^[A-Za-z0-9_-]{11}$/).optional(),
   format: z.enum(['full','short']).optional(),
   artistIds: z.array(z.string().min(1)).optional(),
 }));

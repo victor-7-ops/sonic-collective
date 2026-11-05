@@ -1,11 +1,11 @@
 ---
-import type { Artist } from '../lib/schemas'; import MediaImage from './MediaImage.astro';
+import type { Artist } from '../lib/schemas'; import ArtistPortrait from './ArtistPortrait.astro';
 interface Props { artist: Artist; appearanceCount: number; }
 const {artist,appearanceCount}=Astro.props;
 ---
 <article class="artist-card">
   <a class="card-link" href={`/artists/${encodeURIComponent(artist.id)}/`} aria-label={`View ${artist.name}, ${appearanceCount} performances`}>
-    <MediaImage class="artist-card__image media-frame" base={artist.portrait} alt={artist.portraitAlt} focalPoint={artist.focalPoint} />
+    <ArtistPortrait artist={artist} />
     <div class="artist-card__body"><h2 class="artist-card__title">{artist.name}</h2><span class="muted">{appearanceCount} {appearanceCount===1?'performance':'performances'}</span></div>
   </a>
 </article>

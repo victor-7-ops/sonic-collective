@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import Analytics from '@vercel/analytics/astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import QuickWatchDialog from '../components/QuickWatchDialog.astro';
@@ -38,5 +39,10 @@ const publicPlaybackData=JSON.stringify(playbackRecords).replace(/</g,'\\u003c')
     <script>import '../../scripts/navigation.ts';</script>
     <script>import '../../scripts/player.ts';</script>
     <script>import '../../scripts/card-previews.ts';</script>
+    {import.meta.env.VERCEL_ENV==='production'&&<>
+      <script is:inline>window.webAnalyticsBeforeSend = function(event) { return {...event, url:event.url.split('?')[0].split('#')[0]}; };</script>
+      <Analytics />
+    </>}
+    <script>import '../../scripts/engagement.ts';</script>
   </body>
 </html>

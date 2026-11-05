@@ -25,6 +25,7 @@ if(authoredIds.size!==authored.length)fail('Authored source contains duplicate Y
 const imported=active?(snapshot.videos??[]).filter((video)=>!authoredIds.has(video.youtubeId)&&!overrides.some((item)=>item.youtubeId===video.youtubeId&&item.excluded)):[];
 const availableIds=active?new Set((snapshot.videos??[]).map((video)=>video.youtubeId)):new Set();
 const visibleArtistIds=new Set(approved.filter((record)=>!overrides.some((item)=>item.youtubeId===record.youtubeId&&item.excluded)&&(!active||availableIds.has(record.youtubeId))).flatMap((record)=>record.artistIds));
+for(const item of overrides) if(active&&availableIds.has(item.youtubeId)&&!item.excluded) for(const id of item.artistIds??[]) visibleArtistIds.add(id);
 const routes=['404.html','index.html','about/index.html','privacy/index.html','sessions/index.html','artists/index.html',...approved.map((record)=>`sessions/${record.id}/index.html`),...artists.filter((artist)=>visibleArtistIds.has(artist.id)).map((artist)=>`artists/${artist.id}/index.html`),...imported.map((video)=>`watch/${video.youtubeId}/index.html`),...legacy.map((route)=>`watch/${route.youtubeId}/index.html`)];
 if(new Set(routes).size!==routes.length)fail('Expected output routes are not unique');
 for(const route of routes)if(!files.includes(resolve(dist,route)))fail(`Missing output page: /${route}`);

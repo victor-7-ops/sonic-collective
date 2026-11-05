@@ -4,7 +4,7 @@ export const seriesIdSchema = z.enum(['sessions', 'covers']);
 export const publicPathSchema = z.string().regex(/^\/(?!\/)[^?#]+$/).refine((p) => !p.split('/').includes('..'), 'must be a public-root path');
 export const artistSchema = z.object({
   id: z.string().min(1), name: z.string().min(1), aliases: z.array(z.string()),
-  kind: z.enum(['solo', 'group']), portrait: publicPathSchema, portraitAlt: z.string().min(1),
+  kind: z.enum(['solo', 'group']), portrait: publicPathSchema.optional(), portraitAlt: z.string().min(1).optional(),
   focalPoint: z.string().min(1), portraitLayout: z.enum(['portrait', 'landscape']),
   bio: z.string().optional(), links: z.array(z.object({ label: z.string().min(1), url: z.url().refine((u) => u.startsWith('https://')) })),
   featuredOrder: z.number().optional(),
@@ -25,6 +25,7 @@ export const seriesSchema = z.object({ id: seriesIdSchema, title: z.string().min
 export const siteConfigSchema = z.object({
   name: z.literal('Sonic Collective'), channelUrl: z.url().refine((u) => u.startsWith('https://')),
   hero: z.object({ performanceId: z.string(), poster: publicPathSchema, portraitClipId: z.string().optional(), portraitPerformanceId: z.string().optional(), portraitPoster: publicPathSchema.optional(), portraitLoopSrc: publicPathSchema.optional(), landscapeSrc: publicPathSchema.optional() }),
+  spotlightPerformanceIds: z.array(z.string()).min(1).max(4).optional(),
   featuredPerformanceIds: z.array(z.string()), featuredCoverIds: z.array(z.string()), featuredArtistIds: z.array(z.string()),
 });
 export const mediaManifestEntrySchema = z.object({

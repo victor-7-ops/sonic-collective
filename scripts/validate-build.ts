@@ -9,7 +9,7 @@ import { validateSnapshot } from '../src/lib/youtube-import.js';
 const root=process.cwd(),dist=resolve(root,'dist');
 let snapshot;
 try{snapshot=validateSnapshot(JSON.parse(await readFile(resolve(root,'.local/youtube-snapshot.json'),'utf8')),'UCCxO94rfXnMpYf7DH_sd6Bw');}
-catch(error){if((error as NodeJS.ErrnoException).code==='ENOENT')snapshot={initialized:false,videos:[],expiresAt:null,purged:undefined};else throw error;}
+catch(error){if((error as NodeJS.ErrnoException).code==='ENOENT')snapshot=validateSnapshot(JSON.parse(await readFile(resolve(root,'src/data/youtube-snapshot.json'),'utf8')),'UCCxO94rfXnMpYf7DH_sd6Bw');else throw error;}
 const active=snapshot.initialized&&!snapshot.purged&&!!snapshot.expiresAt&&Date.parse(snapshot.expiresAt)>Date.now();
 const approved=performances.filter((item)=>item.approvedForSite),authoredIds=new Set(performances.map((item)=>item.youtubeId));
 if(authoredIds.size!==performances.length)throw new Error('Authored catalog contains duplicate YouTube IDs');
@@ -18,6 +18,7 @@ const exclusionOverrides=overrides as {youtubeId:string;excluded?:boolean}[];
 const oldRoutes=legacyRoutes as {youtubeId:string;performanceId:string}[];
 const excluded=new Set(exclusionOverrides.filter((item)=>item.excluded).map((item)=>item.youtubeId));
 const visibleArtists=new Set(approved.filter((item)=>!excluded.has(item.youtubeId)&&(!active||available.has(item.youtubeId))).flatMap((item)=>item.artistIds));
+for(const item of overrides) if(active&&available.has(item.youtubeId)&&!excluded.has(item.youtubeId)) for(const id of item.artistIds??[]) visibleArtists.add(id);
 const routes=['404.html','index.html','about/index.html','privacy/index.html','sessions/index.html','artists/index.html',...approved.map((item)=>`sessions/${item.id}/index.html`),...artists.filter((artist)=>visibleArtists.has(artist.id)).map((artist)=>`artists/${artist.id}/index.html`),...(active?snapshot.videos.filter((item)=>!authoredIds.has(item.youtubeId)&&!excluded.has(item.youtubeId)).map((item)=>`watch/${item.youtubeId}/index.html`):[]),...oldRoutes.map((item)=>`watch/${item.youtubeId}/index.html`)];
 const errors:string[]=[];const seen=new Set<string>();
 for(const route of routes){if(seen.has(route))errors.push(`Duplicate output route: /${route}`);seen.add(route);try{await access(resolve(dist,route));}catch{errors.push(`Missing output route: /${route}`);}}

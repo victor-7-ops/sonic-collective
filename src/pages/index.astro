@@ -20,7 +20,7 @@ const nextOptions=[...featured,...covers].filter(performance=>performance.id!==h
   performance,clip:catalog.clips.find(clip=>clip.performanceId===performance.id),
 }));
 const next=nextOptions.find(option=>option.clip&&canEmbed(option.performance.youtubeId))??nextOptions.find(option=>option.clip)??nextOptions[0];
-const spotlights=[hero,...featured.filter(item=>item.id!==hero?.id)].filter((item):item is NonNullable<typeof item>=>!!item).slice(0,4);
+const spotlights=(catalog.site.spotlightPerformanceIds??[hero?.id,...featured.map(item=>item.id)]).flatMap(id=>{const item=catalog.performances.find(performance=>performance.id===id);return item&&catalog.availability[item.youtubeId]!=='unavailable'?[item]:[];}).slice(0,4);
 const featuredArtists=catalog.site.featuredArtistIds.map((id)=>catalog.artists.find((a)=>a.id===id)).filter((a)=>a!==undefined);
 const teaserPerformance=catalog.performances.find(item=>item.id===catalog.site.hero.portraitPerformanceId);
 const teaserClip=catalog.clips.find((c)=>c.id===catalog.site.hero.portraitClipId);

@@ -29,7 +29,10 @@
   },
   {
     "youtubeId": "0IYH_xe7xZE",
-    "format": "full"
+    "format": "full",
+    "artistIds": [
+      "pneuma"
+    ]
   },
   {
     "youtubeId": "0o1r7ykkfqE",
@@ -44,18 +47,23 @@
     "format": "short",
     "artistIds": [
       "gerald"
-    ]
+    ],
+    "fullYoutubeId": "SsRgq9fHKjk"
   },
   {
     "youtubeId": "0q9Chr7wl-4",
     "format": "short",
     "artistIds": [
       "nathan-steve"
-    ]
+    ],
+    "fullYoutubeId": "CL4bSIy4AYg"
   },
   {
     "youtubeId": "1GWSCTFrTKg",
-    "format": "full"
+    "format": "full",
+    "artistIds": [
+      "nami"
+    ]
   },
   {
     "youtubeId": "1RBSbh4v1vo",
@@ -63,21 +71,26 @@
   },
   {
     "youtubeId": "2If_iAt5L6U",
-    "format": "full"
+    "format": "full",
+    "artistIds": [
+      "stallions-of-the-burning-church"
+    ]
   },
   {
     "youtubeId": "3jDOWF4MaUM",
     "format": "short",
     "artistIds": [
       "gerald"
-    ]
+    ],
+    "fullYoutubeId": "VGQ2HB3yLVE"
   },
   {
     "youtubeId": "4_rJb2Ncn7E",
     "format": "short",
     "artistIds": [
       "gerald"
-    ]
+    ],
+    "fullYoutubeId": "AnJXSQ-pk4k"
   },
   {
     "youtubeId": "4lvJRmvuQ6s",
@@ -88,11 +101,19 @@
   },
   {
     "youtubeId": "5Q36BeTPGw0",
-    "format": "short"
+    "format": "short",
+    "fullYoutubeId": "Sukfc_CuG4w",
+    "artistIds": [
+      "daniel-miguel"
+    ]
   },
   {
     "youtubeId": "5xNsVtsrViE",
-    "format": "short"
+    "format": "short",
+    "fullYoutubeId": "iHzzkeXN8f0",
+    "artistIds": [
+      "uni"
+    ]
   },
   {
     "youtubeId": "8_FWvC1BLKE",
@@ -107,15 +128,22 @@
     "artistIds": [
       "rena",
       "bianca"
-    ]
+    ],
+    "fullYoutubeId": "dYGDXH9xzlA"
   },
   {
     "youtubeId": "8RzuwEk1fj0",
-    "format": "full"
+    "format": "full",
+    "artistIds": [
+      "stallions-of-the-burning-church"
+    ]
   },
   {
     "youtubeId": "8UCpUiaqQVI",
-    "format": "full"
+    "format": "full",
+    "artistIds": [
+      "pneuma"
+    ]
   },
   {
     "youtubeId": "9yzwJe8Ax8k",
@@ -123,7 +151,8 @@
     "artistIds": [
       "gerald",
       "rena"
-    ]
+    ],
+    "fullYoutubeId": "0o1r7ykkfqE"
   },
   {
     "youtubeId": "A0EOj8aeNVw",
@@ -138,11 +167,18 @@
   },
   {
     "youtubeId": "A4LnJ1uDm3s",
-    "format": "full"
+    "format": "full",
+    "artistIds": [
+      "stallions-of-the-burning-church"
+    ]
   },
   {
     "youtubeId": "A7XpylxqrV0",
-    "format": "full"
+    "format": "full",
+    "artistIds": [
+      "cg",
+      "chav"
+    ]
   },
   {
     "youtubeId": "aHw9fLZ_4Co",
@@ -163,7 +199,8 @@
     "format": "short",
     "artistIds": [
       "playscape-vision"
-    ]
+    ],
+    "fullYoutubeId": "4lvJRmvuQ6s"
   },
   {
     "youtubeId": "CGgCV-I0ACE",
@@ -192,25 +229,31 @@
     "artistIds": [
       "gerald",
       "rena"
-    ]
+    ],
+    "fullYoutubeId": "0o1r7ykkfqE"
   },
   {
     "youtubeId": "d-1lgnI8s4U",
     "format": "short",
     "artistIds": [
       "gerald"
-    ]
+    ],
+    "fullYoutubeId": "AnJXSQ-pk4k"
   },
   {
     "youtubeId": "DpkUs6izNNI",
     "format": "short",
     "artistIds": [
       "playscape-vision"
-    ]
+    ],
+    "fullYoutubeId": "l6jOj6cOdoM"
   },
   {
     "youtubeId": "DTqmvJZmcTQ",
-    "format": "full"
+    "format": "full",
+    "artistIds": [
+      "pneuma"
+    ]
   },
   {
     "youtubeId": "dYGDXH9xzlA",
@@ -225,14 +268,16 @@
     "format": "short",
     "artistIds": [
       "gerald"
-    ]
+    ],
+    "fullYoutubeId": "AnJXSQ-pk4k"
   },
   {
     "youtubeId": "fFWQrqbLVBU",
     "format": "short",
     "artistIds": [
       "jade-makawili"
-    ]
+    ],
+    "fullYoutubeId": "Xcys2EjQGPQ"
   },
   {
     "youtubeId": "g6Kg7I2XSd4",
@@ -240,11 +285,17 @@
   },
   {
     "youtubeId": "GtBMvl8U83s",
-    "format": "full"
+    "format": "full",
+    "artistIds": [
+      "kidz-these-days"
+    ]
   },
   {
     "youtubeId": "H08axpSMLBI",
-    "format": "full"
+    "format": "full",
+    "artistIds": [
+      "natsuki"
+    ]
   },
   {
     "youtubeId": "hg6iRsw-uiI",
@@ -256,11 +307,17 @@
   },
   {
     "youtubeId": "hwreKBw4hiM",
-    "format": "full"
+    "format": "full",
+    "artistIds": [
+      "nami"
+    ]
   },
   {
     "youtubeId": "iHzzkeXN8f0",
-    "format": "full"
+    "format": "full",
+    "artistIds": [
+      "uni"
+    ]
   },
   {
     "youtubeId": "iNY1Yw58_vQ",
@@ -271,7 +328,8 @@
     "format": "short",
     "artistIds": [
       "kalii-skrums"
-    ]
+    ],
+    "fullYoutubeId": "8_FWvC1BLKE"
   },
   {
     "youtubeId": "jdGvuJLGgoQ",
@@ -285,7 +343,8 @@
     "format": "short",
     "artistIds": [
       "zera"
-    ]
+    ],
+    "fullYoutubeId": "CGgCV-I0ACE"
   },
   {
     "youtubeId": "knh3roGTEKc",
@@ -300,22 +359,33 @@
   },
   {
     "youtubeId": "LHyK398R_8g",
-    "format": "short"
+    "format": "short",
+    "fullYoutubeId": "Sukfc_CuG4w",
+    "artistIds": [
+      "daniel-miguel"
+    ]
   },
   {
     "youtubeId": "mJOmL8M-OQ8",
-    "format": "full"
+    "format": "full",
+    "artistIds": [
+      "stallions-of-the-burning-church"
+    ]
   },
   {
     "youtubeId": "n_a8eDp1SiE",
-    "format": "short"
+    "format": "short",
+    "artistIds": [
+      "natsuki"
+    ]
   },
   {
     "youtubeId": "nDiY6ziWfe0",
     "format": "short",
     "artistIds": [
       "gerald"
-    ]
+    ],
+    "fullYoutubeId": "SsRgq9fHKjk"
   },
   {
     "youtubeId": "ny33jxxqFv8",
@@ -329,29 +399,39 @@
     "format": "short",
     "artistIds": [
       "nathan-steve"
-    ]
+    ],
+    "fullYoutubeId": "cpdep5VAh3A"
   },
   {
     "youtubeId": "Ogz1ynNOy6Y",
     "format": "short",
     "artistIds": [
       "blair"
-    ]
+    ],
+    "fullYoutubeId": "sBkITDDRLfw"
   },
   {
     "youtubeId": "oV2of0gEN-I",
-    "format": "short"
+    "format": "short",
+    "fullYoutubeId": "iHzzkeXN8f0",
+    "artistIds": [
+      "uni"
+    ]
   },
   {
     "youtubeId": "OXgeD7BN5fE",
     "format": "short",
     "artistIds": [
       "rena"
-    ]
+    ],
+    "fullYoutubeId": "PnI-kRS5OdQ"
   },
   {
     "youtubeId": "P7fztFgCFaI",
-    "format": "full"
+    "format": "full",
+    "artistIds": [
+      "nami"
+    ]
   },
   {
     "youtubeId": "pIDMq-3fwQo",
@@ -359,14 +439,16 @@
     "artistIds": [
       "gerald",
       "rena"
-    ]
+    ],
+    "fullYoutubeId": "0o1r7ykkfqE"
   },
   {
     "youtubeId": "PjFfvmeVKt0",
     "format": "short",
     "artistIds": [
       "gerald"
-    ]
+    ],
+    "fullYoutubeId": "aHw9fLZ_4Co"
   },
   {
     "youtubeId": "PnI-kRS5OdQ",
@@ -377,11 +459,18 @@
   },
   {
     "youtubeId": "pSsThYGhiVE",
-    "format": "full"
+    "format": "full",
+    "artistIds": [
+      "natsuki"
+    ]
   },
   {
     "youtubeId": "QQ0bxsJNPHc",
-    "format": "short"
+    "format": "short",
+    "fullYoutubeId": "GtBMvl8U83s",
+    "artistIds": [
+      "kidz-these-days"
+    ]
   },
   {
     "youtubeId": "QrlWqqazFYM",
@@ -407,7 +496,11 @@
   },
   {
     "youtubeId": "S6OfHVxHX0Y",
-    "format": "short"
+    "format": "short",
+    "fullYoutubeId": "Sukfc_CuG4w",
+    "artistIds": [
+      "daniel-miguel"
+    ]
   },
   {
     "youtubeId": "SsRgq9fHKjk",
@@ -418,14 +511,18 @@
   },
   {
     "youtubeId": "Sukfc_CuG4w",
-    "format": "full"
+    "format": "full",
+    "artistIds": [
+      "daniel-miguel"
+    ]
   },
   {
     "youtubeId": "T07A7oqmI_M",
     "format": "short",
     "artistIds": [
       "rena"
-    ]
+    ],
+    "fullYoutubeId": "QTdSU6ZDYkw"
   },
   {
     "youtubeId": "VGQ2HB3yLVE",
@@ -439,7 +536,8 @@
     "format": "short",
     "artistIds": [
       "bianca"
-    ]
+    ],
+    "fullYoutubeId": "pdJi4gDwlnI"
   },
   {
     "youtubeId": "vVrs_bfj56w",
@@ -450,7 +548,8 @@
     "format": "short",
     "artistIds": [
       "gerald"
-    ]
+    ],
+    "fullYoutubeId": "SsRgq9fHKjk"
   },
   {
     "youtubeId": "Xcys2EjQGPQ",
@@ -461,22 +560,32 @@
   },
   {
     "youtubeId": "XlcltOiBb6s",
-    "format": "full"
+    "format": "full",
+    "artistIds": [
+      "adrn"
+    ]
   },
   {
     "youtubeId": "xnFHEP3gxvA",
-    "format": "full"
+    "format": "full",
+    "artistIds": [
+      "stallions-of-the-burning-church"
+    ]
   },
   {
     "youtubeId": "xoQMYEcVk1o",
-    "format": "full"
+    "format": "full",
+    "artistIds": [
+      "natsuki"
+    ]
   },
   {
     "youtubeId": "Xwj3qKXDS_U",
     "format": "short",
     "artistIds": [
       "bianca"
-    ]
+    ],
+    "fullYoutubeId": "XxdymAo4arQ"
   },
   {
     "youtubeId": "XxdymAo4arQ",

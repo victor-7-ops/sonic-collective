@@ -43,3 +43,19 @@ test('reviewed format metadata rejects guessed enum values and malformed video I
   assert.equal(youtubeOverridesSchema.safeParse([{youtubeId:'AbCdEfGhIjK',format:'maybe-short'}]).success,false);
   assert.equal(youtubeOverridesSchema.safeParse([{youtubeId:'bad',format:'full'}]).success,false);
 });
+
+test('reviewed Short links point to full videos and preserve known artist IDs',async()=>{
+  const {readFile}=await import('node:fs/promises');
+  const {youtubeOverridesSchema}=await import('../src/lib/merge-catalog.js');
+  const rows=youtubeOverridesSchema.parse(JSON.parse(await readFile(new URL('../src/data/youtube-overrides.json',import.meta.url),'utf8')));
+  const artists=JSON.parse(await readFile(new URL('../src/data/artists.json',import.meta.url),'utf8')) as {id:string}[];
+  assert.equal(new Set(rows.map(item=>item.youtubeId)).size,rows.length);
+  for(const item of rows) {
+    for(const id of item.artistIds??[]) assert.ok(artists.some(artist=>artist.id===id));
+    if(item.fullYoutubeId) {
+      assert.equal(item.format,'short');
+      assert.equal(rows.find(target=>target.youtubeId===item.fullYoutubeId)?.format,'full');
+      assert.notEqual(item.fullYoutubeId,item.youtubeId);
+    }
+  }
+});

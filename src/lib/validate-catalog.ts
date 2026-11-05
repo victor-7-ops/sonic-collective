@@ -26,9 +26,12 @@ export function validateCatalog(input: unknown, manifestInput: unknown, fileExis
     else for(const v of entry.data.variants) if(!fileExists(v.src)) errors.push(`performance.${p.id}.thumbnail: missing file ${v.src}`);
   }
   for (const a of c.artists) {
+    if (a.portrait) {
+    if(!a.portraitAlt) errors.push(`artist.${a.id}.portraitAlt: required for portrait`);
     const entry=mediaManifestEntrySchema.safeParse(manifest[a.portrait]);
     if (!entry.success) errors.push(`artist.${a.id}.portrait: missing or invalid media manifest entry`);
     else for(const v of entry.data.variants) if(!fileExists(v.src)) errors.push(`artist.${a.id}.portrait: missing file ${v.src}`);
+    }
     for (const link of a.links) if (!link.url.startsWith('https://')) errors.push(`artist.${a.id}.links: only HTTPS URLs are allowed`);
   }
   for(const clip of c.clips){
@@ -40,6 +43,7 @@ export function validateCatalog(input: unknown, manifestInput: unknown, fileExis
   const checkFeatured=<T extends {id:string} & Partial<Pick<import('./schemas').Performance,'approvedForSite'|'seriesId'>>>(kind:string,ids:string[],records:Map<string,T>,series?:string)=>{
     for(const id of ids){const item=records.get(id);if(!item)errors.push(`site.${kind}: unknown id ${id}`);else if(release&&item.approvedForSite===false)errors.push(`site.${kind}: ${id} is not approved`);else if(series&&item.seriesId!==series)errors.push(`site.${kind}: ${id} is not in ${series}`);}
   };
+  if(c.site.spotlightPerformanceIds) checkFeatured('spotlightPerformanceIds',c.site.spotlightPerformanceIds,perfs);
   checkFeatured('featuredPerformanceIds',c.site.featuredPerformanceIds,perfs);
   checkFeatured('featuredCoverIds',c.site.featuredCoverIds,perfs,'covers');
   const artistMap=new Map(c.artists.map((x)=>[x.id,x])); checkFeatured('featuredArtistIds',c.site.featuredArtistIds,artistMap);

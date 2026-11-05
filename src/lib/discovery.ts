@@ -13,6 +13,7 @@ const overrides=youtubeOverridesSchema.parse(rawOverrides);
 export type CatalogItem = {
   id:string;source:'curated'|'youtube';title:string;artistLabel?:string;artistIds:string[];searchText:string;
   seriesId:'sessions'|'covers'|null;youtubeId:string;href:string;publishedAt?:string;
+  fullPerformance?: {title:string;href:string};
   image:{kind:'local';base:string;alt:string}|{kind:'youtube';url:string;alt:string};embeddable:boolean;format?:'full'|'short';featuredOrder?:number;
 };
 export async function getYoutubeSnapshot():Promise<YoutubeSnapshot> {
@@ -39,6 +40,16 @@ export async function getDiscoveryCatalog() {
     const names=participants.map(artist=>artist.name);
     return {id:`yt-${video.youtubeId}`,source:'youtube',format:review?.format,title:video.title,artistIds:participants.map(artist=>artist.id),artistLabel:names.length?names.join(' & '):undefined,searchText:[video.title,...names,...participants.flatMap(artist=>artist.aliases)].join(' '),seriesId:video.seriesId,youtubeId:video.youtubeId,href:`/watch/${video.youtubeId}/`,publishedAt:video.publishedAt,image:{kind:'youtube',url:video.thumbnailUrl,alt:`Thumbnail for ${video.title}`},embeddable:video.embeddable};
   });
+  const allItems=[...curated,...imported];
+  for(const item of imported) {
+    const targetId=editorial.get(item.youtubeId)?.fullYoutubeId;
+    if(!targetId) continue;
+    if(item.format!=='short') throw new Error('Only Shorts can link to a full performance');
+    const review=editorial.get(targetId);
+    if(review?.format!=='full'||targetId===item.youtubeId) throw new Error('Invalid full-performance mapping');
+    const target=allItems.find(candidate=>candidate.youtubeId===targetId);
+    if(target) item.fullPerformance={title:target.title,href:target.href};
+  }
   const artists=raw.artists.filter(artist=>curated.some(item=>item.artistIds.includes(artist.id))||imported.some(item=>item.artistIds.includes(artist.id)));
   const availableIds=new Set(approved.filter((item)=>availability[item.youtubeId]!=='unavailable').map((item)=>item.id));
   return {raw,site:raw.site,performances:approved,artists,clips:raw.clips.filter((clip)=>clip.approvedForSite&&availableIds.has(clip.performanceId)),availability,catalogItems:[...curated,...imported],snapshot,imported};

@@ -126,5 +126,95 @@
     "focalPoint": "48% 35%",
     "portraitLayout": "landscape",
     "links": []
+  },
+  {
+    "id": "adrn",
+    "name": "ADRN",
+    "aliases": [],
+    "kind": "group",
+    "focalPoint": "50% 50%",
+    "portraitLayout": "landscape",
+    "links": []
+  },
+  {
+    "id": "pneuma",
+    "name": "PNEUMA",
+    "aliases": [],
+    "kind": "group",
+    "focalPoint": "50% 50%",
+    "portraitLayout": "landscape",
+    "links": []
+  },
+  {
+    "id": "kidz-these-days",
+    "name": "KIDZ THESE DAYS",
+    "aliases": [],
+    "kind": "group",
+    "focalPoint": "50% 50%",
+    "portraitLayout": "landscape",
+    "links": []
+  },
+  {
+    "id": "daniel-miguel",
+    "name": "Daniel Miguel",
+    "aliases": [],
+    "kind": "solo",
+    "focalPoint": "50% 50%",
+    "portraitLayout": "landscape",
+    "links": []
+  },
+  {
+    "id": "uni",
+    "name": "Uni",
+    "aliases": [],
+    "kind": "solo",
+    "focalPoint": "50% 50%",
+    "portraitLayout": "landscape",
+    "links": []
+  },
+  {
+    "id": "natsuki",
+    "name": "Natsuki 夏希",
+    "aliases": [],
+    "kind": "solo",
+    "focalPoint": "50% 50%",
+    "portraitLayout": "landscape",
+    "links": []
+  },
+  {
+    "id": "nami",
+    "name": "Nami 波",
+    "aliases": [],
+    "kind": "solo",
+    "focalPoint": "50% 50%",
+    "portraitLayout": "landscape",
+    "links": []
+  },
+  {
+    "id": "stallions-of-the-burning-church",
+    "name": "Stallions of the Burning Church",
+    "aliases": [],
+    "kind": "group",
+    "focalPoint": "50% 50%",
+    "portraitLayout": "landscape",
+    "links": []
+  },
+  {
+    "id": "cg",
+    "name": "CG",
+    "aliases": [],
+    "kind": "solo",
+    "focalPoint": "50% 50%",
+    "portraitLayout": "landscape",
+    "links": []
+  },
+  {
+    "id": "chav",
+    "name": "Chav",
+    "aliases": [],
+    "kind": "solo",
+    "focalPoint": "50% 50%",
+    "portraitLayout": "landscape",
+    "links": []
   }
 ]
