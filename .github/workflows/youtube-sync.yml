@@ -1,0 +1,44 @@
+name: Update YouTube catalog
+on:
+  schedule:
+    - cron: '23 * * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: youtube-catalog
+  cancel-in-progress: false
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.23.4'
+          cache: npm
+      - run: npm ci
+      - name: Fetch and validate public channel uploads
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+        run: npm run youtube:sync -- --previous src/data/youtube-snapshot.json --output src/data/youtube-snapshot.json
+      - run: npm test
+      - name: Validate production output
+        env:
+          VERCEL_ENV: production
+          SITE_URL: https://sonic-collective.vercel.app
+        run: npm run build
+      - name: Publish validated catalog
+        run: |
+          git add src/data/youtube-snapshot.json
+          if git diff --cached --quiet; then
+            echo "Catalog is current."
+            exit 0
+          fi
+          git config user.name "victor-7-ops"
+          git config user.email "70519898+victor-7-ops@users.noreply.github.com"
+          git commit -m "Refresh public YouTube catalog"
+          git push origin HEAD:main

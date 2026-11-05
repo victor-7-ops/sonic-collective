@@ -9,3 +9,7 @@ Live mode requires `YOUTUBE_API_KEY` in the runner environment before any reques
 `npm run youtube:hydrate -- --preview` is for local preview. A publication runner must supply `YOUTUBE_PUBLICATION_ORIGIN` and `YOUTUBE_FEED_URL` through its supported service context; the feed must be `/youtube-feed.json` on that exact origin. The hydrated baseline and proof are ignored under `.local/`. Credentials must not be put in either file or in command-line arguments.
 
 The API key and the hosted Sites runner are not configured by this project packet. No automatic schedule or live synchronization is active until those capabilities are verified separately.
+
+Production publishes search metadata at https://sonic-collective.vercel.app. Preview deployments retain noindex by default.
+
+GitHub Actions runs the YouTube sync hourly at minute 23 and supports manual runs. It reads YOUTUBE_API_KEY from repository secrets, validates the complete API result, builds and tests the candidate, then commits only src/data/youtube-snapshot.json. Failed API calls, unexpected removals, failed tests, or invalid builds do not publish a candidate. Successful commits trigger the connected Vercel project. No-change runs avoid commits until the seven-day freshness refresh is due.

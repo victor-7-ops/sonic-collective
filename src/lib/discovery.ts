@@ -14,7 +14,7 @@ export type CatalogItem = {
 };
 export async function getYoutubeSnapshot():Promise<YoutubeSnapshot> {
   try {const source=await readFile(resolve(process.cwd(),'.local/youtube-snapshot.json'),'utf8');return validateSnapshot(JSON.parse(source),'UCCxO94rfXnMpYf7DH_sd6Bw');}
-  catch(error){if((error as NodeJS.ErrnoException).code==='ENOENT')return emptySnapshot('UCCxO94rfXnMpYf7DH_sd6Bw');throw error;}
+  catch(error){if((error as NodeJS.ErrnoException).code==='ENOENT')return validateSnapshot(JSON.parse(await readFile(resolve(process.cwd(),'src/data/youtube-snapshot.json'),'utf8')),'UCCxO94rfXnMpYf7DH_sd6Bw');throw error;}
 }
 export async function getDiscoveryCatalog() {
   const raw=await getRawCatalog(),snapshot=await getYoutubeSnapshot();

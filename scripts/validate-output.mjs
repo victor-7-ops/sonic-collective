@@ -2,17 +2,20 @@ import { createHash } from 'node:crypto';
 import { readdir, readFile, stat } from 'node:fs/promises';
 import { dirname, extname, join, relative, resolve, sep } from 'node:path';
 
+if (!process.env.SITE_URL && process.env.VERCEL_ENV === 'production') process.env.SITE_URL = 'https://sonic-collective.vercel.app';
 const root=process.cwd(),dist=resolve(root,'dist'),args=process.argv.slice(2),publication=args.includes('--publication');
 const reasonAt=args.indexOf('--allow-reset'),resetReason=reasonAt>=0?args[reasonAt+1]:'';
 const readJson=async(path)=>JSON.parse(await readFile(resolve(root,path),'utf8'));
 const files=[],fileSizes=new Map();async function walk(dir){for(const entry of await readdir(dir,{withFileTypes:true})){const path=join(dir,entry.name);if(entry.isDirectory())await walk(path);else{files.push(path);fileSizes.set(path,(await stat(path)).size);}}}
 function hashVideos(videos){const canonical=[...videos].sort((a,b)=>a.youtubeId.localeCompare(b.youtubeId)).map(({youtubeId,channelId,title,thumbnailUrl,publishedAt,durationSeconds,seriesId,embeddable})=>({youtubeId,channelId,title,thumbnailUrl,publishedAt,durationSeconds,seriesId,embeddable}));return createHash('sha256').update(JSON.stringify(canonical)).digest('hex');}
+const indexable=process.env.PUBLIC_INDEXABLE==='true'||process.env.VERCEL_ENV==='production';
 const errors=[];const fail=(message)=>errors.push(message);
 await walk(dist);
 const fileSet=new Set(files),directorySet=new Set(files.map((path)=>dirname(path)));
 if(files.some((path)=>relative(dist,path).split(sep).some((part)=>['.local','node_modules'].includes(part))))fail('Build output contains a private runtime directory');
 const authored=await readJson('src/data/performances.json'),artists=await readJson('src/data/artists.json'),overrides=await readJson('src/data/youtube-overrides.json'),legacy=await readJson('src/data/legacy-watch-routes.json');
-let snapshot;try{snapshot=await readJson('.local/youtube-snapshot.json');}catch(error){if(error.code==='ENOENT')snapshot={initialized:false,channelId:'UCCxO94rfXnMpYf7DH_sd6Bw',contentHash:hashVideos([]),videos:[],expiresAt:null};else throw error;}
+let snapshot;try{snapshot=await readJson('.local/youtube-snapshot.json');}catch(error){if(error.code==='ENOENT')snapshot=await readJson('src/data/youtube-snapshot.json');else throw error;}
+if(!snapshot)snapshot={initialized:false,channelId:'UCCxO94rfXnMpYf7DH_sd6Bw',contentHash:hashVideos([]),videos:[],expiresAt:null};
 if(snapshot.channelId!=='UCCxO94rfXnMpYf7DH_sd6Bw'||!Array.isArray(snapshot.videos)||hashVideos(snapshot.videos)!==snapshot.contentHash)fail('Build input snapshot is malformed or has a mismatched content hash');
 if(new Set((snapshot.videos??[]).map((video)=>video.youtubeId)).size!==(snapshot.videos??[]).length)fail('Build snapshot contains duplicate YouTube IDs');
 for(const video of snapshot.videos??[]){try{const url=new URL(video.thumbnailUrl);if(url.protocol!=='https:'||url.hostname!=='i.ytimg.com')fail(`Unapproved remote thumbnail host for ${video.youtubeId}`);}catch{fail(`Invalid remote thumbnail URL for ${video.youtubeId}`);}}
@@ -30,7 +33,7 @@ for(const path of html){const text=await readFile(path,'utf8'),name=relative(dis
   if(/(?:[A-Za-z]:\\Users\\|Downloads\\|node_modules|\.local\/|\.local\\|AIza[\w-]{30,}|YOUTUBE_API_KEY\s*=\s*[^\s<]+)/i.test(text))fail(`Private path or credential-like value in ${name}`);
   const title=text.match(/<title>([\s\S]*?)<\/title>/i)?.[1]?.trim(),description=text.match(/<meta\s+name="description"\s+content="([^"]*)"/i)?.[1];
   if(!title||!description)fail(`Missing title or description in ${name}`);else {if(titles.has(title))fail(`Duplicate page title: ${title}`);titles.set(title,name);}
-  if(!/name="robots"\s+content="noindex,nofollow"/.test(text))fail(`Private noindex policy missing in ${name}`);
+  if(!text.includes(`name="robots" content="${indexable?'index,follow':'noindex,nofollow'}"`))fail(`Incorrect indexing policy in ${name}`);
   const canonical=text.match(/<link\s+rel="canonical"\s+href="([^"]+)"/i)?.[1];
   if(canonical){const url=new URL(canonical);if(url.protocol!=='https:'||['localhost','127.0.0.1'].includes(url.hostname))fail(`Non-public canonical origin in ${name}`);if(canonicals.has(canonical))fail(`Duplicate canonical URL: ${canonical}`);canonicals.add(canonical);if(!text.includes('property="og:url"'))fail(`Canonical lacks og:url in ${name}`);if(!text.includes('property="og:image"'))fail(`Canonical page lacks OG artwork in ${name}`);}
   if(/<a\s+[^>]*href="(?:#|javascript:|https?:\/\/(?:example\.com|localhost)[^"]*)"/i.test(text))fail(`Placeholder link in ${name}`);
@@ -48,7 +51,7 @@ const feedPath=resolve(dist,'youtube-feed.json');let feed;try{feed=JSON.parse(aw
 if(feed&&feed.contentHash!==hashVideos(feed.videos??[]))fail('Built feed content hash does not match records');
 const expectedFeedHash=snapshot.initialized&&snapshot.expiresAt&&Date.parse(snapshot.expiresAt)<=now&&!snapshot.purged?hashVideos([]):snapshot.contentHash;
 if(feed&&feed.contentHash!==expectedFeedHash)fail('Built feed differs from the validated local snapshot input');
-try{const robots=await readFile(resolve(dist,'robots.txt'),'utf8');if(!robots.includes('Disallow: /'))fail('Private robots.txt does not disallow crawling');}catch{fail('Missing robots.txt');}
+try{const robots=await readFile(resolve(dist,'robots.txt'),'utf8');if(!robots.includes(indexable?'Allow: /':'Disallow: /'))fail('Incorrect robots.txt crawl policy');}catch{fail('Missing robots.txt');}
 if(process.env.SITE_URL){try{const sitemap=await readFile(resolve(dist,'sitemap.xml'),'utf8');if(!sitemap.includes('<urlset'))fail('Configured SITE_URL did not produce a sitemap');}catch{fail('Configured SITE_URL but no sitemap was generated');}}
 else {try{const sitemap=await readFile(resolve(dist,'sitemap.xml'),'utf8');if(!sitemap.includes('Sitemap deferred'))fail('Without SITE_URL, sitemap must be explicitly deferred');}catch{fail('Without SITE_URL, sitemap deferral marker is missing');}}
 for(const path of files){const bytes=fileSizes.get(path)??0;if(extname(path).toLowerCase()==='.mp4'&&bytes>20*1024*1024)fail(`Large source video leaked into build output: ${relative(dist,path)}`);}

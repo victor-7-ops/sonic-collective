@@ -6,9 +6,9 @@ import QuickWatchDialog from '../components/QuickWatchDialog.astro';
 import { canonicalUrl } from '../lib/urls';
 interface Props { title: string; description: string; canonicalPath?: string; image?: string; theme?: 'light'|'dark'; currentPath?: string; playbackRecords?: { id: string; title: string; youtubeId: string; embeddable?:boolean }[]; }
 const {title,description,canonicalPath,image='/media/performances/playscape-vision-usseewa-960.webp',theme='light',currentPath=Astro.url.pathname,playbackRecords=[]}=Astro.props;
-const indexable=import.meta.env.PUBLIC_INDEXABLE==='true';
-const canonical=canonicalPath?canonicalUrl(canonicalPath,import.meta.env.SITE):undefined;
-const ogImage=canonicalUrl(image,import.meta.env.SITE);
+const indexable=import.meta.env.PUBLIC_INDEXABLE==='true'||import.meta.env.VERCEL_ENV==='production';
+const canonical=Astro.url.pathname.startsWith('/404')?undefined:canonicalUrl(canonicalPath??Astro.url.pathname,import.meta.env.SITE);
+const ogImage=import.meta.env.SITE?new URL(image,import.meta.env.SITE).href:undefined;
 const publicPlaybackData=JSON.stringify(playbackRecords).replace(/</g,'\\u003c');
 ---
 <!doctype html>
@@ -40,7 +40,3 @@ const publicPlaybackData=JSON.stringify(playbackRecords).replace(/</g,'\\u003c')
     <script>import '../../scripts/card-previews.ts';</script>
   </body>
 </html>
-
-
-
-
