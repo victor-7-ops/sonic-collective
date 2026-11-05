@@ -1,6 +1,4 @@
 @keyframes studio-cue { from { transform: scaleX(0); } }
 @media (prefers-reduced-motion: no-preference) {
   html.motion-active .hero__cue::before { animation: studio-cue 320ms ease-out both; }
-  html.motion-active .hero__play { transition: background-color 140ms ease-out; }
-  .hero__action:active .hero__play { background: var(--mint); }
 }

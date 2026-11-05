@@ -1,22 +1,20 @@
 import { mediaCoordinator } from '../src/lib/media-coordinator';
-import { readMotionPause, writeMotionPause } from '../src/lib/motion-policy';
+import { readMotionPause } from '../src/lib/motion-policy';
 
 type ConnectionInfo = EventTarget & { saveData?: boolean };
 const connection = (navigator as Navigator & { connection?: ConnectionInfo }).connection;
 const reducedQuery = matchMedia('(prefers-reduced-motion: reduce)');
-const motionToggle = document.querySelector<HTMLButtonElement>('[data-motion-toggle]');
 const teaser = document.querySelector<HTMLElement>('[data-teaser-clip]');
 const teaserVideo = teaser?.querySelector<HTMLVideoElement>('[data-teaser-video]');
 const teaserSurface = teaser?.querySelector<HTMLElement>('[data-teaser-surface]');
 const teaserToggle = teaser?.querySelector<HTMLButtonElement>('[data-teaser-toggle]');
 const teaserStatus = teaser?.querySelector<HTMLElement>('[data-teaser-status]');
-let userPaused = readMotionPause(() => window.sessionStorage);
+const userPaused = readMotionPause(() => window.sessionStorage);
 let teaserInView = false;
 let teaserManualPause = false;
 let teaserActive = false;
 let internalTeaserPause = false;
 
-const storage = () => window.sessionStorage;
 const getSaveData = () => connection?.saveData === true;
 
 function renderMotionState(): void {
@@ -24,12 +22,6 @@ function renderMotionState(): void {
   document.documentElement.classList.toggle('motion-active', !reduced && !userPaused);
   document.documentElement.classList.toggle('motion-paused', userPaused);
   document.documentElement.classList.toggle('motion-reduced', reduced);
-  if (motionToggle) {
-    motionToggle.hidden = false;
-    motionToggle.disabled = reduced;
-    motionToggle.setAttribute('aria-pressed', String(reduced || userPaused));
-    motionToggle.textContent = reduced ? 'Reduced motion enabled' : userPaused ? 'Resume motion' : 'Pause motion';
-  }
 }
 
 function renderTeaserButton(): void {
@@ -106,15 +98,6 @@ function evaluateTeaser(): void {
   }
 }
 function documentVisible(): boolean { return document.visibilityState === 'visible'; }
-
-motionToggle?.addEventListener('click', () => {
-  if (reducedQuery.matches) return;
-  userPaused = !userPaused;
-  writeMotionPause(storage, userPaused);
-  if (userPaused) stopTeaser('Preview paused with motion.');
-  renderMotionState();
-  evaluateTeaser();
-});
 
 reducedQuery.addEventListener('change', () => {
   renderMotionState(); evaluateTeaser();

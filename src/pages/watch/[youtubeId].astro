@@ -15,7 +15,8 @@ const {youtubeId,legacyPerformanceId}=Astro.props as {youtubeId:string;legacyPer
 const catalog=await getDiscoveryCatalog();
 const legacy=legacyPerformanceId?catalog.performances.find((item)=>item.id===legacyPerformanceId):undefined;
 const video=legacy?undefined:catalog.imported.find((item)=>item.youtubeId===youtubeId)!;
-const title=legacy?`${legacy.title} | Sonic Collective`:`${video!.title} | Sonic Collective`;
+const repeatedTitle=video&&(catalog.imported.some(item=>item.youtubeId!==youtubeId&&item.title===video.title)||catalog.performances.some(item=>item.title===video.title));
+const title=legacy?`${legacy.title} | Sonic Collective`:`${video!.title}${repeatedTitle?` [${youtubeId}]`:''} | Sonic Collective`;
 const description=legacy?`This older upload page now points to the canonical performance page.`:`${video!.title}, published on the Sonic Collective YouTube channel. Watch the original video on YouTube.`;
 const related=video?.seriesId?catalog.performances.filter((item)=>item.seriesId===video!.seriesId).slice(0,3):[];
 const playbackRecords=[...catalog.performances.map(({id,title,youtubeId})=>({id,title,youtubeId,embeddable:catalog.availability[youtubeId]!=='unavailable'&&catalog.availability[youtubeId]!=='external-only'})),...catalog.imported.map(({id,title,youtubeId,embeddable})=>({id,title,youtubeId,embeddable}))];

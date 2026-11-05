@@ -6,11 +6,6 @@
 .hero__cue { color: var(--mint); }
 .hero__cue::before { display: inline-block; width: 24px; height: 2px; margin-right: 9px; vertical-align: middle; background: currentColor; transform-origin: left; content: ''; }
 .hero__links { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 18px; margin-top: 8px; }
-.hero__action { display: inline-flex; min-height: 52px; align-items: center; gap: 14px; font-size: 12px; font-weight: 700; letter-spacing: .1em; text-decoration: none; text-transform: uppercase; }
-.hero__action:hover { text-decoration: underline; }
-.hero__play { display: grid; width: 52px; height: 52px; border-radius: 50%; place-items: center; background: var(--canvas); color: var(--dark); font-size: 16px; }
-.motion-toggle { min-height:44px; padding:8px 12px; border:1px solid var(--line-dark); border-radius:999px; background:transparent; color:var(--canvas); font-size:13px; cursor:pointer; }
-.motion-toggle:hover { background:rgb(243 241 233 / 9%); }
 .hero__feature.performance-player__poster { min-height: 0; border-radius: 4px; }
 .hero__feature .hero__image img { object-fit: cover; }
 .rena-teaser { background: var(--dark); color: var(--canvas); }

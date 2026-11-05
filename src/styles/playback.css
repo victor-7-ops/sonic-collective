@@ -1,3 +1,8 @@
+.performance-player__poster { position:relative; display:grid; place-items:center; width:100%; min-height:200px; aspect-ratio:16/9; overflow:hidden; border-radius:var(--radius-lg); background:#101715; }
+.performance-player__poster picture,.performance-player__poster img { width:100%; height:100%; position:absolute; inset:0; }
+.performance-player__poster img { object-fit:contain; }
+.performance-player__play { position:relative; display:grid; justify-items:center; gap:10px; padding:20px 26px; border-radius:12px; color:white; background:rgb(10 17 14 / 82%); font-size:34px; text-decoration:none; }
+.performance-player__play span { font-size:14px; font-weight:700; }
 .performance-player__poster picture[hidden] { display:none; }
 .performance-player__play[hidden] { display:none; }
 .performance-player__status:empty { display:none; }
