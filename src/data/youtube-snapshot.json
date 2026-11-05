@@ -1,9 +1,860 @@
 {
   "schemaVersion": 1,
-  "initialized": false,
+  "initialized": true,
   "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
-  "contentHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-  "validatedAt": null,
-  "expiresAt": null,
-  "videos": []
+  "contentHash": "e6493f47e42fcec947bcd65bb2ebbb92fe960c22730ec1c07f9d4be670991a71",
+  "validatedAt": "2026-11-05T05:49:03.682Z",
+  "expiresAt": "2026-12-05T05:49:03.682Z",
+  "videos": [
+    {
+      "youtubeId": "0GtqbE7pS14",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "A Vispop song that tells the bitterness of unrequited love.",
+      "thumbnailUrl": "https://i.ytimg.com/vi/0GtqbE7pS14/maxresdefault.jpg",
+      "publishedAt": "2026-10-04T04:28:27Z",
+      "durationSeconds": 26,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "0IYH_xe7xZE",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "PNEUMA - KAND (Sonic Sessions)",
+      "thumbnailUrl": "https://i.ytimg.com/vi/0IYH_xe7xZE/maxresdefault.jpg",
+      "publishedAt": "2025-09-29T08:00:06Z",
+      "durationSeconds": 290,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "0o1r7ykkfqE",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Gerald × Rena｜ジェラルド × レナ – 点描の唄 (Tenbyou no Uta) / Mrs. GREEN APPLE【Live Cover｜ライブカバー】",
+      "thumbnailUrl": "https://i.ytimg.com/vi/0o1r7ykkfqE/maxresdefault.jpg",
+      "publishedAt": "2025-12-06T12:00:06Z",
+      "durationSeconds": 317,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "0OUDAZzh-c8",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Gerald | Heartache - One Ok Rock 【Live Cover】",
+      "thumbnailUrl": "https://i.ytimg.com/vi/0OUDAZzh-c8/maxresdefault.jpg",
+      "publishedAt": "2026-02-09T12:00:00Z",
+      "durationSeconds": 58,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "0q9Chr7wl-4",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Nathan | Sparkle - RADWIMPS #radwimps #kiminonawa #yourname #sparkle #jpop",
+      "thumbnailUrl": "https://i.ytimg.com/vi/0q9Chr7wl-4/maxresdefault.jpg",
+      "publishedAt": "2025-11-08T12:00:02Z",
+      "durationSeconds": 24,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "1GWSCTFrTKg",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "New Genesis - Ado // Live Cover by  Nami 波 // Otakufest 2025",
+      "thumbnailUrl": "https://i.ytimg.com/vi/1GWSCTFrTKg/maxresdefault.jpg",
+      "publishedAt": "2025-04-12T10:11:15Z",
+      "durationSeconds": 225,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "1RBSbh4v1vo",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Hikaru Nara Final Chorus Hits Different… | Your Lie in April Cover",
+      "thumbnailUrl": "https://i.ytimg.com/vi/1RBSbh4v1vo/maxresdefault.jpg",
+      "publishedAt": "2026-03-08T12:00:00Z",
+      "durationSeconds": 25,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "2If_iAt5L6U",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Stallions of the Burning Church - Onslaught",
+      "thumbnailUrl": "https://i.ytimg.com/vi/2If_iAt5L6U/maxresdefault.jpg",
+      "publishedAt": "2025-01-11T02:30:58Z",
+      "durationSeconds": 363,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "3jDOWF4MaUM",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Gerald | Wasted Nights - One Ok Rock #coversong #oneokrock #wastednights",
+      "thumbnailUrl": "https://i.ytimg.com/vi/3jDOWF4MaUM/maxresdefault.jpg",
+      "publishedAt": "2026-01-10T12:09:30Z",
+      "durationSeconds": 28,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "4_rJb2Ncn7E",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Gerald | Iris - Goo Goo Dolls #cover #googoodolls #iris #alternativerock",
+      "thumbnailUrl": "https://i.ytimg.com/vi/4_rJb2Ncn7E/maxresdefault.jpg",
+      "publishedAt": "2026-01-19T12:00:00Z",
+      "durationSeconds": 21,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "4lvJRmvuQ6s",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Playscape Vision – 『永遠のあくる日』(Eien no Akuruhi) | Ado【Cover】",
+      "thumbnailUrl": "https://i.ytimg.com/vi/4lvJRmvuQ6s/maxresdefault.jpg",
+      "publishedAt": "2026-07-11T11:00:05Z",
+      "durationSeconds": 248,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "5Q36BeTPGw0",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Deceiver by Daniel Miguel  #alternativerockph #cover #cebumusicscene",
+      "thumbnailUrl": "https://i.ytimg.com/vi/5Q36BeTPGw0/maxresdefault.jpg",
+      "publishedAt": "2025-08-08T13:27:37Z",
+      "durationSeconds": 38,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "5xNsVtsrViE",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "The Ado of Cebu — Vivarium (Ado) Vocal Cover | Uni – Sonic Collective",
+      "thumbnailUrl": "https://i.ytimg.com/vi/5xNsVtsrViE/maxresdefault.jpg",
+      "publishedAt": "2026-03-12T12:47:56Z",
+      "durationSeconds": 41,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "8_FWvC1BLKE",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Kalii Skrums - Sexwax X Sail Away (Live at Sonic Collective)",
+      "thumbnailUrl": "https://i.ytimg.com/vi/8_FWvC1BLKE/maxresdefault.jpg",
+      "publishedAt": "2026-08-02T11:00:06Z",
+      "durationSeconds": 266,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "8RGXtTkjVoI",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Rena x Bianca | Click by ClariS #cover #music  #anisong #animesong #nisekoi #jpop #coversong",
+      "thumbnailUrl": "https://i.ytimg.com/vi/8RGXtTkjVoI/maxresdefault.jpg",
+      "publishedAt": "2025-10-26T16:26:31Z",
+      "durationSeconds": 32,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "8RzuwEk1fj0",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Stallions of the Burning Church - INFERNO (Cover)",
+      "thumbnailUrl": "https://i.ytimg.com/vi/8RzuwEk1fj0/maxresdefault.jpg",
+      "publishedAt": "2025-01-11T02:19:27Z",
+      "durationSeconds": 314,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "8UCpUiaqQVI",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "PNEUMA - Di Naba? ( Live Studio Session)",
+      "thumbnailUrl": "https://i.ytimg.com/vi/8UCpUiaqQVI/maxresdefault.jpg",
+      "publishedAt": "2025-05-29T02:05:55Z",
+      "durationSeconds": 417,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "9yzwJe8Ax8k",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Gerald x Rena | 点描の唄 (Tenbyou no Uta) Mrs. GREEN APPLE ft. Sonoko Inoue #点描の唄 #mrsgreenapple",
+      "thumbnailUrl": "https://i.ytimg.com/vi/9yzwJe8Ax8k/maxresdefault.jpg",
+      "publishedAt": "2026-02-03T12:00:00Z",
+      "durationSeconds": 32,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "A0EOj8aeNVw",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Jade Makawili - Ampingan (Live at Sonic Collective)",
+      "thumbnailUrl": "https://i.ytimg.com/vi/A0EOj8aeNVw/maxresdefault.jpg",
+      "publishedAt": "2026-08-28T11:00:09Z",
+      "durationSeconds": 249,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "a4bOQ-u-b4U",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Anime Fans Know This Song Instantly… | Hikaru Nara Cover",
+      "thumbnailUrl": "https://i.ytimg.com/vi/a4bOQ-u-b4U/maxresdefault.jpg",
+      "publishedAt": "2026-03-10T12:00:00Z",
+      "durationSeconds": 37,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "A4LnJ1uDm3s",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Stallions Of The Burning Church - Duel With The Devil (Live)",
+      "thumbnailUrl": "https://i.ytimg.com/vi/A4LnJ1uDm3s/maxresdefault.jpg",
+      "publishedAt": "2024-12-20T03:51:02Z",
+      "durationSeconds": 340,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "A7XpylxqrV0",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "PAHUWAY by Ferdinand Aragon // Cover by CG and Chav",
+      "thumbnailUrl": "https://i.ytimg.com/vi/A7XpylxqrV0/maxresdefault.jpg",
+      "publishedAt": "2024-12-02T11:58:50Z",
+      "durationSeconds": 263,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "aHw9fLZ_4Co",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Gerald｜ジェラルド – キラメキ (Kirameki) / wacci【Live Cover｜ライブカバー】",
+      "thumbnailUrl": "https://i.ytimg.com/vi/aHw9fLZ_4Co/maxresdefault.jpg",
+      "publishedAt": "2025-12-13T12:00:06Z",
+      "durationSeconds": 104,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "AnJXSQ-pk4k",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Gerald | Iris - Goo Goo Dolls",
+      "thumbnailUrl": "https://i.ytimg.com/vi/AnJXSQ-pk4k/maxresdefault.jpg",
+      "publishedAt": "2026-01-17T12:00:06Z",
+      "durationSeconds": 253,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "bgPbOnbt6Q8",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "【Ado】永遠のあくる日（Eien no Akuruhi）– Playscape Vision#Ado #歌ってみた #JRock #JapaneseMusic #CoverSong",
+      "thumbnailUrl": "https://i.ytimg.com/vi/bgPbOnbt6Q8/maxresdefault.jpg",
+      "publishedAt": "2026-07-12T17:53:28Z",
+      "durationSeconds": 59,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "CGgCV-I0ACE",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Zera（ゼラ）｜Coalamode.「七色シンフォニー」【Live Cover｜ライブカバー】",
+      "thumbnailUrl": "https://i.ytimg.com/vi/CGgCV-I0ACE/maxresdefault.jpg",
+      "publishedAt": "2025-12-25T06:34:38Z",
+      "durationSeconds": 283,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "CL4bSIy4AYg",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Nathan｜ネイサン – スパークル (Sparkle) / RADWIMPS【Live Cover｜ライブカバー】",
+      "thumbnailUrl": "https://i.ytimg.com/vi/CL4bSIy4AYg/maxresdefault.jpg",
+      "publishedAt": "2025-11-08T12:00:06Z",
+      "durationSeconds": 204,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "cpdep5VAh3A",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Nathan｜ネイサン – きみにとどけ (Kimi ni Todoke) / Tomofumi Tanizawa【Live Cover｜ライブカバー】",
+      "thumbnailUrl": "https://i.ytimg.com/vi/cpdep5VAh3A/maxresdefault.jpg",
+      "publishedAt": "2025-11-22T12:00:06Z",
+      "durationSeconds": 96,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "CTiNSfBcJ78",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Gerald x Rena | 点描の唄 (Tenbyou no Uta) Mrs. GREEN APPLE ft. Sonoko Inoue #点描の唄 #mrsgreenapple",
+      "thumbnailUrl": "https://i.ytimg.com/vi/CTiNSfBcJ78/maxresdefault.jpg",
+      "publishedAt": "2026-02-03T12:00:00Z",
+      "durationSeconds": 46,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "d-1lgnI8s4U",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Gerald | Iris - Goo Goo Dolls #cover #googoodolls #iris #alternativerock",
+      "thumbnailUrl": "https://i.ytimg.com/vi/d-1lgnI8s4U/maxresdefault.jpg",
+      "publishedAt": "2026-02-01T01:47:52Z",
+      "durationSeconds": 25,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "DpkUs6izNNI",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Playscape Vision - うっせぇわ (Usseewa)【Ado】｜Cover  #usseewa  #うっせぇわ #歌ってみた #utaite",
+      "thumbnailUrl": "https://i.ytimg.com/vi/DpkUs6izNNI/maxresdefault.jpg",
+      "publishedAt": "2026-07-26T14:42:22Z",
+      "durationSeconds": 35,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "DTqmvJZmcTQ",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "PNEUMA - Torpe",
+      "thumbnailUrl": "https://i.ytimg.com/vi/DTqmvJZmcTQ/maxresdefault.jpg",
+      "publishedAt": "2026-09-09T02:58:01Z",
+      "durationSeconds": 305,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "dYGDXH9xzlA",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Rena & Bianca｜レナ & ビアンカ – Click / ClariS【Live Cover｜ライブカバー】",
+      "thumbnailUrl": "https://i.ytimg.com/vi/dYGDXH9xzlA/maxresdefault.jpg",
+      "publishedAt": "2025-10-25T12:00:06Z",
+      "durationSeconds": 218,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "ev5ZNUMEoxs",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Gerald | Iris - Goo Goo Dolls #cover #googoodolls #iris #alternativerock",
+      "thumbnailUrl": "https://i.ytimg.com/vi/ev5ZNUMEoxs/maxresdefault.jpg",
+      "publishedAt": "2026-01-17T12:00:00Z",
+      "durationSeconds": 35,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "fFWQrqbLVBU",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Jade Makawili - Di Mahimutang (Live at Sonic Collective) #vispop #cebuanosongs #opm",
+      "thumbnailUrl": "https://i.ytimg.com/vi/fFWQrqbLVBU/maxresdefault.jpg",
+      "publishedAt": "2026-09-19T12:46:12Z",
+      "durationSeconds": 20,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "g6Kg7I2XSd4",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Franzel N'D Flayahs  -  Ako Nalang Bi (Live at Sonic Collective)",
+      "thumbnailUrl": "https://i.ytimg.com/vi/g6Kg7I2XSd4/maxresdefault.jpg",
+      "publishedAt": "2026-08-14T10:05:30Z",
+      "durationSeconds": 300,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "GtBMvl8U83s",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "KIDZ THESE DAYS - Hustisya (Live) || Sonic Sessions",
+      "thumbnailUrl": "https://i.ytimg.com/vi/GtBMvl8U83s/sddefault.jpg",
+      "publishedAt": "2025-09-26T04:00:06Z",
+      "durationSeconds": 302,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "H08axpSMLBI",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Hikaru Nara (光るなら) – Goose house Cover | Natsuki 夏希",
+      "thumbnailUrl": "https://i.ytimg.com/vi/H08axpSMLBI/maxresdefault.jpg",
+      "publishedAt": "2026-03-07T11:00:06Z",
+      "durationSeconds": 256,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "hg6iRsw-uiI",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "9 years of 'Zenzenzense'—and it's still a banger! Here's a snippet of our short cover.#radwimps",
+      "thumbnailUrl": "https://i.ytimg.com/vi/hg6iRsw-uiI/maxresdefault.jpg",
+      "publishedAt": "2025-09-07T15:42:02Z",
+      "durationSeconds": 26,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "hoyeStErb84",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Hotaru - Fujita Majiko (Cover) #Jpop #Hotaru #FujitaMaiko #蛍火の杜へ",
+      "thumbnailUrl": "https://i.ytimg.com/vi/hoyeStErb84/maxresdefault.jpg",
+      "publishedAt": "2026-01-03T13:53:33Z",
+      "durationSeconds": 25,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "hwreKBw4hiM",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Nami 波 - AniMedley Otakufest 2025 // Studio Version",
+      "thumbnailUrl": "https://i.ytimg.com/vi/hwreKBw4hiM/maxresdefault.jpg",
+      "publishedAt": "2025-04-12T10:56:36Z",
+      "durationSeconds": 325,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "iHzzkeXN8f0",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Vivarium / ビバリウム – Ado (Vocal Cover) | Uni | S/C The Covers EP.16",
+      "thumbnailUrl": "https://i.ytimg.com/vi/iHzzkeXN8f0/maxresdefault.jpg",
+      "publishedAt": "2026-03-11T11:00:06Z",
+      "durationSeconds": 247,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "iNY1Yw58_vQ",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "You guys need to hear this amazing unreleased Vispop song! #vispop #bisayasongs #opm",
+      "thumbnailUrl": "https://i.ytimg.com/vi/iNY1Yw58_vQ/maxresdefault.jpg",
+      "publishedAt": "2026-08-21T16:34:48Z",
+      "durationSeconds": 29,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "J91G8AT1vaA",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Kalii Skrums - Sexwax x Sail Away",
+      "thumbnailUrl": "https://i.ytimg.com/vi/J91G8AT1vaA/maxresdefault.jpg",
+      "publishedAt": "2026-08-02T12:17:36Z",
+      "durationSeconds": 45,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "jdGvuJLGgoQ",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Nathan | Red Swan - YOSHIKI ft. HYDE",
+      "thumbnailUrl": "https://i.ytimg.com/vi/jdGvuJLGgoQ/maxresdefault.jpg",
+      "publishedAt": "2025-12-27T12:17:54Z",
+      "durationSeconds": 109,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "JHUlD_BYuBc",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Zera | Nanairo Symphony - COALAMODE",
+      "thumbnailUrl": "https://i.ytimg.com/vi/JHUlD_BYuBc/maxresdefault.jpg",
+      "publishedAt": "2025-12-25T06:38:46Z",
+      "durationSeconds": 27,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "knh3roGTEKc",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "New Cebuano songs you got to hear!",
+      "thumbnailUrl": "https://i.ytimg.com/vi/knh3roGTEKc/maxresdefault.jpg",
+      "publishedAt": "2026-08-29T13:16:28Z",
+      "durationSeconds": 33,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "kptAS61TzOY",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Nathan | Zenzenzense - RADWIMPS",
+      "thumbnailUrl": "https://i.ytimg.com/vi/kptAS61TzOY/maxresdefault.jpg",
+      "publishedAt": "2025-10-30T16:06:23Z",
+      "durationSeconds": 60,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "l6jOj6cOdoM",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Playscape Vision - うっせぇわ (Usseewa)【Ado】｜Cover",
+      "thumbnailUrl": "https://i.ytimg.com/vi/l6jOj6cOdoM/maxresdefault.jpg",
+      "publishedAt": "2026-07-25T12:05:22Z",
+      "durationSeconds": 220,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "LHyK398R_8g",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Deceiver by Daniel Miguel // Live at the Sonic Collective #alternativerockph #cover #cebumusicscene",
+      "thumbnailUrl": "https://i.ytimg.com/vi/LHyK398R_8g/maxresdefault.jpg",
+      "publishedAt": "2025-08-08T13:24:09Z",
+      "durationSeconds": 38,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "mJOmL8M-OQ8",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Stallions of the Burning Church - Thorns",
+      "thumbnailUrl": "https://i.ytimg.com/vi/mJOmL8M-OQ8/maxresdefault.jpg",
+      "publishedAt": "2025-01-11T02:12:29Z",
+      "durationSeconds": 356,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "n_a8eDp1SiE",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Wait for the Chorus… Hikaru Nara Cover | Natsuki 夏希",
+      "thumbnailUrl": "https://i.ytimg.com/vi/n_a8eDp1SiE/maxresdefault.jpg",
+      "publishedAt": "2026-03-09T12:00:00Z",
+      "durationSeconds": 39,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "nDiY6ziWfe0",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Gerald | Heartache - One Ok Rock 【Live Cover】",
+      "thumbnailUrl": "https://i.ytimg.com/vi/nDiY6ziWfe0/maxresdefault.jpg",
+      "publishedAt": "2026-02-08T11:00:00Z",
+      "durationSeconds": 47,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "ny33jxxqFv8",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Kalii Skrums『Zober』(Live at Sonic Collective)",
+      "thumbnailUrl": "https://i.ytimg.com/vi/ny33jxxqFv8/maxresdefault.jpg",
+      "publishedAt": "2026-09-04T11:00:06Z",
+      "durationSeconds": 206,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "OD-6eIJlKYw",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Nathan | Kimi No Todoke - Tomofumi Tanizawa #kiminotodoke #TomofumiTanizawa #animesong #anime #jpop",
+      "thumbnailUrl": "https://i.ytimg.com/vi/OD-6eIJlKYw/maxresdefault.jpg",
+      "publishedAt": "2025-11-22T12:29:44Z",
+      "durationSeconds": 17,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "Ogz1ynNOy6Y",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Blair - 心のそばに (Kokoro no Soba ni) 【Belle】| Cover",
+      "thumbnailUrl": "https://i.ytimg.com/vi/Ogz1ynNOy6Y/maxresdefault.jpg",
+      "publishedAt": "2026-07-19T03:14:10Z",
+      "durationSeconds": 28,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "oV2of0gEN-I",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "This Part of Ado’s “Vivarium” Is Almost Impossible to Sing…",
+      "thumbnailUrl": "https://i.ytimg.com/vi/oV2of0gEN-I/maxresdefault.jpg",
+      "publishedAt": "2026-03-11T11:12:29Z",
+      "durationSeconds": 26,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "OXgeD7BN5fE",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Rena | Kirameki - wacci OFFICIAL #jpop #shigatsuwakiminouso #yourlieinaprilanime  #animesong",
+      "thumbnailUrl": "https://i.ytimg.com/vi/OXgeD7BN5fE/maxresdefault.jpg",
+      "publishedAt": "2025-11-15T13:08:33Z",
+      "durationSeconds": 29,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "P7fztFgCFaI",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Nami 波 - Live Session (AniMedley)",
+      "thumbnailUrl": "https://i.ytimg.com/vi/P7fztFgCFaI/maxresdefault.jpg",
+      "publishedAt": "2024-11-29T14:11:37Z",
+      "durationSeconds": 542,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "pdJi4gDwlnI",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Bianca｜ビアンカ – “Your Idol” (K-pop Demon Hunters OST)【Live Cover】",
+      "thumbnailUrl": "https://i.ytimg.com/vi/pdJi4gDwlnI/maxresdefault.jpg",
+      "publishedAt": "2025-11-01T12:00:06Z",
+      "durationSeconds": 207,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "pIDMq-3fwQo",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Gerald x Rena | 点描の唄 (Tenbyou no Uta) Mrs. GREEN APPLE ft. Sonoko Inoue #songcover #jpop #点描の唄",
+      "thumbnailUrl": "https://i.ytimg.com/vi/pIDMq-3fwQo/maxresdefault.jpg",
+      "publishedAt": "2025-12-06T12:01:46Z",
+      "durationSeconds": 27,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "PjFfvmeVKt0",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Gerald | Kirameki - Wacci Official #shigatsuwakiminouso #jpop #animesong  #anime #song #songs",
+      "thumbnailUrl": "https://i.ytimg.com/vi/PjFfvmeVKt0/maxresdefault.jpg",
+      "publishedAt": "2025-12-13T12:00:56Z",
+      "durationSeconds": 22,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "PnI-kRS5OdQ",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Rena｜レナ – キラメキ (Kirameki) / wacci【Your Lie in April｜Live Cover｜ライブカバー】",
+      "thumbnailUrl": "https://i.ytimg.com/vi/PnI-kRS5OdQ/maxresdefault.jpg",
+      "publishedAt": "2025-11-15T12:00:06Z",
+      "durationSeconds": 147,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "pSsThYGhiVE",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Hikaru Nara (光るなら) - Goose house | Your Lie in April Animated Utaite Cover by Natsuki 夏希",
+      "thumbnailUrl": "https://i.ytimg.com/vi/pSsThYGhiVE/maxresdefault.jpg",
+      "publishedAt": "2026-03-31T12:00:06Z",
+      "durationSeconds": 258,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "QQ0bxsJNPHc",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Kidz These Days - Hustisya (Live)",
+      "thumbnailUrl": "https://i.ytimg.com/vi/QQ0bxsJNPHc/maxresdefault.jpg",
+      "publishedAt": "2025-10-02T15:56:13Z",
+      "durationSeconds": 51,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "QrlWqqazFYM",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "This song hurts in the most beautiful way.",
+      "thumbnailUrl": "https://i.ytimg.com/vi/QrlWqqazFYM/maxresdefault.jpg",
+      "publishedAt": "2026-03-13T14:31:48Z",
+      "durationSeconds": 22,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "QTdSU6ZDYkw",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Rena｜レナ – いのちの名前 (Inochi no Namae)【Live Cover｜ライブカバー】",
+      "thumbnailUrl": "https://i.ytimg.com/vi/QTdSU6ZDYkw/maxresdefault.jpg",
+      "publishedAt": "2026-01-24T12:00:06Z",
+      "durationSeconds": 122,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "rEsPOJm9X50",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Best Surf Punk band in the Philippines! #surfpunk #newmusic #opm",
+      "thumbnailUrl": "https://i.ytimg.com/vi/rEsPOJm9X50/maxresdefault.jpg",
+      "publishedAt": "2026-09-04T11:00:37Z",
+      "durationSeconds": 30,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "RhDTMRnfT1E",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Zera｜ゼラ – 蛍 (Hotaru) / 藤田麻衣子【Live Cover｜ライブカバー】",
+      "thumbnailUrl": "https://i.ytimg.com/vi/RhDTMRnfT1E/maxresdefault.jpg",
+      "publishedAt": "2026-01-03T12:01:00Z",
+      "durationSeconds": 311,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "S6OfHVxHX0Y",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Daniel Miguel - Deceiver // GUITAR SOLO #guitar #guitarsolo #guitarist",
+      "thumbnailUrl": "https://i.ytimg.com/vi/S6OfHVxHX0Y/maxresdefault.jpg",
+      "publishedAt": "2025-08-08T13:21:19Z",
+      "durationSeconds": 49,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "sBkITDDRLfw",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Blair - 心のそばに (Kokoro no Soba ni) 【Belle】| Cover",
+      "thumbnailUrl": "https://i.ytimg.com/vi/sBkITDDRLfw/maxresdefault.jpg",
+      "publishedAt": "2026-07-18T11:00:05Z",
+      "durationSeconds": 161,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "SsRgq9fHKjk",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Gerald（ジェラルド）｜ONE OK ROCK「Heartache」【Live Cover｜ライブカバー】",
+      "thumbnailUrl": "https://i.ytimg.com/vi/SsRgq9fHKjk/maxresdefault.jpg",
+      "publishedAt": "2026-02-07T12:00:00Z",
+      "durationSeconds": 300,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "Sukfc_CuG4w",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Daniel Miguel   Deceiver",
+      "thumbnailUrl": "https://i.ytimg.com/vi/Sukfc_CuG4w/maxresdefault.jpg",
+      "publishedAt": "2025-08-06T16:11:49Z",
+      "durationSeconds": 523,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "T07A7oqmI_M",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Rena | Inochi no Namae #inochinonamae #spiritedaway #anime #coversong",
+      "thumbnailUrl": "https://i.ytimg.com/vi/T07A7oqmI_M/maxresdefault.jpg",
+      "publishedAt": "2026-01-24T12:00:00Z",
+      "durationSeconds": 36,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "VGQ2HB3yLVE",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Gerald（ジェラルド）｜ONE OK ROCK「Wasted Nights」【Live Cover｜ライブカバー】",
+      "thumbnailUrl": "https://i.ytimg.com/vi/VGQ2HB3yLVE/maxresdefault.jpg",
+      "publishedAt": "2026-01-10T12:00:53Z",
+      "durationSeconds": 269,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "VPGtC7QQ94U",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Bianca | Your Idol - Kpop Demon Hunters #cover #music #kdh  #anime #kpop #kpopdemonhunter #shorts",
+      "thumbnailUrl": "https://i.ytimg.com/vi/VPGtC7QQ94U/maxresdefault.jpg",
+      "publishedAt": "2025-11-01T12:00:58Z",
+      "durationSeconds": 23,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "vVrs_bfj56w",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Your Lie in April' Tribute – Teaser 2: The Journey Continues!",
+      "thumbnailUrl": "https://i.ytimg.com/vi/vVrs_bfj56w/maxresdefault.jpg",
+      "publishedAt": "2026-03-06T11:00:00Z",
+      "durationSeconds": 51,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "wsWDbA2-wp0",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Gerald | Heartache - One Ok Rock [ Live Cover ]",
+      "thumbnailUrl": "https://i.ytimg.com/vi/wsWDbA2-wp0/maxresdefault.jpg",
+      "publishedAt": "2026-02-12T12:00:00Z",
+      "durationSeconds": 31,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "Xcys2EjQGPQ",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Jade Makawili - Di Mahimutang (Live at Sonic Collective)",
+      "thumbnailUrl": "https://i.ytimg.com/vi/Xcys2EjQGPQ/maxresdefault.jpg",
+      "publishedAt": "2026-09-18T11:08:17Z",
+      "durationSeconds": 234,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "XlcltOiBb6s",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "ADRN - Lawod (Live at Sonic Collective)",
+      "thumbnailUrl": "https://i.ytimg.com/vi/XlcltOiBb6s/maxresdefault.jpg",
+      "publishedAt": "2026-10-02T11:00:38Z",
+      "durationSeconds": 247,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "xnFHEP3gxvA",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "OVERTURE x DEJA VU // Stallions of the Burning Church Cover",
+      "thumbnailUrl": "https://i.ytimg.com/vi/xnFHEP3gxvA/maxresdefault.jpg",
+      "publishedAt": "2025-01-17T01:55:44Z",
+      "durationSeconds": 521,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "xoQMYEcVk1o",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Hikaru Nara (Your Lie in April OP) – Natsuki 夏希 | Otakufest 2026 Stripped Down Cover",
+      "thumbnailUrl": "https://i.ytimg.com/vi/xoQMYEcVk1o/maxresdefault.jpg",
+      "publishedAt": "2026-03-18T09:00:06Z",
+      "durationSeconds": 249,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "Xwj3qKXDS_U",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Bianca | Orange - 7!! #orange #shigatsuwakiminouso #animesong #cover #coversong #singer",
+      "thumbnailUrl": "https://i.ytimg.com/vi/Xwj3qKXDS_U/maxresdefault.jpg",
+      "publishedAt": "2025-11-29T13:01:27Z",
+      "durationSeconds": 31,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "XxdymAo4arQ",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Bianca｜ビアンカ – Orange / 7!!【Live Cover｜ライブカバー】",
+      "thumbnailUrl": "https://i.ytimg.com/vi/XxdymAo4arQ/maxresdefault.jpg",
+      "publishedAt": "2025-11-29T12:00:06Z",
+      "durationSeconds": 150,
+      "seriesId": null,
+      "embeddable": true
+    },
+    {
+      "youtubeId": "ZpCurUqB7dE",
+      "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
+      "title": "Franzel - Ikaw Nalang Bi (Live at Sonic Collective) #vispop #newmusic #opm #sonata #risingartist",
+      "thumbnailUrl": "https://i.ytimg.com/vi/ZpCurUqB7dE/maxresdefault.jpg",
+      "publishedAt": "2026-08-17T06:11:29Z",
+      "durationSeconds": 46,
+      "seriesId": null,
+      "embeddable": true
+    }
+  ]
 }
