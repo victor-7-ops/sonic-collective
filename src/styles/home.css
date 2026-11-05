@@ -82,7 +82,7 @@
   .rena-teaser__image { max-height: 190px; }
   .rena-teaser__copy h2 { font-size: clamp(22px, 6vw, 30px); }
   .rena-teaser__copy > p:not(.eyebrow) { font-size: 14px; }
-  .section-heading { align-items: start; }
+  .section-heading { display: grid; align-items: start; }
   .section-heading > .text-link { flex: 0 0 auto; }
   .archive__filters { gap: 16px; }
   .archive__filters button { font-size: 11px; }
