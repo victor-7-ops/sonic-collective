@@ -104,3 +104,11 @@
 .hero__loop { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #101715; }
 .hero__loop[hidden] { display: none; }
 .hero__feature .performance-player__play { z-index: 1; }
+
+.hero {
+  background: radial-gradient(ellipse at 76% 43%, #203a34 0%, #151d1b 46%, #101715 78%);
+}
+.hero__feature.performance-player__poster {
+  box-shadow: 0 0 0 1px rgb(158 200 189 / .36), 0 24px 64px rgb(0 0 0 / .32);
+}
+.hero__cue { letter-spacing: .16em; }
