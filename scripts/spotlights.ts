@@ -43,6 +43,7 @@ if (carousel && controls && pause && position && slides.length > 1) {
     schedule();
   });
   document.addEventListener('visibilitychange', schedule);
+  pause.textContent = paused ? 'Resume spotlights' : 'Pause spotlights';
   controls.hidden = false;
   schedule();
 }

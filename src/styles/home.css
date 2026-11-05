@@ -146,3 +146,5 @@
   .hero__title { font-size: clamp(40px, 11vw, 72px); }
   .hero__intro { font-size: 16px; }
 }
+
+[data-spotlight-position] { white-space: nowrap; }
