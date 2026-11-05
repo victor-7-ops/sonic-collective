@@ -1,5 +1,5 @@
 ---
-interface Props { query: { q: string; series: string; sort: string }; count: number; }
+interface Props { query: { q: string; series: string; sort: string; format?: string }; count: number; }
 const { query, count } = Astro.props;
 ---
 <form class="catalog-filters" data-filter-form>
@@ -11,6 +11,14 @@ const { query, count } = Astro.props;
       <option value="all" selected={query.series === 'all'}>All series</option>
       <option value="sessions" selected={query.series === 'sessions'}>Sonic Sessions</option>
       <option value="covers" selected={query.series === 'covers'}>Covers</option>
+    </select>
+  </label>
+  <label>Video format
+    <select name="format">
+      <option value="all" selected={!query.format||query.format==='all'}>All formats</option>
+      <option value="full" selected={query.format==='full'}>Full performances</option>
+      <option value="short" selected={query.format==='short'}>Shorts</option>
+      <option value="unreviewed" selected={query.format==='unreviewed'}>Other uploads</option>
     </select>
   </label>
   <label>Sort

@@ -24,3 +24,22 @@ test('snapshot validation rejects duplicate video IDs even with a matching hash'
   const snapshot=makeSnapshot([video],'channel');snapshot.videos.push(video);snapshot.contentHash=hashVideos(snapshot.videos);
   assert.throws(()=>validateSnapshot(snapshot),/duplicate YouTube IDs/);
 });
+
+test('format filters combine with search, preserve unknown uploads, and reject unknown query values',()=>{
+  const items=[
+    {...item('full','youtube',undefined,'Rena song'),format:'full' as const},
+    {...item('short','youtube',undefined,'Rena excerpt'),format:'short' as const},
+    item('unknown','youtube',undefined,'New upload'),
+  ];
+  assert.deepEqual(filterCatalogItems(items,parseCatalogQuery('format=short&q=rena')).map(item=>item.id),['short']);
+  assert.deepEqual(filterCatalogItems(items,parseCatalogQuery('format=full')).map(item=>item.id),['full']);
+  assert.deepEqual(filterCatalogItems(items,parseCatalogQuery('format=unreviewed')).map(item=>item.id),['unknown']);
+  assert.equal(filterCatalogItems(items,parseCatalogQuery('format=invalid')).length,3);
+});
+
+test('reviewed format metadata rejects guessed enum values and malformed video IDs',async()=>{
+  const {youtubeOverridesSchema}=await import('../src/lib/merge-catalog.js');
+  assert.equal(youtubeOverridesSchema.safeParse([{youtubeId:'AbCdEfGhIjK',format:'short',artistIds:['rena']}]).success,true);
+  assert.equal(youtubeOverridesSchema.safeParse([{youtubeId:'AbCdEfGhIjK',format:'maybe-short'}]).success,false);
+  assert.equal(youtubeOverridesSchema.safeParse([{youtubeId:'bad',format:'full'}]).success,false);
+});

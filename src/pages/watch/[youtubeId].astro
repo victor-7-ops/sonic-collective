@@ -2,7 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import RemoteWatchPlayer from '../../components/RemoteWatchPlayer.astro';
 import { getDiscoveryCatalog } from '../../lib/discovery';
-import { performanceUrl, youtubeUrl } from '../../lib/urls';
+import { performanceUrl, youtubeUrl, artistUrl } from '../../lib/urls';
 import PerformanceCard from '../../components/PerformanceCard.astro';
 import legacyWatchRoutes from '../../data/legacy-watch-routes.json';
 import '../../styles/discovery.css';
@@ -27,7 +27,9 @@ const playbackRecords=[...catalog.performances.map(({id,title,youtubeId})=>({id,
     <nav aria-label="Breadcrumb"><a href="/sessions/">All performances</a> <span aria-hidden="true">/</span> {video.title}</nav>
     <div style="margin-top:24px"><RemoteWatchPlayer id={video.id} youtubeId={video.youtubeId} title={video.title} thumbnailUrl={video.image.kind==='youtube'?video.image.url:''} embeddable={video.embeddable} /></div>
     <section class="performance-details"><p class="eyebrow">{video.seriesId==='sessions'?'Sonic Session':video.seriesId==='covers'?'Sonic Cover':'Channel upload'}</p>
-      <h1 class="performance-title">{video.title}</h1><p>Published by <a href="https://www.youtube.com/@Sonic_Collective-PH" target="_blank" rel="noopener noreferrer">Sonic Collective ↗</a></p>
+      <h1 class="performance-title">{video.title}</h1>
+      <p>{video.format==='short'?'YouTube Short':video.format==='full'?'Full performance':'Channel upload'}</p>
+      {video.artistIds.length>0&&<p>Performed by {video.artistIds.map((id,index)=><>{index>0?' & ':''}<a href={artistUrl(id)}>{catalog.raw.artists.find(artist=>artist.id===id)!.name}</a></>)}</p>}<p>Published by <a href="https://www.youtube.com/@Sonic_Collective-PH" target="_blank" rel="noopener noreferrer">Sonic Collective ↗</a></p>
       {video.publishedAt&&<p><time datetime={video.publishedAt}>{new Date(video.publishedAt).toLocaleDateString('en',{dateStyle:'long',timeZone:'UTC'})}</time></p>}
       {!video.embeddable&&<p role="status">This video cannot be embedded. Use the direct YouTube link to watch it.</p>}
       <p><a class="button button--quiet" href={youtubeUrl(video.youtubeId)} target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></p>

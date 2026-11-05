@@ -1,6 +1,17 @@
+import { z } from 'zod';
 import { validateSnapshot, type ImportedVideo, type YoutubeSnapshot } from './youtube-import.js';
 
-export type YoutubeOverride = { youtubeId:string; approved?:boolean; excluded?:boolean; seriesId?:'sessions'|'covers'|null; thumbnailUrl?:string; embeddable?:boolean };
+export const youtubeOverridesSchema = z.array(z.object({
+  youtubeId: z.string().regex(/^[A-Za-z0-9_-]{11}$/),
+  approved: z.boolean().optional(),
+  excluded: z.boolean().optional(),
+  seriesId: z.enum(['sessions','covers']).nullable().optional(),
+  thumbnailUrl: z.url().optional(),
+  embeddable: z.boolean().optional(),
+  format: z.enum(['full','short']).optional(),
+  artistIds: z.array(z.string().min(1)).optional(),
+}));
+export type YoutubeOverride = z.infer<typeof youtubeOverridesSchema>[number];
 export function mergeCatalog(authored: { youtubeId:string; id:string; approvedForSite:boolean; seriesId:'sessions'|'covers' }[], snapshot:YoutubeSnapshot, overrides:YoutubeOverride[]) {
   validateSnapshot(snapshot);
   const authoredById = new Map(authored.map((record)=>[record.youtubeId,record]));

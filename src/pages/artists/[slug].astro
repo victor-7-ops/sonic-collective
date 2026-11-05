@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import CatalogCard from '../../components/CatalogCard.astro';
 import PerformanceCard from '../../components/PerformanceCard.astro';
 import MediaImage from '../../components/MediaImage.astro';
 import { getDiscoveryCatalog } from '../../lib/discovery';
@@ -7,17 +8,17 @@ import { artistUrl } from '../../lib/urls';
 import '../../styles/discovery.css';
 export async function getStaticPaths() {
   const catalog = await getDiscoveryCatalog();
-  const visible = new Set(catalog.performances.filter((p)=>catalog.availability[p.youtubeId]!=='unavailable').flatMap((performance) => performance.artistIds));
-  return catalog.artists.filter((artist) => visible.has(artist.id)).map((artist) => ({ params: { slug: artist.id }, props: { artistId: artist.id } }));
+  return catalog.artists.map((artist) => ({ params: { slug: artist.id }, props: { artistId: artist.id } }));
 }
 const { artistId } = Astro.props;
 const catalog = await getDiscoveryCatalog();
 const artist = catalog.artists.find((item) => item.id === artistId)!;
 const appearances = catalog.performances.filter((performance) => catalog.availability[performance.youtubeId]!=='unavailable'&&performance.artistIds.includes(artist.id)).sort((a,b) => a.featuredOrder-b.featuredOrder || a.id.localeCompare(b.id));
+const uploads=catalog.imported.filter(item=>item.artistIds.includes(artist.id));
 const title = `${artist.name} | Sonic Collective artists`;
 const description = artist.bio ?? `${artist.name} appears in ${appearances.length} Sonic Collective ${appearances.length === 1 ? 'performance' : 'performances'}.`;
 ---
-<BaseLayout title={title} description={description} canonicalPath={artistUrl(artist.id)} currentPath="/artists/" playbackRecords={catalog.performances.map(({id,title,youtubeId})=>({id,title,youtubeId,embeddable:catalog.availability[youtubeId]!=='unavailable'&&catalog.availability[youtubeId]!=='external-only'}))}>
+<BaseLayout title={title} description={description} canonicalPath={artistUrl(artist.id)} currentPath="/artists/" playbackRecords={[...catalog.imported.map(({id,title,youtubeId,embeddable})=>({id,title,youtubeId,embeddable})),...catalog.performances.map(({id,title,youtubeId})=>({id,title,youtubeId,embeddable:catalog.availability[youtubeId]!=='unavailable'&&catalog.availability[youtubeId]!=='external-only'}))]}>
   <article class="discovery-page"><div class="discovery-page__inner">
     <nav aria-label="Breadcrumb"><a href="/artists/">Artists</a> <span aria-hidden="true">/</span> {artist.name}</nav>
     <section class="profile-heading" style="margin-top:28px">
@@ -29,5 +30,6 @@ const description = artist.bio ?? `${artist.name} appears in ${appearances.lengt
       </div>
     </section>
     <section class="profile-appearances"><h2>Performances</h2><div class="catalog-grid">{appearances.map((performance) => <PerformanceCard performance={performance} artistNames={performance.artistIds.map((id) => catalog.raw.artists.find((item) => item.id === id)?.name ?? '').filter(Boolean)} playable={catalog.availability[performance.youtubeId]!=='external-only'} preview={catalog.clips.find((clip)=>clip.performanceId===performance.id)} />)}</div></section>
+    {uploads.length>0&&<section class="profile-appearances"><h2>More from {artist.name}</h2><div class="catalog-grid">{uploads.map(item=><CatalogCard item={item} />)}</div></section>}
   </div></article>
 </BaseLayout>

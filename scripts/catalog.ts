@@ -1,6 +1,6 @@
 import { filterCatalogItems, parseCatalogQuery } from '../src/lib/search';
 
-type Item = { id:string;title:string;searchText:string;seriesId:'sessions'|'covers'|null;source:'curated'|'youtube';featuredOrder?:number;publishedAt?:string };
+type Item = { id:string;title:string;searchText:string;seriesId:'sessions'|'covers'|null;source:'curated'|'youtube';featuredOrder?:number;publishedAt?:string;format?:'full'|'short' };
 const root = document.querySelector<HTMLElement>('[data-catalog-root]');
 if (root) {
   const form = root.querySelector<HTMLFormElement>('[data-filter-form]')!;
@@ -14,10 +14,11 @@ if (root) {
 
   function stateFromForm() {
     const values = new FormData(form);
-    return parseCatalogQuery(new URLSearchParams({ q: String(values.get('q') ?? ''), series: String(values.get('series') ?? 'all'), sort: String(values.get('sort') ?? 'featured') }));
+    return parseCatalogQuery(new URLSearchParams({ format: String(values.get('format')??'all'), q: String(values.get('q') ?? ''), series: String(values.get('series') ?? 'all'), sort: String(values.get('sort') ?? 'featured') }));
   }
   function paramsFor(state: ReturnType<typeof stateFromForm>) {
     const params = new URLSearchParams();
+    if (state.format && state.format !== 'all') params.set('format', state.format);
     if (state.q) params.set('q', state.q);
     if (state.series !== 'all') params.set('series', state.series);
     if (state.sort !== 'featured') params.set('sort', state.sort);
@@ -39,6 +40,7 @@ if (root) {
   }
   function fromUrl() {
     const state = parseCatalogQuery(location.search);
+    (form.elements.namedItem('format') as HTMLSelectElement).value = state.format??'all';
     (form.elements.namedItem('q') as HTMLInputElement).value = state.q;
     (form.elements.namedItem('series') as HTMLSelectElement).value = state.series;
     (form.elements.namedItem('sort') as HTMLSelectElement).value = state.sort;
@@ -56,6 +58,7 @@ if (root) {
   });
   clearButtons.forEach((clear) => clear.addEventListener('click', (event) => {
     event.preventDefault(); if (typingTimer) clearTimeout(typingTimer);
+    (form.elements.namedItem('format') as HTMLSelectElement).value = 'all';
     (form.elements.namedItem('q') as HTMLInputElement).value = '';
     (form.elements.namedItem('series') as HTMLSelectElement).value = 'all';
     (form.elements.namedItem('sort') as HTMLSelectElement).value = 'featured';

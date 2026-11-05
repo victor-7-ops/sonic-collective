@@ -2,7 +2,7 @@
 .discovery-page__inner { width: min(1200px,calc(100% - 40px)); margin-inline:auto; }
 .discovery-page h1 { font-size:clamp(42px,7vw,88px); line-height:.98; letter-spacing:-.055em; margin:0 0 22px; }
 .discovery-lede { max-width:58ch; color:var(--ink-muted); font-size:18px; margin:0 0 36px; }
-.catalog-filters { display:grid; grid-template-columns:minmax(220px,1.5fr) minmax(160px,.7fr) minmax(140px,.6fr) auto; align-items:end; gap:14px; margin:0 0 18px; padding:22px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-lg); }
+.catalog-filters { display:grid; grid-template-columns:minmax(220px,1.5fr) repeat(3,minmax(120px,.6fr)) auto; align-items:end; gap:14px; margin:0 0 18px; padding:22px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-lg); }
 .catalog-filters label { display:grid; gap:8px; color:var(--ink); font-size:14px; font-weight:650; }
 .catalog-filters input,.catalog-filters select { min-width:0; min-height:48px; width:100%; padding:10px 12px; border:1px solid #a9aea8; border-radius:9px; background:white; color:var(--ink); font:inherit; }
 .catalog-filters input:focus-visible,.catalog-filters select:focus-visible { outline:3px solid var(--mint-strong); outline-offset:2px; }
@@ -34,3 +34,5 @@
 .share-row input[hidden] { display:none; }
 @media(max-width:760px) { .catalog-filters { grid-template-columns:1fr 1fr; padding:16px; } .catalog-filters__search { grid-column:1/-1; } .catalog-grid,.artist-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; } .profile-heading { grid-template-columns:1fr; } .profile-heading .media-frame { max-width:520px; } }
 @media(max-width:440px) { .catalog-filters { grid-template-columns:1fr; } .catalog-filters__search { grid-column:auto; } .catalog-grid,.artist-grid { grid-template-columns:1fr; } }
+
+.catalog-artists { display: flex; flex-wrap: wrap; gap: 12px; margin: 8px 0; font-size: 13px; }

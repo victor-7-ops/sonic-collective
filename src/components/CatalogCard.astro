@@ -1,6 +1,8 @@
 ---
 import type { CatalogItem } from '../lib/discovery';
 import type { Clip } from '../lib/schemas';
+import artists from '../data/artists.json';
+import { artistUrl } from '../lib/urls';
 import MediaImage from './MediaImage.astro';
 import RemoteThumbnail from './RemoteThumbnail.astro';
 import PerformancePreview from './PerformancePreview.astro';
@@ -16,7 +18,9 @@ const {item,preview}=Astro.props;
     {preview&&<PerformancePreview clip={preview} label={item.title} />}
   </div>
   <div class="performance-card__body">
-    <div class="performance-card__meta"><h2 class="performance-card__title"><a class="card-link" href={item.href}>{item.artistLabel??'Sonic Collective'}</a></h2><small>{item.seriesId==='sessions'?'Session':item.seriesId==='covers'?'Cover':'Latest upload'}</small></div>
+    <div class="performance-card__meta"><h2 class="performance-card__title"><a class="card-link" href={item.href}>{item.artistLabel??'Sonic Collective'}</a></h2><small>{item.format==='short'?'Short':item.format==='full'?'Full performance':'Upload'}</small></div>
+    {item.artistIds.length>0&&<p class="catalog-artists">{item.artistIds.map(id=><a href={artistUrl(id)}>{artists.find(artist=>artist.id===id)?.name} ↗</a>)}</p>}
+    <div class="performance-card__meta"><small>{item.seriesId==='sessions'?'Session':item.seriesId==='covers'?'Cover':'Latest upload'}</small></div>
     <div class="performance-card__meta"><a href={item.href}>{item.title}</a></div>
     {item.embeddable&&<button class="performance-card__quick-watch" type="button" data-watch-id={item.id} hidden aria-label={`Quick watch ${item.title}`}>Quick watch</button>}
   </div>

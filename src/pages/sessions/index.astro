@@ -8,7 +8,7 @@ import '../../styles/discovery.css';
 const catalog=await getDiscoveryCatalog();
 const query=parseCatalogQuery(Astro.url.searchParams);
 const results=filterCatalogItems(catalog.catalogItems,query);
-const data=JSON.stringify(catalog.catalogItems.map(({id,title,searchText,seriesId,source,featuredOrder,publishedAt})=>({id,title,searchText,seriesId,source,featuredOrder,publishedAt}))).replace(/</g,'\\u003c');
+const data=JSON.stringify(catalog.catalogItems.map(({id,title,searchText,seriesId,source,featuredOrder,publishedAt,format})=>({id,title,searchText,seriesId,source,featuredOrder,publishedAt,format}))).replace(/</g,'\\u003c');
 const playbackRecords=[...catalog.performances.map(({id,title,youtubeId})=>({id,title,youtubeId,embeddable:catalog.availability[youtubeId]!=='unavailable'&&catalog.availability[youtubeId]!=='external-only'})),...catalog.imported.map(({id,title,youtubeId,embeddable})=>({id,title,youtubeId,embeddable}))];
 ---
 <BaseLayout title="All performances | Sonic Collective" description="Search the Sonic Collective performance archive across Sonic Sessions, Covers, and channel uploads." canonicalPath="/sessions/" currentPath="/sessions/" playbackRecords={playbackRecords}>

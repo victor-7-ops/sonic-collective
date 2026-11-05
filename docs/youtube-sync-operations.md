@@ -13,3 +13,5 @@ The GitHub Actions workflow supplies the API key and persists its validated publ
 Production publishes search metadata at https://sonic-collective.vercel.app. Preview deployments retain noindex by default.
 
 GitHub Actions runs the YouTube sync hourly at minute 23 and supports manual runs. It reads YOUTUBE_API_KEY from repository secrets, validates the complete API result, builds and tests the candidate, then commits only src/data/youtube-snapshot.json. Failed API calls, unexpected removals, failed tests, or invalid builds do not publish a candidate. Successful commits trigger the connected Vercel project. No-change runs avoid commits until the seven-day freshness refresh is due.
+
+Reviewed video formats in youtube-overrides.json were checked against the channel's Videos and Shorts tabs on 2026-11-05. Artist IDs map explicit names in those reviewed upload titles to existing profiles. Future uploads stay in Other uploads until their format is reviewed. Sync refreshes the API snapshot without overwriting editorial mappings.

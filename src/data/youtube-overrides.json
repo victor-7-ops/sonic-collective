@@ -1,5 +1,492 @@
 [
-  { "youtubeId": "l6jOj6cOdoM", "embeddable": false },
-  { "youtubeId": "sBkITDDRLfw", "embeddable": false },
-  { "youtubeId": "pdJi4gDwlnI", "embeddable": false }
+  {
+    "youtubeId": "l6jOj6cOdoM",
+    "embeddable": false,
+    "format": "full",
+    "artistIds": [
+      "playscape-vision"
+    ]
+  },
+  {
+    "youtubeId": "sBkITDDRLfw",
+    "embeddable": false,
+    "format": "full",
+    "artistIds": [
+      "blair"
+    ]
+  },
+  {
+    "youtubeId": "pdJi4gDwlnI",
+    "embeddable": false,
+    "format": "full",
+    "artistIds": [
+      "bianca"
+    ]
+  },
+  {
+    "youtubeId": "0GtqbE7pS14",
+    "format": "short"
+  },
+  {
+    "youtubeId": "0IYH_xe7xZE",
+    "format": "full"
+  },
+  {
+    "youtubeId": "0o1r7ykkfqE",
+    "format": "full",
+    "artistIds": [
+      "gerald",
+      "rena"
+    ]
+  },
+  {
+    "youtubeId": "0OUDAZzh-c8",
+    "format": "short",
+    "artistIds": [
+      "gerald"
+    ]
+  },
+  {
+    "youtubeId": "0q9Chr7wl-4",
+    "format": "short",
+    "artistIds": [
+      "nathan-steve"
+    ]
+  },
+  {
+    "youtubeId": "1GWSCTFrTKg",
+    "format": "full"
+  },
+  {
+    "youtubeId": "1RBSbh4v1vo",
+    "format": "short"
+  },
+  {
+    "youtubeId": "2If_iAt5L6U",
+    "format": "full"
+  },
+  {
+    "youtubeId": "3jDOWF4MaUM",
+    "format": "short",
+    "artistIds": [
+      "gerald"
+    ]
+  },
+  {
+    "youtubeId": "4_rJb2Ncn7E",
+    "format": "short",
+    "artistIds": [
+      "gerald"
+    ]
+  },
+  {
+    "youtubeId": "4lvJRmvuQ6s",
+    "format": "full",
+    "artistIds": [
+      "playscape-vision"
+    ]
+  },
+  {
+    "youtubeId": "5Q36BeTPGw0",
+    "format": "short"
+  },
+  {
+    "youtubeId": "5xNsVtsrViE",
+    "format": "short"
+  },
+  {
+    "youtubeId": "8_FWvC1BLKE",
+    "format": "full",
+    "artistIds": [
+      "kalii-skrums"
+    ]
+  },
+  {
+    "youtubeId": "8RGXtTkjVoI",
+    "format": "short",
+    "artistIds": [
+      "rena",
+      "bianca"
+    ]
+  },
+  {
+    "youtubeId": "8RzuwEk1fj0",
+    "format": "full"
+  },
+  {
+    "youtubeId": "8UCpUiaqQVI",
+    "format": "full"
+  },
+  {
+    "youtubeId": "9yzwJe8Ax8k",
+    "format": "short",
+    "artistIds": [
+      "gerald",
+      "rena"
+    ]
+  },
+  {
+    "youtubeId": "A0EOj8aeNVw",
+    "format": "full",
+    "artistIds": [
+      "jade-makawili"
+    ]
+  },
+  {
+    "youtubeId": "a4bOQ-u-b4U",
+    "format": "short"
+  },
+  {
+    "youtubeId": "A4LnJ1uDm3s",
+    "format": "full"
+  },
+  {
+    "youtubeId": "A7XpylxqrV0",
+    "format": "full"
+  },
+  {
+    "youtubeId": "aHw9fLZ_4Co",
+    "format": "full",
+    "artistIds": [
+      "gerald"
+    ]
+  },
+  {
+    "youtubeId": "AnJXSQ-pk4k",
+    "format": "full",
+    "artistIds": [
+      "gerald"
+    ]
+  },
+  {
+    "youtubeId": "bgPbOnbt6Q8",
+    "format": "short",
+    "artistIds": [
+      "playscape-vision"
+    ]
+  },
+  {
+    "youtubeId": "CGgCV-I0ACE",
+    "format": "full",
+    "artistIds": [
+      "zera"
+    ]
+  },
+  {
+    "youtubeId": "CL4bSIy4AYg",
+    "format": "full",
+    "artistIds": [
+      "nathan-steve"
+    ]
+  },
+  {
+    "youtubeId": "cpdep5VAh3A",
+    "format": "full",
+    "artistIds": [
+      "nathan-steve"
+    ]
+  },
+  {
+    "youtubeId": "CTiNSfBcJ78",
+    "format": "short",
+    "artistIds": [
+      "gerald",
+      "rena"
+    ]
+  },
+  {
+    "youtubeId": "d-1lgnI8s4U",
+    "format": "short",
+    "artistIds": [
+      "gerald"
+    ]
+  },
+  {
+    "youtubeId": "DpkUs6izNNI",
+    "format": "short",
+    "artistIds": [
+      "playscape-vision"
+    ]
+  },
+  {
+    "youtubeId": "DTqmvJZmcTQ",
+    "format": "full"
+  },
+  {
+    "youtubeId": "dYGDXH9xzlA",
+    "format": "full",
+    "artistIds": [
+      "rena",
+      "bianca"
+    ]
+  },
+  {
+    "youtubeId": "ev5ZNUMEoxs",
+    "format": "short",
+    "artistIds": [
+      "gerald"
+    ]
+  },
+  {
+    "youtubeId": "fFWQrqbLVBU",
+    "format": "short",
+    "artistIds": [
+      "jade-makawili"
+    ]
+  },
+  {
+    "youtubeId": "g6Kg7I2XSd4",
+    "format": "full"
+  },
+  {
+    "youtubeId": "GtBMvl8U83s",
+    "format": "full"
+  },
+  {
+    "youtubeId": "H08axpSMLBI",
+    "format": "full"
+  },
+  {
+    "youtubeId": "hg6iRsw-uiI",
+    "format": "short"
+  },
+  {
+    "youtubeId": "hoyeStErb84",
+    "format": "short"
+  },
+  {
+    "youtubeId": "hwreKBw4hiM",
+    "format": "full"
+  },
+  {
+    "youtubeId": "iHzzkeXN8f0",
+    "format": "full"
+  },
+  {
+    "youtubeId": "iNY1Yw58_vQ",
+    "format": "short"
+  },
+  {
+    "youtubeId": "J91G8AT1vaA",
+    "format": "short",
+    "artistIds": [
+      "kalii-skrums"
+    ]
+  },
+  {
+    "youtubeId": "jdGvuJLGgoQ",
+    "format": "full",
+    "artistIds": [
+      "nathan-steve"
+    ]
+  },
+  {
+    "youtubeId": "JHUlD_BYuBc",
+    "format": "short",
+    "artistIds": [
+      "zera"
+    ]
+  },
+  {
+    "youtubeId": "knh3roGTEKc",
+    "format": "short"
+  },
+  {
+    "youtubeId": "kptAS61TzOY",
+    "format": "short",
+    "artistIds": [
+      "nathan-steve"
+    ]
+  },
+  {
+    "youtubeId": "LHyK398R_8g",
+    "format": "short"
+  },
+  {
+    "youtubeId": "mJOmL8M-OQ8",
+    "format": "full"
+  },
+  {
+    "youtubeId": "n_a8eDp1SiE",
+    "format": "short"
+  },
+  {
+    "youtubeId": "nDiY6ziWfe0",
+    "format": "short",
+    "artistIds": [
+      "gerald"
+    ]
+  },
+  {
+    "youtubeId": "ny33jxxqFv8",
+    "format": "full",
+    "artistIds": [
+      "kalii-skrums"
+    ]
+  },
+  {
+    "youtubeId": "OD-6eIJlKYw",
+    "format": "short",
+    "artistIds": [
+      "nathan-steve"
+    ]
+  },
+  {
+    "youtubeId": "Ogz1ynNOy6Y",
+    "format": "short",
+    "artistIds": [
+      "blair"
+    ]
+  },
+  {
+    "youtubeId": "oV2of0gEN-I",
+    "format": "short"
+  },
+  {
+    "youtubeId": "OXgeD7BN5fE",
+    "format": "short",
+    "artistIds": [
+      "rena"
+    ]
+  },
+  {
+    "youtubeId": "P7fztFgCFaI",
+    "format": "full"
+  },
+  {
+    "youtubeId": "pIDMq-3fwQo",
+    "format": "short",
+    "artistIds": [
+      "gerald",
+      "rena"
+    ]
+  },
+  {
+    "youtubeId": "PjFfvmeVKt0",
+    "format": "short",
+    "artistIds": [
+      "gerald"
+    ]
+  },
+  {
+    "youtubeId": "PnI-kRS5OdQ",
+    "format": "full",
+    "artistIds": [
+      "rena"
+    ]
+  },
+  {
+    "youtubeId": "pSsThYGhiVE",
+    "format": "full"
+  },
+  {
+    "youtubeId": "QQ0bxsJNPHc",
+    "format": "short"
+  },
+  {
+    "youtubeId": "QrlWqqazFYM",
+    "format": "short"
+  },
+  {
+    "youtubeId": "QTdSU6ZDYkw",
+    "format": "full",
+    "artistIds": [
+      "rena"
+    ]
+  },
+  {
+    "youtubeId": "rEsPOJm9X50",
+    "format": "short"
+  },
+  {
+    "youtubeId": "RhDTMRnfT1E",
+    "format": "full",
+    "artistIds": [
+      "zera"
+    ]
+  },
+  {
+    "youtubeId": "S6OfHVxHX0Y",
+    "format": "short"
+  },
+  {
+    "youtubeId": "SsRgq9fHKjk",
+    "format": "full",
+    "artistIds": [
+      "gerald"
+    ]
+  },
+  {
+    "youtubeId": "Sukfc_CuG4w",
+    "format": "full"
+  },
+  {
+    "youtubeId": "T07A7oqmI_M",
+    "format": "short",
+    "artistIds": [
+      "rena"
+    ]
+  },
+  {
+    "youtubeId": "VGQ2HB3yLVE",
+    "format": "full",
+    "artistIds": [
+      "gerald"
+    ]
+  },
+  {
+    "youtubeId": "VPGtC7QQ94U",
+    "format": "short",
+    "artistIds": [
+      "bianca"
+    ]
+  },
+  {
+    "youtubeId": "vVrs_bfj56w",
+    "format": "short"
+  },
+  {
+    "youtubeId": "wsWDbA2-wp0",
+    "format": "short",
+    "artistIds": [
+      "gerald"
+    ]
+  },
+  {
+    "youtubeId": "Xcys2EjQGPQ",
+    "format": "full",
+    "artistIds": [
+      "jade-makawili"
+    ]
+  },
+  {
+    "youtubeId": "XlcltOiBb6s",
+    "format": "full"
+  },
+  {
+    "youtubeId": "xnFHEP3gxvA",
+    "format": "full"
+  },
+  {
+    "youtubeId": "xoQMYEcVk1o",
+    "format": "full"
+  },
+  {
+    "youtubeId": "Xwj3qKXDS_U",
+    "format": "short",
+    "artistIds": [
+      "bianca"
+    ]
+  },
+  {
+    "youtubeId": "XxdymAo4arQ",
+    "format": "full",
+    "artistIds": [
+      "bianca"
+    ]
+  },
+  {
+    "youtubeId": "ZpCurUqB7dE",
+    "format": "short"
+  }
 ]

@@ -40,5 +40,5 @@ export type Clip = z.infer<typeof clipSchema>;
 export type Series = z.infer<typeof seriesSchema>;
 export type SiteConfig = z.infer<typeof siteConfigSchema>;
 export type Catalog = z.infer<typeof catalogSchema>;
-export type CatalogQuery = { q: string; series: 'all' | 'sessions' | 'covers'; sort: 'featured' | 'az' | 'newest' };
+export type CatalogQuery = { format?: 'all' | 'full' | 'short' | 'unreviewed'; q: string; series: 'all' | 'sessions' | 'covers'; sort: 'featured' | 'az' | 'newest' };
 
