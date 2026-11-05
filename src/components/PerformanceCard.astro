@@ -11,6 +11,7 @@ const href=`/sessions/${encodeURIComponent(performance.id)}/`;
   <div class="performance-card__media">
     <a class="card-link" href={href} aria-label={`${performance.title} by ${artistNames.join(' and ')}`}>
       <MediaImage class="performance-card__image media-frame" base={performance.thumbnail} alt={performance.thumbnailAlt} />
+      <span class="session-stamp" aria-hidden="true">SC SESSION</span>
     </a>
     {preview&&<PerformancePreview clip={preview} label={`${performance.title} by ${artistNames.join(' and ')}`} />}
   </div>

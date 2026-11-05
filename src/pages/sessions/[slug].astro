@@ -17,7 +17,7 @@ const playable=catalog.availability[performance.youtubeId]!=='unavailable'&&cata
 const artists=performance.artistIds.map((id)=>catalog.raw.artists.find((artist)=>artist.id===id)).filter((artist)=>artist!==undefined);
 const names=artistNamesFor(performance,catalog.raw.artists);
 const series=catalog.raw.series.find((item)=>item.id===performance.seriesId)!;
-const related=getRelated(performance,catalog.performances.filter((item)=>catalog.availability[item.youtubeId]!=='unavailable'));
+const [next]=getRelated(performance,catalog.performances.filter((item)=>catalog.availability[item.youtubeId]!=='unavailable'));
 const title=`${performance.title} by ${names.join(' & ')} | Sonic Collective`;
 const description=`${performance.title} by ${names.join(' & ')} in ${series.title}. Watch the full performance on YouTube.`;
 const playbackRecords=catalog.performances.map(({id,title,youtubeId})=>({id,title,youtubeId,embeddable:catalog.availability[youtubeId]!=='unavailable'&&catalog.availability[youtubeId]!=='external-only'}));
@@ -31,13 +31,15 @@ const playbackRecords=catalog.performances.map(({id,title,youtubeId})=>({id,titl
       <p class="eyebrow">{series.title}{performance.episode ? ` · Episode ${performance.episode}` : ''}</p><h1 class="performance-title">{performance.title}</h1>
       {performance.originalTitle&&<p lang="ja">{performance.originalTitle}</p>}
       <div class="performance-byline">{artists.map((artist,index)=><span>{index>0&&<span aria-hidden="true"> · </span>}<a href={artistUrl(artist.id)}>{artist.name}</a></span>)}</div>
-      {performance.originalArtist&&<p>Original song by {performance.originalArtist}</p>}
+      {performance.editorialNote&&<p>{performance.editorialNote}</p>}
+      <h2>Credits</h2>
+      <p>Performed by {names.join(' & ')}{performance.originalArtist&&<> · Original song by {performance.originalArtist}</>}</p>
       <div class="share-row"><button class="button button--quiet" type="button" data-share-page>Copy page link</button><span role="status" aria-live="polite" data-share-status></span><input aria-label="Canonical page link" readonly hidden data-share-url /></div>
       <script>import '../../../scripts/share.ts';</script>
     </section>
-    {related.length>0&&<section class="related-performances"><h2>More performances</h2><div class="catalog-grid">{related.map((item)=>{
-      const shared=item.artistIds.some((id)=>performance.artistIds.includes(id));const sameSeries=item.seriesId===performance.seriesId;
-      return <div>{shared&&<p class="eyebrow">Artist</p>}{sameSeries&&<p class="eyebrow">Same series</p>}<PerformanceCard performance={item} artistNames={artistNamesFor(item,catalog.raw.artists)} playable={catalog.availability[item.youtubeId]!=='external-only'} preview={catalog.clips.find((clip)=>clip.performanceId===item.id)} /></div>;
-    })}</div></section>}
+    {next&&<section class="related-performances" aria-labelledby="watch-next">
+      <h2 id="watch-next">Watch next</h2>
+      <div class="catalog-grid"><PerformanceCard performance={next} artistNames={artistNamesFor(next,catalog.raw.artists)} playable={catalog.availability[next.youtubeId]!=='external-only'} /></div>
+    </section>}
   </div></article>
 </BaseLayout>

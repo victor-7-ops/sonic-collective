@@ -11,6 +11,7 @@ const {item,preview}=Astro.props;
   <div class="performance-card__media">
     <a class="card-link" href={item.href} aria-label={item.artistLabel?`${item.title} by ${item.artistLabel}`:item.title}>
       {item.image.kind==='local'?<MediaImage class="performance-card__image media-frame" base={item.image.base} alt={item.image.alt} />:<RemoteThumbnail class="performance-card__image media-frame" url={item.image.url} alt={item.image.alt} />}
+      {item.source==='curated'&&<span class="session-stamp" aria-hidden="true">SC SESSION</span>}
     </a>
     {preview&&<PerformancePreview clip={preview} label={item.title} />}
   </div>

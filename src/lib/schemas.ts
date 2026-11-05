@@ -13,6 +13,7 @@ export const performanceSchema = z.object({
   id: z.string().min(1), title: z.string().min(1), originalTitle: z.string().optional(), aliases: z.array(z.string()),
   artistIds: z.array(z.string()).min(1), seriesId: seriesIdSchema, youtubeId: z.string().regex(/^[A-Za-z0-9_-]{11}$/),
   thumbnail: publicPathSchema, thumbnailAlt: z.string().min(1), episode: z.number().int().positive().optional(),
+  editorialNote: z.string().min(1).optional(),
   originalArtist: z.string().optional(), publishedAt: z.iso.datetime({ offset: true }).optional(), durationSeconds: z.number().positive().optional(),
   featuredOrder: z.number(), approvedForSite: z.boolean(),
 });
