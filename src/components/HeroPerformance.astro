@@ -6,20 +6,22 @@ interface Props { performance: Performance; site: SiteConfig; artistNames: strin
 const {performance,site,artistNames,playable,embeddable,next,previewClip}=Astro.props;
 const loopSrc = previewClip?.performanceId === performance.id ? site.hero.portraitLoopSrc : undefined;
 ---
-<section class="hero" aria-labelledby="hero-title" data-teaser-clip={loopSrc ? previewClip?.id : undefined}>
+<section class="hero" aria-labelledby={`hero-title-${performance.id}`} data-teaser-clip={loopSrc ? previewClip?.id : undefined}>
   <div class="hero__layout wrap">
     <div class="hero__copy">
-      <p class="eyebrow hero__cue">SC SESSION / Featured premiere</p>
-      <h1 class="display hero__title" id="hero-title">{artistNames.join(' & ')}</h1>
-      <p class="hero__intro">{performance.title}</p>
-      <a class="text-link" href="/sessions/">Browse performances <span aria-hidden="true">↗</span></a>
+      <p class="eyebrow hero__cue">Independent voices. Shared frequencies.</p>
+      <h1 class="display hero__title" id={`hero-title-${performance.id}`}>SONIC<br />COLLECTIVE</h1>
+      <p class="hero__intro">A space for the voices you know.<br />And the ones you’re about to discover.</p>
+      <a class="hero__watch" href={playable?youtubeUrl(performance.youtubeId):site.channelUrl} data-play-performance={embeddable?performance.id:undefined}><span aria-hidden="true">▶</span><span>{playable?'Watch performance':'Visit our channel'}</span></a>
     </div>
     <div class="hero__spotlight">
       <div class="hero__feature performance-player__poster" data-teaser-surface data-player-id={performance.id} data-video-id={performance.youtubeId}>
       <MediaImage class="hero__image" base={performance.id===site.hero.performanceId?site.hero.poster:performance.thumbnail} alt={performance.thumbnailAlt} sizes="(max-width: 760px) 100vw, 64vw" eager={true} />
       {loopSrc&&<video class="hero__loop" data-teaser-video data-src={loopSrc} muted playsinline preload="none" hidden aria-label="Silent performance preview"></video>}
-      <a class="performance-player__play" href={playable?youtubeUrl(performance.youtubeId):site.channelUrl} data-play-performance={embeddable?performance.id:undefined}><span aria-hidden="true">▶</span><span>{playable?'Watch session':'Visit our channel'}</span></a>
+
       </div>
+      <p class="eyebrow hero__label">In the spotlight</p>
+      <h2 class="hero__artist">{artistNames.join(' & ')} <span>/ {performance.title}</span></h2>
       {embeddable&&<p class="performance-player__status" data-player-status role="status"></p>}
       {embeddable&&<a class="text-link" href={youtubeUrl(performance.youtubeId)}>Watch on YouTube <span aria-hidden="true">↗</span></a>}
       {next&&embeddable&&<section class="hero__up-next" data-playback-teaser aria-label="Up next" hidden>

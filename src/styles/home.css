@@ -125,3 +125,24 @@
 @media (prefers-reduced-motion: no-preference) {
   .hero__loop:not([hidden]) { animation: premiere-preview 320ms ease-out both; }
 }
+
+[data-spotlight][hidden], [data-spotlight-controls][hidden] { display: none; }
+.spotlights { background: #101715; color: #f3f1e9; }
+.spotlights__controls { display: flex; align-items: center; gap: 24px; padding-bottom: 24px; }
+.spotlights__controls button { min-width: 44px; min-height: 44px; background: transparent; border: 0; color: inherit; cursor: pointer; }
+.spotlights__controls [data-spotlight-pause] { margin-left: auto; }
+@media (prefers-reduced-motion: no-preference) {
+  [data-spotlight]:not([hidden]) { animation: premiere-type 320ms ease-out; --premiere-rise: 0px; }
+}
+
+.hero__layout { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.hero__title { font-size: clamp(50px, 7.7vw, 120px); }
+.hero__intro { font-size: 18px; }
+.hero__watch { display: inline-flex; align-items: center; gap: 16px; margin-top: 24px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+.hero__watch > span:first-child { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; background: #f3f1e9; color: #101715; }
+.hero__intro::after { content: none; }
+@media (max-width: 760px) {
+  .hero__layout { grid-template-columns: 1fr; }
+  .hero__title { font-size: clamp(40px, 11vw, 72px); }
+  .hero__intro { font-size: 16px; }
+}

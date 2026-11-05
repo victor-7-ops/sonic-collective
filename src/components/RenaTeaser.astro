@@ -9,8 +9,8 @@ const {clip,performance,loopSrc}=Astro.props;
   <div class="rena-teaser__inner wrap">
     <div class="rena-teaser__media" data-teaser-surface>
       <MediaImage class="rena-teaser__image media-frame" base="/media/hero/rena-inochi-poster" alt="Rena singing in a pink outfit at a microphone" sizes="(max-width: 760px) 100vw, 32vw" />
-      {loopSrc&&<video class="rena-teaser__video" data-teaser-video data-src={loopSrc} poster="/media/hero/rena-inochi-poster.webp" muted loop playsinline preload="none" hidden aria-label="Silent Rena performance preview"></video>}
+      {loopSrc&&<video class="rena-teaser__video" data-teaser-video data-src={loopSrc} poster="/media/hero/rena-inochi-poster.webp" muted playsinline preload="none" hidden aria-label="Silent Rena performance preview"></video>}
     </div>
-    <div class="rena-teaser__copy"><p class="eyebrow">A closer listen / Sonic Covers</p><h2 id="rena-teaser-title">Rena sings <em>Inochi no Namae.</em></h2><p>This separate preview is silent and follows Rena’s performance.</p>{loopSrc&&<><button class="text-link teaser-toggle" type="button" data-teaser-toggle hidden aria-pressed="false">Play silent preview</button><p class="teaser-status" data-teaser-status role="status" aria-live="polite"></p></>}<a class="text-link" href={performanceUrl(performance.id)}>Watch Rena’s performance <span aria-hidden="true">↗</span></a></div>
+    <div class="rena-teaser__copy"><p class="eyebrow">A closer listen / Sonic Covers</p><h2 id="rena-teaser-title">Rena sings <em>Inochi no Namae.</em></h2><p>A voice, a microphone, and a moment with the song.</p><a class="text-link" href={performanceUrl(performance.id)}>Watch Rena’s performance <span aria-hidden="true">↗</span></a></div>
   </div>
 </section>
