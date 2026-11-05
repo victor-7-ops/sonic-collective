@@ -112,3 +112,16 @@
   box-shadow: 0 0 0 1px rgb(158 200 189 / .36), 0 24px 64px rgb(0 0 0 / .32);
 }
 .hero__cue { letter-spacing: .16em; }
+
+@keyframes premiere-preview {
+  from { opacity: 0; }
+}
+
+.hero__loop {
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, #294039, #101715 72%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero__loop:not([hidden]) { animation: premiere-preview 320ms ease-out both; }
+}
