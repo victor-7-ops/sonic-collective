@@ -1,0 +1,56 @@
+---
+import EditorialLayout from '../../../layouts/EditorialLayout.astro';
+import { editorialKindLabels,editorialStatusLabels } from '../../../lib/editorial/content';
+import { editorialLibraryWindow } from '../../../lib/editorial/library';
+export const prerender=false;
+const client=Astro.locals.editorialClient!;
+const params=Astro.url.searchParams;
+const query=(params.get('q')??'').trim().slice(0,80);
+const kinds=['artist','performance','clip','series','site','youtube-review'];
+const statuses=['draft','in-review','changes-requested','approved'];
+const kind=kinds.includes(params.get('kind')??'')?params.get('kind')!:'';
+const reviewState=statuses.includes(params.get('status')??'')?params.get('status')!:'';
+const archiveState=['active','archived','all'].includes(params.get('archive')??'')?params.get('archive')??'active':'active';
+const requestedPage=Number(params.get('page')??1);
+const page=Number.isSafeInteger(requestedPage)&&requestedPage>0?requestedPage:1;
+const filters={...(kind?{kind}:{}),...(reviewState?{review_state:reviewState}:{})};
+const search=query.replace(/[\\%_]/g,'\\$&');
+let countQuery=client.from('content_items').select('*',{count:'exact',head:true}).match(filters);
+let itemsQuery=client.from('content_items').select('id,kind,stable_id,review_state,version,updated_at,draft_revision_id,archived_at').match(filters);
+if(archiveState==='active'){countQuery=countQuery.is('archived_at',null);itemsQuery=itemsQuery.is('archived_at',null);}
+if(archiveState==='archived'){countQuery=countQuery.not('archived_at','is',null);itemsQuery=itemsQuery.not('archived_at','is',null);}
+if(search){countQuery=countQuery.ilike('stable_id',`%${search}%`);itemsQuery=itemsQuery.ilike('stable_id',`%${search}%`);}
+const countResult=await countQuery;
+const pageWindow=editorialLibraryWindow(page,countResult.count??0);
+const itemsResult=await itemsQuery.order('updated_at',{ascending:false}).order('id',{ascending:true}).range(pageWindow.from,pageWindow.to);
+const revisionIds=(itemsResult.data??[]).flatMap(item=>item.draft_revision_id?[item.draft_revision_id]:[]);
+const revisions=revisionIds.length?await client.from('content_revisions').select('id,payload').in('id',revisionIds):{data:[],error:null};
+const revisionById=new Map((revisions.data??[]).map(revision=>[revision.id,revision.payload as Record<string,unknown>]));
+const records=(itemsResult.data??[]).map(item=>{
+  const payload=item.draft_revision_id?revisionById.get(item.draft_revision_id):undefined;
+  const label=payload?.name??payload?.title;
+  return {...item,label:typeof label==='string'&&label.trim()?label:item.stable_id};
+});
+const error=countResult.error||itemsResult.error||revisions.error;
+if(error) Astro.response.status=503;
+const pageUrl=(next:number)=>`/admin/content/?${new URLSearchParams({...(query?{q:query}:{}),...(kind?{kind}:{}),...(reviewState?{status:reviewState}:{}),archive:archiveState,page:String(next)})}`;
+---
+<EditorialLayout title="Content library" description="Search and filter your artists, performances, and editorial selections.">
+  <p><a class="button" href="/admin/content/new/">Create private draft →</a></p>
+  {error?<p class="notice error" role="alert">The content library could not be loaded. Try again later.</p>:<>
+    <div class="library-intro"><p>{countResult.count??0} accessible records</p><span>Private drafts · Review before publishing</span></div>
+    <form method="get" class="library-filters">
+      <label>Search stable ID<input type="search" name="q" value={query} maxlength="80" /></label>
+      <label>Content type<select name="kind"><option value="">All types</option>{kinds.map(value=><option value={value} selected={kind===value}>{editorialKindLabels[value]}</option>)}</select></label>
+      <label>Review status<select name="status"><option value="">All statuses</option>{statuses.map(value=><option value={value} selected={reviewState===value}>{editorialStatusLabels[value]}</option>)}</select></label>
+      <label>Archive state<select name="archive"><option value="active" selected={archiveState==='active'}>Active</option><option value="archived" selected={archiveState==='archived'}>Archived</option><option value="all" selected={archiveState==='all'}>All</option></select></label>
+      <button>Apply filters</button>
+      {(query||kind||reviewState||archiveState!=='active')&&<a href="/admin/content/">Clear filters</a>}
+    </form>
+    {(countResult.count??0)===0?<div class="panel"><h2>{query||kind||reviewState||archiveState!=='active'?'No matching content.':'A fresh start.'}</h2><p>{query||kind||reviewState||archiveState!=='active'?'Change your filters or search terms.':'No content has been imported or assigned to you yet.'}</p></div>:<>
+      <p aria-live="polite">{countResult.count} matching records · Page {pageWindow.page} of {pageWindow.pageCount}</p>
+      <div class="table-scroll"><table><thead><tr><th scope="col">Content</th><th scope="col">Type</th><th scope="col">Review status</th><th scope="col">Archive</th><th scope="col">Revision</th></tr></thead><tbody>{records.map(item=><tr><td><a href={`/admin/content/${item.id}/`}>{item.label}</a><small> · {item.stable_id}</small></td><td>{editorialKindLabels[item.kind]??item.kind}</td><td><span class="status-badge" data-state={item.review_state}>{editorialStatusLabels[item.review_state]??item.review_state}</span></td><td>{item.archived_at?'Archived':'Active'}</td><td>{item.version}</td></tr>)}</tbody></table></div>
+      <nav aria-label="Content pages"><div class="pagination">{pageWindow.page>1&&<a href={pageUrl(pageWindow.page-1)}>← Previous page</a>}<span>Page {pageWindow.page} of {pageWindow.pageCount}</span>{pageWindow.page<pageWindow.pageCount&&<a href={pageUrl(pageWindow.page+1)}>Next page →</a>}</div></nav>
+    </>}
+  </>}
+</EditorialLayout>

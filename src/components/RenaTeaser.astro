@@ -2,15 +2,15 @@
 import type { Clip, Performance } from '../lib/schemas';
 import MediaImage from './MediaImage.astro';
 import { performanceUrl } from '../lib/urls';
-interface Props { clip: Clip; performance: Performance; loopSrc?: string; }
-const {clip,performance,loopSrc}=Astro.props;
+interface Props { clip: Clip; performance: Performance; artistNames: string[]; seriesTitle: string; posterBase: string; videoPoster: string; loopSrc?: string; legacyPoster?:boolean; }
+const {clip,performance,artistNames,seriesTitle,posterBase,videoPoster,loopSrc,legacyPoster=false}=Astro.props;
 ---
 <section class="rena-teaser" aria-labelledby="rena-teaser-title" data-teaser-clip={clip.id} data-reveal>
   <div class="rena-teaser__inner wrap">
     <div class="rena-teaser__media" data-teaser-surface>
-      <MediaImage class="rena-teaser__image media-frame" base="/media/hero/rena-inochi-poster" alt="Rena singing in a pink outfit at a microphone" sizes="(max-width: 760px) 100vw, 32vw" />
-      {loopSrc&&<video class="rena-teaser__video" data-teaser-video data-src={loopSrc} poster="/media/hero/rena-inochi-poster.webp" muted playsinline preload="none" hidden aria-label="Silent Rena performance preview"></video>}
+      <MediaImage class="rena-teaser__image media-frame" base={posterBase} alt={legacyPoster?'Rena singing in a pink outfit at a microphone':`A teaser preview for ${performance.title} by ${artistNames.join(' & ')}`} sizes="(max-width: 760px) 100vw, 32vw" />
+      {loopSrc&&<video class="rena-teaser__video" data-teaser-video data-src={loopSrc} poster={videoPoster} muted playsinline preload="none" hidden aria-label={legacyPoster?'Silent Rena performance preview':`Silent teaser for ${performance.title}`}></video>}
     </div>
-    <div class="rena-teaser__copy"><p class="eyebrow">A closer listen / Sonic Covers</p><h2 id="rena-teaser-title">Rena sings <em>Inochi no Namae.</em></h2><p>A voice, a microphone, and a moment with the song.</p><a class="text-link" href={performanceUrl(performance.id)}>Watch Rena’s performance <span aria-hidden="true">↗</span></a></div>
+    <div class="rena-teaser__copy"><p class="eyebrow">A closer listen / {seriesTitle}</p><h2 id="rena-teaser-title">{artistNames.join(' & ')} sings <em>{performance.title}.</em></h2><p>A voice, a microphone, and a moment with the song.</p><a class="text-link" href={performanceUrl(performance.id)}>Watch {artistNames.join(' & ')}’s performance <span aria-hidden="true">↗</span></a></div>
   </div>
 </section>

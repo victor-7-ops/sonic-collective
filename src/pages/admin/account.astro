@@ -1,0 +1,24 @@
+---
+import EditorialLayout from '../../layouts/EditorialLayout.astro';
+import { readEditorialForm } from '../../lib/editorial/access';
+export const prerender = false;
+const client=Astro.locals.editorialClient!;
+let message='';
+let success=false;
+if(Astro.request.method==='POST') {
+  try {
+    const form=await readEditorialForm(Astro.request);
+    const password=form.get('password')??'';
+    if(password.length<12||password.length>1024||password!==form.get('confirm')) throw new Error('Use a matching password of at least 12 characters.');
+    const result=await client.auth.updateUser({password});
+    if(result.error) throw new Error('The password could not be updated. Sign in again or request a new recovery link.');
+    message='Password updated.';success=true;
+  } catch(error) {message=error instanceof Error?error.message:'Unable to update password.';Astro.response.status=400;}
+}
+---
+<EditorialLayout title="Your account">
+  <p>{Astro.locals.editorialMember!.email}</p>
+  {message&&<p class:list={['notice',!success&&'error']} role={success?'status':'alert'}>{message}</p>}
+  <h2>Set or change your password</h2><form method="post"><label>New password<input type="password" name="password" minlength="12" maxlength="1024" autocomplete="new-password" required /></label><label>Confirm password<input type="password" name="confirm" minlength="12" maxlength="1024" autocomplete="new-password" required /></label><button>Save password</button></form>
+  <h2>Multi-factor authentication</h2><p>Approving content requires verification with an authenticator app.</p><a href="/admin/security/">Set up or verify authenticator →</a>
+</EditorialLayout>

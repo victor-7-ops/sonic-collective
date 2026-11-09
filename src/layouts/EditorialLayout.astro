@@ -1,0 +1,47 @@
+---
+import '../styles/editorial.css';
+interface Props { title: string; description?: string; }
+const { title,description } = Astro.props;
+const member = Astro.locals.editorialMember;
+const path=Astro.url.pathname;
+const links=[
+  {href:'/admin/',label:'Overview',icon:'M3 3h7v7H3z M14 3h7v7h-7z M3 14h7v7H3z M14 14h7v7h-7z',active:path==='/admin/'},
+  {href:'/admin/content/',label:'Content library',icon:'M4 4h16v16H4z M8 8h8 M8 12h8 M8 16h4',active:path.startsWith('/admin/content/')},
+  {href:'/admin/account/',label:'Account & security',icon:'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M4 21v-2a8 8 0 0 1 16 0v2',active:['/admin/account/','/admin/security/'].includes(path)},
+];
+if(member?.role==='owner') links.push({href:'/admin/team/',label:'Team',icon:'M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6 M2 21v-3a6 6 0 0 1 12 0v3 M17 5a3 3 0 0 1 0 6 M18 15a5 5 0 0 1 4 5',active:path==='/admin/team/'});
+if(member&&member.role!=='contributor') links.push({href:'/admin/releases/',label:'Releases',icon:'M12 3v12 M7 8l5-5 5 5 M4 14v7h16v-7',active:path.startsWith('/admin/releases/')});
+if(member) links.push({href:'/admin/media/',label:'Media',icon:'M3 3h18v18H3z M3 17l6-6 5 5 3-3 4 4',active:path==='/admin/media/'});
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta name="theme-color" content="#172b24" />
+    <link rel="icon" href="/media/brand/sonic-collective-logo.png" />
+    <title>{title} — Sonic Collective editorial</title>
+  </head>
+  <body class:list={['editorial',!member&&'editorial--auth']}>
+    <a href="#main" class="skip">Skip to content</a>
+    <div class="editorial-shell">
+      <aside class="editorial-sidebar">
+        <a href="/admin/" class="editorial-brand"><img src="/media/brand/sonic-collective-logo-white.png" width="36" height="47" alt="" /><span>SONIC<br />COLLECTIVE<small>EDITORIAL STUDIO</small></span></a>
+        {member ? <>
+          <p class="sidebar-label">Workspace</p>
+          <nav class="editorial-nav" aria-label="Editorial navigation">{links.map(link=><a href={link.href} aria-current={link.active?'page':undefined}><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={link.icon}/></svg>{link.label}</a>)}</nav>
+          <div class="sidebar-bottom">
+            <p class="sidebar-note"><span class="status-dot"></span>Private team workspace</p>
+            <div class="editorial-identity"><span class="avatar" aria-hidden="true">{member.email.slice(0,1).toUpperCase()}</span><div><strong>{member.email}</strong><small>{member.role}</small></div></div>
+            <form action="/admin/logout/" method="post"><button class="sidebar-signout">Sign out <span aria-hidden="true">↗</span></button></form>
+          </div>
+        </> : <p class="sidebar-auth-note">A little behind the scenes.<br />A lot of independent voices.</p>}
+      </aside>
+      <div class="editorial-workspace">
+        <header class="editorial-topbar"><span class="breadcrumb">Studio <span aria-hidden="true">/</span> {member?'Workspace':'Team access'}</span><a href="/" class="public-link">View public site <span aria-hidden="true">↗</span></a></header>
+        <main id="main"><div class="page-heading"><p class="eyebrow">Sonic Collective · Editorial</p><h1>{title}</h1>{description&&<p class="page-description">{description}</p>}</div><slot /><footer class="editorial-footer"><span>Independent voices. Shared frequencies.</span><span>Sonic Collective Studio</span></footer></main>
+      </div>
+    </div>
+  </body>
+</html>

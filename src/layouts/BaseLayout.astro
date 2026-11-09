@@ -5,10 +5,16 @@ import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import QuickWatchDialog from '../components/QuickWatchDialog.astro';
 import { canonicalUrl } from '../lib/urls';
-interface Props { title: string; description: string; canonicalPath?: string; image?: string; theme?: 'light'|'dark'; currentPath?: string; playbackRecords?: { id: string; title: string; youtubeId: string; embeddable?:boolean }[]; }
-const {title,description,canonicalPath,image='/media/performances/playscape-vision-usseewa-960.webp',theme='light',currentPath=Astro.url.pathname,playbackRecords=[]}=Astro.props;
-const indexable=import.meta.env.PUBLIC_INDEXABLE==='true'||import.meta.env.VERCEL_ENV==='production';
-const canonical=Astro.url.pathname.startsWith('/404')?undefined:canonicalUrl(canonicalPath??Astro.url.pathname,import.meta.env.SITE);
+import rawSite from '../data/site.json';
+import {siteConfigSchema,type SiteConfig} from '../lib/schemas';
+import {getRawCatalog} from '../lib/catalog';
+import { resolveSiteContent } from '../lib/editorial/site-content';
+interface Props { title: string; description: string; canonicalPath?: string; image?: string; theme?: 'light'|'dark'; currentPath?: string; preview?:boolean; editorPath?:string; playbackRecords?: { id: string; title: string; youtubeId: string; embeddable?:boolean }[]; site?:SiteConfig; }
+const {title,description,canonicalPath,image='/media/performances/playscape-vision-usseewa-960.webp',theme='light',currentPath=Astro.url.pathname,playbackRecords=[],preview=false,editorPath='/admin/content/',site:providedSite}=Astro.props;
+const site=providedSite??(preview?siteConfigSchema.parse(rawSite):(await getRawCatalog()).site);
+const {footer,header}=resolveSiteContent(site);
+const indexable=!preview&&(import.meta.env.PUBLIC_INDEXABLE==='true'||import.meta.env.VERCEL_ENV==='production');
+const canonical=preview||Astro.url.pathname.startsWith('/404')?undefined:canonicalUrl(canonicalPath??Astro.url.pathname,import.meta.env.SITE);
 const ogImage=import.meta.env.SITE?new URL(image,import.meta.env.SITE).href:undefined;
 const publicPlaybackData=JSON.stringify(playbackRecords).replace(/</g,'\\u003c');
 ---
@@ -29,20 +35,26 @@ const publicPlaybackData=JSON.stringify(playbackRecords).replace(/</g,'\\u003c')
     <meta property="og:description" content={description} />
     {ogImage&&<meta property="og:image" content={ogImage} />}
   </head>
-  <body>
+  <body class:list={[preview&&'draft-preview']}>
+    {preview&&<div class="draft-preview-bar" role="note"><span>PRIVATE DRAFT PREVIEW · Not published</span><a href={editorPath}>Back to editor ↗</a></div>}
     <a class="skip-link" href="#main-content">Skip to content</a>
-    <SiteHeader theme={theme} currentPath={currentPath} />
+    <SiteHeader theme={theme} currentPath={currentPath} header={header} channelUrl={site.channelUrl} />
     <main id="main-content"><slot /></main>
-    <SiteFooter />
+    <SiteFooter footer={footer} />
     <script type="application/json" id="playback-records" set:html={publicPlaybackData}></script>
     <QuickWatchDialog />
     <script>import '../../scripts/navigation.ts';</script>
     <script>import '../../scripts/player.ts';</script>
     <script>import '../../scripts/card-previews.ts';</script>
-    {import.meta.env.VERCEL_ENV==='production'&&<>
+    {!preview&&import.meta.env.VERCEL_ENV==='production'&&<>
       <script is:inline>window.webAnalyticsBeforeSend = function(event) { return {...event, url:event.url.split('?')[0].split('#')[0]}; };</script>
       <Analytics />
     </>}
     <script>import '../../scripts/engagement.ts';</script>
   </body>
 </html>
+<style is:global>
+  .draft-preview-bar { position:relative; z-index:50; display:flex; flex-wrap:wrap; justify-content:space-between; gap:12px; padding:12px 24px; background:#b8e9cf; color:#172b24; font:700 11px/1.5 Arial,sans-serif; }
+  .draft-preview .site-header--overlay { top:40px; }
+  @media(max-width:520px){.draft-preview-bar{padding:10px 16px;font-size:10px}.draft-preview .site-header--overlay{position:relative;top:auto;background:#17211f}}
+</style>

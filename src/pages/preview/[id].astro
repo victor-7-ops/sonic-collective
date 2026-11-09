@@ -1,0 +1,60 @@
+---
+import HomePage from '../../components/HomePage.astro';
+import AboutPage from '../../components/AboutPage.astro';
+import ArtistPage from '../../components/ArtistPage.astro';
+import PerformancePage from '../../components/PerformancePage.astro';
+import { loadPreviewArtistDrafts,previewCatalog } from '../../lib/editorial/preview';
+import { editorialKindSchema } from '../../lib/editorial/content';
+import { getDiscoveryCatalog } from '../../lib/discovery';
+import rawSnapshot from '../../data/youtube-snapshot.json';
+import rawOverrides from '../../data/youtube-overrides.json';
+import { validateSnapshot } from '../../lib/youtube-import';
+import { youtubeOverridesSchema } from '../../lib/merge-catalog';
+import { performanceSchema } from '../../lib/schemas';
+export const prerender=false;
+const id=Astro.params.id??'';
+if(!/^[a-f\d-]{36}$/i.test(id)) return new Response('Preview not found.',{status:404});
+const client=Astro.locals.editorialClient!;
+const item=await client.from('content_items').select('id,kind,stable_id,draft_revision_id').eq('id',id).maybeSingle();
+if(item.error) return new Response('Preview could not be loaded.',{status:503});
+if(!item.data) return new Response('Preview not found.',{status:404});
+const revisionId=Astro.url.searchParams.get('revision');
+if(!revisionId||!/^[a-f\d-]{36}$/i.test(revisionId)) return new Response('Choose a saved revision from the editor.',{status:400});
+const revision=await client.from('content_revisions').select('payload').eq('id',revisionId).eq('item_id',id).maybeSingle();
+if(revision.error) return new Response('Revision could not be loaded.',{status:503});
+if(!revision.data) return new Response('Revision not found.',{status:404});
+const kind=editorialKindSchema.parse(item.data.kind);
+let artistDrafts:{id:string;payload:unknown}[]=[];
+if(kind==='performance') {
+  const performance=performanceSchema.safeParse(revision.data.payload);
+  if(!performance.success)return new Response('This revision cannot be previewed. Check required fields and references in the editor.',{status:422});
+  const related=await loadPreviewArtistDrafts(client,performance.data.artistIds);
+  if(related.error)return new Response('Related preview data could not be loaded. Try again later.',{status:503});
+  artistDrafts=related.data;
+}
+let catalog;
+try {
+  const raw=previewCatalog(kind,item.data.stable_id,revision.data.payload,artistDrafts);
+  const discovered=await getDiscoveryCatalog({raw,snapshot:validateSnapshot(rawSnapshot,'UCCxO94rfXnMpYf7DH_sd6Bw'),overrides:youtubeOverridesSchema.parse(rawOverrides)});
+  catalog={...discovered,artists:[...discovered.artists],performances:[...discovered.performances]};
+  if(kind==='artist') {
+    const artist=raw.artists.find(candidate=>candidate.id===item.data!.stable_id);
+    if(!artist) throw new Error('Preview artist is missing.');
+    if(!catalog.artists.some(candidate=>candidate.id===artist.id)) catalog.artists.push(artist);
+  }
+  if(kind==='performance') {
+    const performance=raw.performances.find(candidate=>candidate.id===item.data!.stable_id);
+    if(!performance) throw new Error('Preview performance is missing.');
+    if(!catalog.performances.some(candidate=>candidate.id===performance.id)) catalog.performances.push(performance);
+    for(const artistId of performance.artistIds) {
+      const artist=raw.artists.find(candidate=>candidate.id===artistId);
+      if(artist&&!catalog.artists.some(candidate=>candidate.id===artist.id)) catalog.artists.push(artist);
+    }
+  }
+} catch {
+  return new Response('This revision cannot be previewed. Check required fields, references, existing media, and public-site eligibility in the editor.',{status:422});
+}
+const editorPath=`/admin/content/${id}/`;
+const isAboutView=kind==='site'&&Astro.url.searchParams.get('view')==='about';
+---
+{isAboutView?<AboutPage site={catalog.site} preview editorPath={editorPath} />:kind==='site'?<HomePage catalog={catalog} preview editorPath={editorPath} />:kind==='artist'?<ArtistPage catalog={catalog} artistId={item.data.stable_id} preview editorPath={editorPath} />:<PerformancePage catalog={catalog} performanceId={item.data.stable_id} preview editorPath={editorPath} />}

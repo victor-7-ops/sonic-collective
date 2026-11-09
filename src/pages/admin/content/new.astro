@@ -1,0 +1,73 @@
+---
+import EditorialLayout from '../../../layouts/EditorialLayout.astro';
+import artists from '../../../data/artists.json';
+import snapshot from '../../../data/youtube-snapshot.json';
+import youtubeConfig from '../../../data/youtube-config.json';
+import manifest from '../../../data/media-manifest.json';
+import {ZodError} from 'zod';
+import {mediaManifestEntrySchema} from '../../../lib/schemas';
+import {validateSnapshot} from '../../../lib/youtube-import';
+import {readEditorialForm} from '../../../lib/editorial/access';
+import {createEditorialPayload,requestedEditorialCreateKind,saveNewEditorialDraft} from '../../../lib/editorial/create';
+
+export const prerender=false;
+const client=Astro.locals.editorialClient!;
+const validatedVideos=validateSnapshot(snapshot,youtubeConfig.channelId).videos;
+let values=new URLSearchParams();
+let message='';
+let kind=requestedEditorialCreateKind(Astro.url.searchParams.get('kind'));
+if(Astro.request.method==='POST') {
+  try {
+    values=await readEditorialForm(Astro.request);
+    kind=values.get('kind')??'';
+    const itemsResult=await client.from('content_items').select('stable_id,kind').eq('kind','artist');
+    if(itemsResult.error) throw new Error('Available references could not be loaded. Try again later.');
+    const mediaPaths=Object.keys(manifest).filter(path=>mediaManifestEntrySchema.safeParse(manifest[path as keyof typeof manifest]).success);
+    const payload=createEditorialPayload(kind,values,{
+      artistIds:(itemsResult.data??[]).map(item=>item.stable_id),
+      artistMedia:mediaPaths.filter(path=>path.startsWith('/media/artists/')),
+      performanceMedia:mediaPaths.filter(path=>path.startsWith('/media/performances/')),
+      youtubeIds:validatedVideos.map(video=>video.youtubeId),
+    });
+    const stableId=values.get('id')?.trim()??'';
+    if(kind!=='artist'&&kind!=='performance') throw new Error('Choose an artist or performance.');
+    const itemId=await saveNewEditorialDraft(client,kind,stableId,payload as import('../../../lib/editorial/database.types').Json);
+    return Astro.redirect(`/admin/content/${itemId}/`,303);
+  } catch(error) {
+    message=error instanceof ZodError?error.issues.map(issue=>`${issue.path.join('.')}: ${issue.message}`).join('; '):error instanceof Error?error.message:'The draft could not be created.';
+  }
+}
+const artistResult=await client.from('content_items').select('stable_id,kind').eq('kind','artist');
+if(artistResult.error) { Astro.response.status=503;message='Available references could not be loaded. Try again later.'; }
+const artistOptions=artistResult.data??[];
+const artistNames=new Map(artists.map(artist=>[artist.id,artist.name]));
+const mediaPaths=Object.keys(manifest).filter(path=>mediaManifestEntrySchema.safeParse(manifest[path as keyof typeof manifest]).success);
+const artistMedia=mediaPaths.filter(path=>path.startsWith('/media/artists/'));
+const performanceMedia=mediaPaths.filter(path=>path.startsWith('/media/performances/'));
+const youtubeVideos=validatedVideos;
+const q=(key:string)=>values.get(key)??'';
+---
+<EditorialLayout title="Create content" description="Create a private artist or performance draft. IDs stay fixed after creation.">
+  <p><a href="/admin/content/">← Back to content library</a></p>
+  <p>Create an <a href="/admin/content/new/?kind=artist">artist</a> or <a href="/admin/content/new/?kind=performance">performance</a>.</p>
+  {message&&<p class="notice error" role="alert">{message}</p>}
+  <form method="post" class="editorial-form">
+    <input type="hidden" name="kind" value={kind} />
+    <label>Stable ID<input name="id" value={q('id')} required maxlength="120" pattern="[A-Za-z0-9_-]+" aria-describedby="id-help" /></label>
+    <small id="id-help">Letters, numbers, hyphens, and underscores. This ID cannot be changed later.</small>
+    {kind==='artist'?<>
+      <label>Artist name<input name="name" value={q('name')} required maxlength="200" /></label>
+      <label>Artist type<select name="artistKind"><option value="solo" selected={q('artistKind')==='solo'}>Solo</option><option value="group" selected={q('artistKind')==='group'}>Group</option></select></label>
+      <label>Existing portrait (optional)<select name="portrait"><option value="">No portrait</option>{artistMedia.map(path=><option value={path} selected={q('portrait')===path}>{path}</option>)}</select></label>
+      <label>Portrait description (required when a portrait is selected)<input name="portraitAlt" value={q('portraitAlt')} maxlength="300" /></label>
+    </>:<>
+      <label>Performance title<input name="title" value={q('title')} required maxlength="200" /></label>
+      <label>Artist<select name="artistId" required><option value="">Choose an existing artist</option>{artistOptions.map(item=><option value={item.stable_id} selected={q('artistId')===item.stable_id}>{artistNames.get(item.stable_id)??item.stable_id}</option>)}</select></label>
+      <label>Series<select name="seriesId"><option value="sessions" selected={q('seriesId')!=='covers'}>Sonic Sessions</option><option value="covers" selected={q('seriesId')==='covers'}>Sonic Covers</option></select></label>
+      <label>Existing video<select name="youtubeId" required><option value="">Choose a validated video</option>{youtubeVideos.map(video=><option value={video.youtubeId} selected={q('youtubeId')===video.youtubeId}>{video.title}</option>)}</select></label>
+      <label>Existing performance artwork<select name="thumbnail" required><option value="">Choose existing artwork</option>{performanceMedia.map(path=><option value={path} selected={q('thumbnail')===path}>{path}</option>)}</select></label>
+      <label>Artwork description<input name="thumbnailAlt" value={q('thumbnailAlt')} required maxlength="300" /></label>
+    </>}
+    <button type="submit">Create private draft</button>
+  </form>
+</EditorialLayout>

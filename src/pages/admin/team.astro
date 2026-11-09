@@ -1,0 +1,101 @@
+---
+import EditorialLayout from '../../layouts/EditorialLayout.astro';
+import { readEditorialForm } from '../../lib/editorial/access';
+import { applyEditorialTeamAction,applyEditorialInvitation,editorialTeamError,listEditorialTeam } from '../../lib/editorial/team';
+import {editorialAdminClient} from '../../lib/editorial/server';
+import {randomUUID} from 'node:crypto';
+export const prerender=false;
+const client=Astro.locals.editorialClient!;
+let message='';let success=false;
+let requestId:string=randomUUID();let invitationEmail='',invitationRole='contributor';
+const admin=editorialAdminClient();
+if(Astro.locals.editorialMember?.role!=='owner') Astro.response.status=403;
+if(Astro.request.method==='POST'&&Astro.locals.editorialMember?.role==='owner') {
+  try {
+    const form=await readEditorialForm(Astro.request);
+    const outcome=form.get('action')==='invite'
+      ?await applyEditorialInvitation(client,admin,form,Astro.url.origin)
+      :await applyEditorialTeamAction(client,form);
+    if('redirect' in outcome) return Astro.redirect(outcome.redirect,303);
+    message=outcome.message;Astro.response.status=outcome.status;
+    if('requestId' in outcome) {requestId=outcome.requestId;invitationEmail=outcome.email;invitationRole=outcome.role;}
+  } catch {
+    message='The team change could not be completed. Try again later.';Astro.response.status=400;
+  }
+}
+const roster=Astro.locals.editorialMember?.role==='owner'?await listEditorialTeam(client):{members:null,error:null};
+if(roster.error) {const failure=editorialTeamError(roster.error);message=failure.message;Astro.response.status=failure.status;}
+const members=roster.members??[];
+const contributors=members.filter(member=>member.active&&member.role==='contributor');
+const content=Astro.locals.editorialMember?.role==='owner'
+  ?await client.from('content_items').select('id,kind,stable_id,owner_id,version').in('kind',['artist','performance','clip']).order('stable_id').limit(500)
+  :{data:[],error:null};
+if(content.error) {message='Assignable content could not be loaded. Try again later.';Astro.response.status=503;}
+success=Astro.url.searchParams.has('updated');
+const invitations=Astro.locals.editorialMember?.role==='owner'
+  ?await client.from('editorial_invitations').select('request_id,email,role,status,requested_by,created_at').order('created_at',{ascending:false}).limit(20)
+  :{data:[],error:null};
+---
+<EditorialLayout title="Team access" description="Manage existing team roles and assign contributor content access.">
+  {Astro.locals.editorialMember?.role!=='owner'?<p class="notice error" role="alert">Only an active owner can manage team access.</p>:<>
+    {message&&<p class:list={['notice',(Astro.response.status??200)>=400&&'error']} role={(Astro.response.status??200)>=400?'alert':'status'}>{message}</p>}
+    {success&&<p class="notice" role="status">Team changes saved.</p>}
+    <section class="panel" aria-labelledby="members-heading">
+      <div class="panel-heading"><h2 id="members-heading">Existing members</h2><span>{members.length} accounts</span></div>
+      {roster.error?<p>Member details could not be loaded. Verify your authenticator or try again later.</p>:members.length===0?<p>No team accounts are available.</p>:<div class="table-scroll"><table>
+        <thead><tr><th scope="col">Account</th><th scope="col">Role and access</th><th scope="col">Action</th></tr></thead>
+        <tbody>{members.map(member=><tr>
+          <td>{member.email||member.user_id}<small>{member.user_id}</small></td>
+          <td>{member.role} · {member.active?'Active':'Inactive'}</td>
+          <td><form method="post" class="team-row-form">
+            <input type="hidden" name="action" value="member" />
+            <input type="hidden" name="userId" value={member.user_id} />
+            <input type="hidden" name="expectedRole" value={member.role} />
+            <input type="hidden" name="expectedActive" value={String(member.active)} />
+            <label>Role<select name="role">{['owner','editor','contributor'].map(role=><option value={role} selected={member.role===role}>{role}</option>)}</select></label>
+            <label><input type="checkbox" name="active" value="true" checked={member.active} /> Active</label>
+            <button class="secondary">Save access</button>
+          </form></td>
+        </tr>)}</tbody>
+      </table></div>}
+    </section>
+    <section class="panel" aria-labelledby="assignment-heading">
+      <div class="panel-heading"><h2 id="assignment-heading">Contributor assignments</h2><span>{(content.data??[]).length} records</span></div>
+      <p>Only active contributors can receive artist, performance, and clip assignments. Editors and owners can access all records.</p>
+      {contributors.length===0&&<p>No active contributors are available. Existing assignments can still be removed.</p>}
+      {content.error?<p class="notice error" role="alert">Assignable content could not be loaded.</p>:(content.data??[]).length===0?<p>No assignable content records are available.</p>:<div class="table-scroll"><table>
+        <thead><tr><th scope="col">Content</th><th scope="col">Contributor</th><th scope="col">Action</th></tr></thead>
+        <tbody>{(content.data??[]).map(item=><tr>
+          <td>{item.stable_id}<small>{item.kind}</small></td>
+          <td><form id={`assign-${item.id}`} method="post" class="team-row-form">
+            <input type="hidden" name="action" value="assignment" />
+            <input type="hidden" name="itemId" value={item.id} />
+            <input type="hidden" name="expectedOwnerId" value={item.owner_id??''} />
+            <label>Contributor<select id={`owner-${item.id}`} name="ownerId"><option value="">Unassigned</option>{item.owner_id&&!contributors.some(contributor=>contributor.user_id===item.owner_id)&&<option value={item.owner_id} selected>Existing assignee (inactive or non-contributor)</option>}{contributors.map(contributor=><option value={contributor.user_id} selected={item.owner_id===contributor.user_id}>{contributor.email||contributor.user_id}</option>)}</select></label>
+          </form></td>
+          <td><button form={`assign-${item.id}`} class="secondary" type="submit">Save assignment</button></td>
+        </tr>)}</tbody>
+      </table></div>}
+    </section>
+    <section class="panel" aria-labelledby="invite-heading">
+      <h2 id="invite-heading">Invite a team member</h2>
+      <p>Verify your authenticator before inviting. Existing accounts and roles are never overwritten. Email acceptance by Supabase does not guarantee delivery.</p>
+      {Astro.url.searchParams.get('invitation')==='sent'&&<p role="status">Auth accepted the invitation and team access was prepared.</p>}
+      {!admin&&<p class="notice">Configure the server-only Supabase credential to enable invitations.</p>}
+      <form method="post"><input type="hidden" name="action" value="invite" /><input type="hidden" name="requestId" value={requestId} />
+        <label>Email<input name="email" type="email" value={invitationEmail} maxlength="254" required /></label>
+        <label>Role<select name="role"><option value="contributor" selected={invitationRole==='contributor'}>Contributor</option><option value="editor" selected={invitationRole==='editor'}>Editor</option></select></label>
+        <button disabled={!admin}>Send invitation</button>
+      </form>
+      <h3>Recent invitation requests</h3>
+      {invitations.error?<p role="alert">Invitation history could not be loaded.</p>:<ul>{(invitations.data??[]).map(invitation=><li>
+        {invitation.email} · {invitation.role} · {invitation.status}
+        {invitation.requested_by===Astro.locals.editorialMember!.userId&&['failed','accepted'].includes(invitation.status)&&<form method="post">
+          <input type="hidden" name="action" value="invite" /><input type="hidden" name="requestId" value={invitation.request_id} /><input type="hidden" name="email" value={invitation.email} /><input type="hidden" name="role" value={invitation.role} /><button class="secondary" disabled={!admin}>Retry this request</button>
+        </form>}
+      </li>)}</ul>}
+    </section>
+  </>}
+</EditorialLayout>
+
+

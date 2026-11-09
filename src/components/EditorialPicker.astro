@@ -1,0 +1,32 @@
+---
+import {editorialPickerOptions} from '../lib/editorial/forms';
+interface Props { name:string;label:string;selected:string[];options:{id:string;label:string}[]; }
+const {name,label,selected,options}=Astro.props;
+const initial=selected.length?selected:[''];
+const choices=editorialPickerOptions(selected,options);
+---
+<fieldset data-editorial-picker>
+  <input type="hidden" name={name} value="" />
+  <legend>{label}</legend>
+  <ol>{initial.map((id)=><li><select name={name} aria-label={label}><option value="">Select…</option>{choices.map(option=><option value={option.id} selected={option.id===id}>{option.label}</option>)}</select><button type="button" data-move="up" aria-label={`Move ${label} entry up`}>↑</button><button type="button" data-move="down" aria-label={`Move ${label} entry down`}>↓</button><button type="button" data-remove aria-label={`Remove ${label} entry`}>Remove</button></li>)}</ol>
+  <button type="button" data-add>Add entry</button>
+  <p data-picker-status role="status" aria-live="polite"></p>
+</fieldset>
+<style>fieldset{margin:1.5rem 0;border:1px solid var(--line);border-radius:8px;padding:1rem}legend{padding:0 8px;font-size:12px;font-weight:600}ol{padding:0;list-style:none}li{display:flex;gap:.5rem;margin:.7rem 0;flex-wrap:wrap}select{flex:1;min-width:10rem;width:auto}button{background:transparent;color:var(--ink);border-color:var(--line);font-size:12px}button:hover{background:#e9eee5}p{margin-bottom:0;font-size:12px;color:var(--muted)}</style>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-editorial-picker]').forEach(picker=>{
+    const list=picker.querySelector('ol')!;
+    const status=picker.querySelector<HTMLElement>('[data-picker-status]')!;
+    const template=list.querySelector('li')!.cloneNode(true) as HTMLLIElement;
+    picker.addEventListener('click',event=>{
+      const button=(event.target as HTMLElement).closest('button');if(!button)return;
+      const row=button.closest('li');
+      if(button.hasAttribute('data-add')){const next=template.cloneNode(true) as HTMLLIElement;next.querySelector('select')!.value='';list.append(next);next.querySelector('select')!.focus();status.textContent='Entry added.';}
+      else if(row&&button.hasAttribute('data-remove')){const focus=row.nextElementSibling??row.previousElementSibling;row.remove();(focus?.querySelector('select')??picker.querySelector<HTMLButtonElement>('[data-add]'))?.focus();status.textContent='Entry removed.';}
+      else if(row&&button.dataset.move==='up'&&row.previousElementSibling){list.insertBefore(row,row.previousElementSibling);button.focus();status.textContent='Entry moved up.';}
+      else if(row&&button.dataset.move==='down'&&row.nextElementSibling){list.insertBefore(row.nextElementSibling,row);button.focus();status.textContent='Entry moved down.';}
+      else return;
+      picker.dispatchEvent(new Event('change',{bubbles:true}));
+    });
+  });
+</script>

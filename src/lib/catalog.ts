@@ -1,9 +1,12 @@
-import { getCollection } from 'astro:content';
 import site from '../data/site.json';
 import { siteConfigSchema, type Catalog, type Artist, type Clip, type Performance, type Series } from './schemas';
+import {getConfiguredReleaseArtifact} from './editorial/releases';
 
 const normalize = <T extends { id: string }>(entries: { id: string; data: Omit<T, 'id'> }[]) => entries.map((entry) => ({ ...entry.data, id: entry.id }) as T);
 export async function getRawCatalog(): Promise<Catalog> {
+  const release=await getConfiguredReleaseArtifact();
+  if(release) return release.catalog;
+  const {getCollection}=await import('astro:content');
   const [artists, performances, clips, series] = await Promise.all([
     getCollection('artists'), getCollection('performances'), getCollection('clips'), getCollection('series'),
   ]);

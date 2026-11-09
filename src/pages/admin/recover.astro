@@ -1,0 +1,23 @@
+---
+import EditorialLayout from '../../layouts/EditorialLayout.astro';
+import { readEditorialForm } from '../../lib/editorial/access';
+import { sendPasswordRecovery } from '../../lib/editorial/server';
+export const prerender = false;
+let sent = false;
+let error = '';
+if (Astro.request.method === 'POST') {
+  try {
+    const form = await readEditorialForm(Astro.request);
+    const email = form.get('email')?.trim() ?? '';
+    if (!email || email.length > 254) throw new Error('Enter a valid email address.');
+    const result=await sendPasswordRecovery(email,new URL('/auth/landing/',Astro.url.origin).href);
+    if(result.error) throw new Error(result.error.status===429?'Too many recovery requests. Wait a while before requesting another email.':'The recovery email could not be sent. Try again later.');
+    sent = true;
+  } catch(caught) {error=caught instanceof Error?caught.message:'The recovery request could not be completed.';Astro.response.status=400;}
+}
+---
+<EditorialLayout title="Recover your account">
+  {error&&<p class="notice error" role="alert">{error}</p>}
+  {sent ? <p class="notice" role="status">If this address has an invited account, you’ll receive a recovery email. Check your spam folder too.</p> : <form method="post"><label>Email<input type="email" name="email" autocomplete="email" maxlength="254" required /></label><button>Send recovery email</button></form>}
+  <p><a href="/admin/login/">Back to sign in</a></p>
+</EditorialLayout>

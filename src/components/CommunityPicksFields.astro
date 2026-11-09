@@ -1,0 +1,14 @@
+---
+import type {SiteConfig} from '../lib/schemas';
+import defaults from '../data/community-picks.json';
+interface Props {picks:SiteConfig['communityPicks'];}
+const picks=Astro.props.picks??defaults;
+const fields=[{key:'id',label:'Stable ID',type:'text',max:120},{key:'title',label:'Video title',type:'text',max:240},{key:'channel',label:'Channel name',type:'text',max:160},{key:'channelUrl',label:'Channel URL (HTTPS)',type:'url',max:2000},{key:'youtubeId',label:'YouTube video ID (11 characters)',type:'text',max:11}] as const;
+---
+<fieldset><legend>Community picks</legend>
+  <p>Up to 12 external videos, in display order. Leave every field in a row blank to remove it. These cards link to other channels.</p>
+  <input type="hidden" name="communityPicks.present" value="1" />
+  {Array.from({length:12},(_,index)=><details open={index<picks.length}><summary>Pick {index+1}{picks[index]?`: ${picks[index].title}`:''}</summary>
+    {fields.map(field=><label>{field.label}<input type={field.type} name={`communityPicks.${index}.${field.key}`} value={picks[index]?.[field.key]??''} maxlength={field.max} /></label>)}
+  </details>)}
+</fieldset>

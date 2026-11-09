@@ -1,9 +1,10 @@
 import { createHash } from 'node:crypto';
 import { readdir, readFile, stat } from 'node:fs/promises';
 import { dirname, extname, join, relative, resolve, sep } from 'node:path';
+import {readBuildInputs} from './lib/build-inputs.mjs';
 
 if (!process.env.SITE_URL && process.env.VERCEL_ENV === 'production') process.env.SITE_URL = 'https://sonic-collective.vercel.app';
-const root=process.cwd(),dist=resolve(root,'dist'),args=process.argv.slice(2),publication=args.includes('--publication');
+const root=process.cwd(),dist=resolve(root,'dist/client'),args=process.argv.slice(2),publication=args.includes('--publication');
 const reasonAt=args.indexOf('--allow-reset'),resetReason=reasonAt>=0?args[reasonAt+1]:'';
 const readJson=async(path)=>JSON.parse(await readFile(resolve(root,path),'utf8'));
 const files=[],fileSizes=new Map();async function walk(dir){for(const entry of await readdir(dir,{withFileTypes:true})){const path=join(dir,entry.name);if(entry.isDirectory())await walk(path);else{files.push(path);fileSizes.set(path,(await stat(path)).size);}}}
@@ -13,8 +14,7 @@ const errors=[];const fail=(message)=>errors.push(message);
 await walk(dist);
 const fileSet=new Set(files),directorySet=new Set(files.map((path)=>dirname(path)));
 if(files.some((path)=>relative(dist,path).split(sep).some((part)=>['.local','node_modules'].includes(part))))fail('Build output contains a private runtime directory');
-const authored=await readJson('src/data/performances.json'),artists=await readJson('src/data/artists.json'),overrides=await readJson('src/data/youtube-overrides.json'),legacy=await readJson('src/data/legacy-watch-routes.json');
-let snapshot;try{snapshot=await readJson('.local/youtube-snapshot.json');}catch(error){if(error.code==='ENOENT')snapshot=await readJson('src/data/youtube-snapshot.json');else throw error;}
+const inputs=await readBuildInputs(root),catalog=inputs.catalog,authored=catalog.performances,artists=catalog.artists,overrides=inputs.youtubeOverrides,legacy=await readJson('src/data/legacy-watch-routes.json'),snapshot=inputs.snapshot;
 if(!snapshot)snapshot={initialized:false,channelId:'UCCxO94rfXnMpYf7DH_sd6Bw',contentHash:hashVideos([]),videos:[],expiresAt:null};
 if(snapshot.channelId!=='UCCxO94rfXnMpYf7DH_sd6Bw'||!Array.isArray(snapshot.videos)||hashVideos(snapshot.videos)!==snapshot.contentHash)fail('Build input snapshot is malformed or has a mismatched content hash');
 if(new Set((snapshot.videos??[]).map((video)=>video.youtubeId)).size!==(snapshot.videos??[]).length)fail('Build snapshot contains duplicate YouTube IDs');

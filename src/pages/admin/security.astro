@@ -1,0 +1,37 @@
+---
+import EditorialLayout from '../../layouts/EditorialLayout.astro';
+import { readEditorialForm } from '../../lib/editorial/access';
+export const prerender=false;
+const client=Astro.locals.editorialClient!;
+let message='';let success=false;let qr='';let enrolledId='';
+const listed=await client.auth.mfa.listFactors();
+const verified=(listed.data?.totp??[]).filter(factor=>factor.status==='verified');
+if(Astro.request.method==='POST') {
+  try {
+    const form=await readEditorialForm(Astro.request);
+    if(form.get('action')==='enroll') {
+      if(verified.length) throw new Error('An authenticator is already enrolled. Verify it below.');
+      const old=(listed.data?.all??[]).filter(factor=>factor.factor_type==='totp'&&factor.status==='unverified');
+      for(const factor of old) {const removed=await client.auth.mfa.unenroll({factorId:factor.id});if(removed.error) throw new Error('Could not reset unfinished setup. Try again.');}
+      const result=await client.auth.mfa.enroll({factorType:'totp',friendlyName:'Sonic Collective editorial'});
+      if(result.error) throw new Error('Could not start authenticator setup. Try again.');
+      enrolledId=result.data.id;qr=result.data.totp.qr_code;
+    } else {
+      const factorId=form.get('factorId')??'';const code=form.get('code')??'';
+      if(!/^\d{6}$/.test(code)||!(listed.data?.all??[]).some(factor=>factor.id===factorId&&factor.factor_type==='totp')) throw new Error('Choose your authenticator and enter its six-digit code.');
+      const result=await client.auth.mfa.challengeAndVerify({factorId,code});
+      if(result.error) throw new Error('The code was not accepted. Try the current code from your authenticator.');
+      message='Authenticator verified. You can now approve content in this session.';success=true;
+    }
+  } catch(error) {message=error instanceof Error?error.message:'Verification failed.';Astro.response.status=400;}
+}
+---
+<EditorialLayout title="Authenticator security">
+  {message&&<p class:list={['notice',!success&&'error']} role={success?'status':'alert'}>{message}</p>}
+  {listed.error?<p class="notice error" role="alert">Authenticators could not be loaded. Try again later.</p>:<>
+    {qr&&<section><h2>Scan with your authenticator</h2><img src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(qr)}`} width="240" height="240" alt="QR code to enroll your Sonic Collective authenticator" /><p>Save your authenticator securely. This QR code is private.</p></section>}
+    {(verified.length>0||enrolledId)&&<form method="post"><input type="hidden" name="action" value="verify" /><label>Authenticator<select name="factorId">{enrolledId&&<option value={enrolledId}>New authenticator</option>}{verified.map(factor=><option value={factor.id}>{factor.friendly_name??'Authenticator'}</option>)}</select></label><label>Six-digit code<input name="code" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required /></label><button>Verify authenticator</button></form>}
+    {!verified.length&&!enrolledId&&<form method="post"><input type="hidden" name="action" value="enroll" /><p>Use an authenticator app to secure content approvals. Contact the project owner for recovery if your device is lost.</p><button>Set up authenticator</button></form>}
+    {!verified.length&&(listed.data?.all??[]).some(factor=>factor.status==='unverified')&&!enrolledId&&<p>An unfinished setup exists. Starting again replaces the unfinished enrollment.</p>}
+  </>}
+</EditorialLayout>

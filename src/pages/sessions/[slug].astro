@@ -1,45 +1,7 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import PerformanceCard from '../../components/PerformanceCard.astro';
-import PerformancePlayer from '../../components/PerformancePlayer.astro';
-import { getDiscoveryCatalog } from '../../lib/discovery';
-import { getRelated } from '../../lib/related';
-import { artistNamesFor, artistUrl, performanceUrl } from '../../lib/urls';
-import '../../styles/discovery.css';
-export async function getStaticPaths() {
-  const catalog=await getDiscoveryCatalog();
-  return catalog.performances.map((performance)=>({params:{slug:performance.id},props:{performanceId:performance.id}}));
-}
-const {performanceId}=Astro.props;
+import PerformancePage from '../../components/PerformancePage.astro';
+import {getDiscoveryCatalog} from '../../lib/discovery';
+export async function getStaticPaths(){const catalog=await getDiscoveryCatalog();return catalog.performances.map(item=>({params:{slug:item.id},props:{performanceId:item.id}}));}
 const catalog=await getDiscoveryCatalog();
-const performance=catalog.performances.find((item)=>item.id===performanceId)!;
-const playable=catalog.availability[performance.youtubeId]!=='unavailable'&&catalog.availability[performance.youtubeId]!=='external-only';
-const artists=performance.artistIds.map((id)=>catalog.raw.artists.find((artist)=>artist.id===id)).filter((artist)=>artist!==undefined);
-const names=artistNamesFor(performance,catalog.raw.artists);
-const series=catalog.raw.series.find((item)=>item.id===performance.seriesId)!;
-const [next]=getRelated(performance,catalog.performances.filter((item)=>catalog.availability[item.youtubeId]!=='unavailable'));
-const title=`${performance.title} by ${names.join(' & ')} | Sonic Collective`;
-const description=`${performance.title} by ${names.join(' & ')} in ${series.title}. Watch the full performance on YouTube.`;
-const playbackRecords=catalog.performances.map(({id,title,youtubeId})=>({id,title,youtubeId,embeddable:catalog.availability[youtubeId]!=='unavailable'&&catalog.availability[youtubeId]!=='external-only'}));
 ---
-<BaseLayout title={title} description={description} canonicalPath={performanceUrl(performance.id)} currentPath="/sessions/" playbackRecords={playbackRecords}>
-  <article class="performance-page"><div class="performance-page__inner">
-    <nav aria-label="Breadcrumb"><a href="/sessions/">All performances</a> <span aria-hidden="true">/</span> {performance.title}</nav>
-    <div style="margin-top:24px"><PerformancePlayer performance={performance} playable={playable} /></div>
-    {!playable&&<p role="status">{catalog.availability[performance.youtubeId]==='external-only'?'This performance plays on YouTube. Use the link above to watch.':'This video is not currently listed as available on the channel. Check the channel for updates.'}</p>}
-    <section class="performance-details">
-      <p class="eyebrow">{series.title}{performance.episode ? ` · Episode ${performance.episode}` : ''}</p><h1 class="performance-title">{performance.title}</h1>
-      {performance.originalTitle&&<p lang="ja">{performance.originalTitle}</p>}
-      <div class="performance-byline">{artists.map((artist,index)=><span>{index>0&&<span aria-hidden="true"> · </span>}<a href={artistUrl(artist.id)}>{artist.name}</a></span>)}</div>
-      {performance.editorialNote&&<p>{performance.editorialNote}</p>}
-      <h2>Credits</h2>
-      <p>Performed by {names.join(' & ')}{performance.originalArtist&&<> · Original song by {performance.originalArtist}</>}</p>
-      <div class="share-row"><button class="button button--quiet" type="button" data-share-page>Copy page link</button><span role="status" aria-live="polite" data-share-status></span><input aria-label="Canonical page link" readonly hidden data-share-url /></div>
-      <script>import '../../../scripts/share.ts';</script>
-    </section>
-    {next&&<section class="related-performances" aria-labelledby="watch-next">
-      <h2 id="watch-next">Watch next</h2>
-      <div class="catalog-grid"><PerformanceCard performance={next} artistNames={artistNamesFor(next,catalog.raw.artists)} playable={catalog.availability[next.youtubeId]!=='external-only'} /></div>
-    </section>}
-  </div></article>
-</BaseLayout>
+<PerformancePage catalog={catalog} performanceId={Astro.props.performanceId} />

@@ -1,0 +1,29 @@
+---
+import EditorialLayout from '../../layouts/EditorialLayout.astro';
+import { editorialKindLabels,editorialStatusLabels } from '../../lib/editorial/content';
+export const prerender = false;
+const result = await Astro.locals.editorialClient!.from('content_items').select('id,review_state,kind,stable_id,updated_at').order('updated_at',{ascending:false}).limit(1000);
+if (result.error) Astro.response.status = 503;
+const items = result.data ?? [];
+---
+<EditorialLayout title="Your studio, at a glance." description="Shape the stories, performances, and voices that make Sonic Collective.">
+  {result.error ? <p class="notice error" role="alert">Content could not be loaded. Try again later.</p> : <>
+    <dl class="stat-grid">
+      <div class="stat-card"><dt>Content library</dt><dd>{items.length}</dd><small>Records available to you</small></div>
+      <div class="stat-card"><dt>Artists</dt><dd>{items.filter(item=>item.kind==='artist').length}</dd><small>Independent voices</small></div>
+      <div class="stat-card"><dt>Performances</dt><dd>{items.filter(item=>item.kind==='performance').length}</dd><small>Sessions & covers</small></div>
+      <div class="stat-card"><dt>Waiting for review</dt><dd>{items.filter(item=>item.review_state==='in-review').length}</dd><small>Submitted drafts</small></div>
+    </dl>
+    <div class="overview-grid">
+      <section class="panel" aria-labelledby="recent-content"><div class="panel-heading"><h2 id="recent-content">Recently updated</h2><a href="/admin/content/">View all content ↗</a></div>
+        {items.length?<div class="table-scroll"><table><thead><tr><th scope="col">Content</th><th scope="col">Type</th><th scope="col">Status</th></tr></thead><tbody>{items.slice(0,5).map(item=><tr><td><a href={`/admin/content/${item.id}/`}>{item.stable_id}</a></td><td>{editorialKindLabels[item.kind]??item.kind}</td><td><span class="status-badge" data-state={item.review_state}>{editorialStatusLabels[item.review_state]??item.review_state}</span></td></tr>)}</tbody></table></div>:<p>No content has been assigned to you yet.</p>}
+      </section>
+      <section class="panel" aria-labelledby="studio-shortcuts"><div class="panel-heading"><h2 id="studio-shortcuts">Back to the work</h2></div>
+        <a href="/admin/content/" class="quick-link"><span><strong>Edit your content</strong><small>Artists, performances, and homepage picks</small></span><span aria-hidden="true">↗</span></a>
+        <a href="/admin/security/" class="quick-link"><span><strong>Secure your account</strong><small>Set up or verify your authenticator</small></span><span aria-hidden="true">↗</span></a>
+        <a href="/" class="quick-link"><span><strong>See the public site</strong><small>Step into the audience’s view</small></span><span aria-hidden="true">↗</span></a>
+      </section>
+    </div>
+  </>}
+  <section class="notice"><h2>A private space to make your next edit.</h2><p>Save and review drafts here. Publishing is still being connected, so your edits won’t appear on the public site yet.</p></section>
+</EditorialLayout>

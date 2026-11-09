@@ -2,16 +2,17 @@ import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import rawOverrides from '../data/youtube-overrides.json';
 import { getRawCatalog } from './catalog';
+import {getConfiguredReleaseArtifact} from './editorial/releases';
 import { mergeCatalog, youtubeOverridesSchema } from './merge-catalog';
 import type { YoutubeOverride } from './merge-catalog';
 import { performanceUrl } from './urls';
 import { makeSnapshot, validateSnapshot, type YoutubeSnapshot } from './youtube-import';
-import type { Artist } from './schemas';
+import type { Artist, Catalog } from './schemas';
 
-const overrides=youtubeOverridesSchema.parse(rawOverrides);
+const defaultOverrides=youtubeOverridesSchema.parse(rawOverrides);
 
 export type CatalogItem = {
-  id:string;source:'curated'|'youtube';title:string;artistLabel?:string;artistIds:string[];searchText:string;
+  id:string;source:'curated'|'youtube';title:string;artistLabel?:string;artistIds:string[];artistNames:{id:string;name:string}[];searchText:string;
   seriesId:'sessions'|'covers'|null;youtubeId:string;href:string;publishedAt?:string;
   fullPerformance?: {title:string;href:string};
   image:{kind:'local';base:string;alt:string}|{kind:'youtube';url:string;alt:string};embeddable:boolean;format?:'full'|'short';featuredOrder?:number;
@@ -20,16 +21,19 @@ export async function getYoutubeSnapshot():Promise<YoutubeSnapshot> {
   try {const source=await readFile(resolve(process.cwd(),'.local/youtube-snapshot.json'),'utf8');return validateSnapshot(JSON.parse(source),'UCCxO94rfXnMpYf7DH_sd6Bw');}
   catch(error){if((error as NodeJS.ErrnoException).code==='ENOENT')return validateSnapshot(JSON.parse(await readFile(resolve(process.cwd(),'src/data/youtube-snapshot.json'),'utf8')),'UCCxO94rfXnMpYf7DH_sd6Bw');throw error;}
 }
-export async function getDiscoveryCatalog() {
-  const raw=await getRawCatalog(),snapshot=await getYoutubeSnapshot();
+export async function getDiscoveryCatalog(source?:{raw:Catalog;snapshot:YoutubeSnapshot;overrides:YoutubeOverride[]}) {
+  const configured=source?null:await getConfiguredReleaseArtifact();
+  const raw=source?.raw??configured?.catalog??await getRawCatalog(),snapshot=source?.snapshot??await getYoutubeSnapshot();
+  const overrides=source?.overrides??configured?.youtubeOverrides??defaultOverrides;
   const approved=raw.performances.filter((item)=>item.approvedForSite);
   const merged=mergeCatalog(raw.performances,snapshot,overrides);
   const uploadDates = new Map(merged.videos.map((video) => [video.youtubeId, video.publishedAt]));
   const availability=merged.availabilityByYoutubeId as Record<string,'available'|'external-only'|'unavailable'|'unverified'>;
 
   const curated:CatalogItem[]=approved.filter((item)=>availability[item.youtubeId]!=='unavailable').map((item)=>{
-    const names=item.artistIds.map((id)=>raw.artists.find((artist)=>artist.id===id)).filter((artist):artist is Artist=>!!artist).map((artist)=>artist.name);
-    return {id:item.id,source:'curated',format:'full',title:item.title,artistLabel:names.join(' & '),artistIds:item.artistIds,searchText:[item.title,item.originalTitle??'',...item.aliases,...names,...item.artistIds.flatMap((id)=>raw.artists.find((a)=>a.id===id)?.aliases??[])].join(' '),seriesId:item.seriesId,youtubeId:item.youtubeId,href:performanceUrl(item.id),publishedAt:item.publishedAt??uploadDates.get(item.youtubeId),image:{kind:'local',base:item.thumbnail,alt:item.thumbnailAlt},embeddable:availability[item.youtubeId]!=='external-only',featuredOrder:item.featuredOrder};
+    const participants=item.artistIds.map((id)=>raw.artists.find((artist)=>artist.id===id)).filter((artist):artist is Artist=>!!artist);
+    const names=participants.map(artist=>artist.name);
+    return {id:item.id,source:'curated',format:'full',title:item.title,artistLabel:names.join(' & '),artistIds:item.artistIds,artistNames:participants.map(({id,name})=>({id,name})),searchText:[item.title,item.originalTitle??'',...item.aliases,...names,...item.artistIds.flatMap((id)=>raw.artists.find((a)=>a.id===id)?.aliases??[])].join(' '),seriesId:item.seriesId,youtubeId:item.youtubeId,href:performanceUrl(item.id),publishedAt:item.publishedAt??uploadDates.get(item.youtubeId),image:{kind:'local',base:item.thumbnail,alt:item.thumbnailAlt},embeddable:availability[item.youtubeId]!=='external-only',featuredOrder:item.featuredOrder};
   });
   const editorial=new Map<string, YoutubeOverride>(overrides.map(item=>[item.youtubeId,item]));
   for(const item of editorial.values()) for(const id of item.artistIds??[]) { if(!raw.artists.some(artist=>artist.id===id)) throw new Error(`Unknown reviewed artist: ${id}`); }
@@ -38,7 +42,7 @@ export async function getDiscoveryCatalog() {
     const review=editorial.get(video.youtubeId);
     const participants=(review?.artistIds??[]).map(id=>raw.artists.find(artist=>artist.id===id)!);
     const names=participants.map(artist=>artist.name);
-    return {id:`yt-${video.youtubeId}`,source:'youtube',format:review?.format,title:video.title,artistIds:participants.map(artist=>artist.id),artistLabel:names.length?names.join(' & '):undefined,searchText:[video.title,...names,...participants.flatMap(artist=>artist.aliases)].join(' '),seriesId:video.seriesId,youtubeId:video.youtubeId,href:`/watch/${video.youtubeId}/`,publishedAt:video.publishedAt,image:{kind:'youtube',url:video.thumbnailUrl,alt:`Thumbnail for ${video.title}`},embeddable:video.embeddable};
+    return {id:`yt-${video.youtubeId}`,source:'youtube',format:review?.format,title:video.title,artistIds:participants.map(artist=>artist.id),artistNames:participants.map(({id,name})=>({id,name})),artistLabel:names.length?names.join(' & '):undefined,searchText:[video.title,...names,...participants.flatMap(artist=>artist.aliases)].join(' '),seriesId:video.seriesId,youtubeId:video.youtubeId,href:`/watch/${video.youtubeId}/`,publishedAt:video.publishedAt,image:{kind:'youtube',url:video.thumbnailUrl,alt:`Thumbnail for ${video.title}`},embeddable:video.embeddable};
   });
   const allItems=[...curated,...imported];
   for(const item of imported) {

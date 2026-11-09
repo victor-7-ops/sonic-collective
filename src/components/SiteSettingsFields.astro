@@ -1,0 +1,6 @@
+---
+import {siteSettingGroups,siteSettingName,siteSettingValue,type SiteSettingsCopy} from '../lib/editorial/site-form';
+interface Props {copy:SiteSettingsCopy;}
+const {copy}=Astro.props;
+---
+{siteSettingGroups.map(group=><fieldset><legend>{group.legend}</legend>{group.fields.map(field=><label>{field.label}{field.type==='textarea'?<textarea name={siteSettingName(group,field)} required maxlength={field.maxLength}>{siteSettingValue(copy,group,field)}</textarea>:<input name={siteSettingName(group,field)} type={field.type} value={siteSettingValue(copy,group,field)} required min={field.min} max={field.max} maxlength={field.maxLength} />}</label>)}{group.path==='header'&&<small>Destinations stay fixed to the existing public pages and channel.</small>}</fieldset>)}

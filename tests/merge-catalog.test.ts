@@ -11,6 +11,12 @@ test('exclusions hide authored videos and a null override clears imported series
   assert.equal(result.availabilityByYoutubeId.Curated0001,'unavailable');
   assert.deepEqual(result.videos,[video('Imported001')]);
 });
+test('missing series override inherits imported classification while null clears it',()=>{
+  const snapshot=makeSnapshot([video('Imported001','covers')],'channel');
+  assert.equal(mergeCatalog([],snapshot,[]).videos[0].seriesId,'covers');
+  assert.equal(mergeCatalog([],snapshot,[{youtubeId:'Imported001',seriesId:null}]).videos[0].seriesId,null);
+  assert.equal(mergeCatalog([],snapshot,[{youtubeId:'Imported001',seriesId:'sessions'}]).videos[0].seriesId,'sessions');
+});
 test('curated series wins, drafts and exclusions stay hidden, imports remain unattributed',()=>{
   const snapshot=makeSnapshot([video('Curated0001','covers'),video('DraftItem01'),video('Imported001')],'channel');
   const result=mergeCatalog([{youtubeId:'Curated0001',id:'stable-slug',approvedForSite:true,seriesId:'sessions'},{youtubeId:'DraftItem01',id:'draft',approvedForSite:false,seriesId:'covers'}],snapshot,[{youtubeId:'Imported001',excluded:true}]);

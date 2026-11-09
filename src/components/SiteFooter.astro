@@ -1,12 +1,9 @@
 ---
-const links=[['Performances','/sessions/'],['Artists','/artists/'],['About','/about/'],['Privacy','/privacy/']];
-const socials=[
-  ['YouTube','https://www.youtube.com/@Sonic_Collective-PH'],
-  ['Facebook','https://www.facebook.com/profile.php?id=61577313503520'],
-  ['Instagram','https://www.instagram.com/sonic_collective/'],
-  ['TikTok','https://www.tiktok.com/@sonic_collective'],
-  ['X','https://x.com/CollectiveSonic'],
-];
+import type { SiteFooter } from '../lib/schemas';
+interface Props { footer:SiteFooter; }
+const {footer}=Astro.props;
+const links=[[footer.navigation.performances,'/sessions/'],[footer.navigation.artists,'/artists/'],[footer.navigation.about,'/about/'],[footer.navigation.privacy,'/privacy/']];
+const socials=[['YouTube',footer.socialUrls.youtube],['Facebook',footer.socialUrls.facebook],['Instagram',footer.socialUrls.instagram],['TikTok',footer.socialUrls.tiktok],['X',footer.socialUrls.x]];
 const logos: Record<string, string> = {
   YouTube: 'M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.2 3.6z',
   Facebook: 'M24 12a12 12 0 1 0-13.9 11.9v-8.4h-3V12h3V9.4c0-3 1.8-4.7 4.5-4.7 1.3 0 2.7.2 2.7.2v3h-1.5c-1.5 0-1.9.9-1.9 1.9V12h3.3l-.5 3.5h-2.8v8.4A12 12 0 0 0 24 12Z',
@@ -18,7 +15,7 @@ const logos: Record<string, string> = {
 <footer class="site-footer">
   <div class="wrap">
     <div class="site-footer__top">
-      <p class="eyebrow" style="color:var(--mint)">Independent voices. Shared frequencies.</p>
+      <p class="eyebrow" style="color:var(--mint)">{footer.tagline}</p>
       <nav class="site-footer__links" aria-label="Footer navigation">
         {links.map(([label,href])=><a href={href}>{label}</a>)}
       </nav>
@@ -27,10 +24,10 @@ const logos: Record<string, string> = {
       {socials.map(([label,href])=><a class="social-icon" href={href} target="_blank" rel="noreferrer" aria-label={label} title={label}>
         <svg viewBox="0 0 24 24" width="21" height="21" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d={logos[label]} /></svg>
       </a>)}
-      <a href="mailto:soniccollective.contact@gmail.com?subject=Sonic%20Collective%20collaboration">Email for collaborations</a>
+      <a href={`mailto:${footer.contactEmail}?subject=Sonic%20Collective%20collaboration`}>{footer.contactLabel}</a>
     </nav>
-    <p class="site-footer__wordmark display">SONIC COLLECTIVE</p>
-    <div class="site-footer__bottom"><span>Independent voices. Shared frequencies.</span><span>SONIC COLLECTIVE © 2026</span></div>
+    <p class="site-footer__wordmark display">{footer.wordmark}</p>
+    <div class="site-footer__bottom"><span>{footer.tagline}</span><span>{footer.wordmark} © {footer.copyrightYear}</span></div>
   </div>
 </footer>
 <style>

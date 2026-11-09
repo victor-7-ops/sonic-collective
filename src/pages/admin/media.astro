@@ -1,0 +1,38 @@
+---
+import EditorialLayout from '../../layouts/EditorialLayout.astro';
+import {editorialAdminClient} from '../../lib/editorial/server';
+export const prerender=false;
+const client=Astro.locals.editorialClient!;
+const admin=editorialAdminClient();
+const uploadsEnabled=admin!==null;
+const result=await client.from('editorial_assets').select('id,derivative_path,alt_text,width,height,created_at').eq('status','ready').order('created_at',{ascending:false}).limit(50);
+const assets=result.data??[];
+const member=await client.from('team_members').select('role').eq('user_id',Astro.locals.editorialMember!.userId).eq('active',true).maybeSingle();
+if(member.error||!member.data) return new Response('Active team access could not be verified.',{status:403});
+const previews=await Promise.all(assets.map(async asset=>({asset,...(admin&&asset.derivative_path?await admin.storage.from('editorial-media').createSignedUrl(asset.derivative_path,60):{data:null,error:new Error('Server configuration or asset path unavailable')})})));
+if(result.error||previews.some(preview=>preview.error))Astro.response.status=503;
+---
+<EditorialLayout title="Media library" description="Private image assets for editorial drafts.">
+  {uploadsEnabled?<form action="/api/editorial/media/upload/" method="post" enctype="multipart/form-data" class="panel">
+    <h2>Add a private image</h2>
+    <label>JPEG, PNG, or WebP image (15 MiB maximum)<input type="file" name="file" accept="image/jpeg,image/png,image/webp" required /></label>
+    <label>Image description<input name="altText" maxlength="500" required /></label>
+    <label>Horizontal focal point<input type="range" name="focalX" min="0" max="1" step="0.01" value="0.5" /></label>
+    <label>Vertical focal point<input type="range" name="focalY" min="0" max="1" step="0.01" value="0.5" /></label>
+    <button>Validate and upload privately</button>
+  </form>:<section class="panel" aria-labelledby="media-status">
+    <h2 id="media-status">Image uploads are disabled</h2>
+    <p>The server-only Supabase credential is not configured. No asset can be persisted or marked ready without the trusted server upload path.</p>
+  </section>}
+  {Astro.url.searchParams.has('uploaded')&&<p role="status">Image validated and stored privately. It is available only in the editorial media gallery.</p>}
+  <section aria-labelledby="media-gallery"><h2 id="media-gallery">Private gallery</h2>
+    <p>Showing the 50 most recent validated images.</p>
+    {result.error?<p class="notice error" role="alert">Media records are unavailable. Apply the media database migration and retry.</p>:previews.length?<div class="table-scroll"><ul class="media-grid">{previews.map(({asset,data,error})=><li>{error||!data?<p role="alert">Private preview could not be opened.</p>:<img src={data.signedUrl} alt={asset.alt_text} width={asset.width} height={asset.height} loading="lazy" />}<p>{asset.alt_text}</p><small>{asset.width} × {asset.height}</small></li>)}</ul></div>:<p>No validated images are available yet.</p>}
+  </section>
+  <p><a href="/admin/content/">← Back to content library</a></p>
+</EditorialLayout>
+<style>
+  .media-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:20px; padding:0; list-style:none; }
+  .media-grid li { min-width:0; padding:14px; border:1px solid var(--line); border-radius:12px; background:var(--surface); }
+  .media-grid img { display:block; width:100%; height:220px; object-fit:contain; background:var(--surface-muted); }
+</style>

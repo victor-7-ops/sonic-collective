@@ -1,3 +1,7 @@
+# Historical checkpoint
+
+The results below are dated November 4 and are retained as evidence for that version. Current CMS status, later counts and remaining checks are in `PROJECT-AUDIT.md`, `CLAUDE-HANDOFF.md` and `editorial-setup.md`.
+
 # Release candidate verification
 
 Date: November 4, 2026. Scope: local static build, fixture-backed upload integration, and browser QA. No publish or hourly task was performed in this checkpoint.

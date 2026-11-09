@@ -1,0 +1,25 @@
+---
+import EditorialLayout from '../../layouts/EditorialLayout.astro';
+import { readEditorialForm } from '../../lib/editorial/access';
+export const prerender = false;
+let message = '';
+let email = '';
+if (Astro.locals.editorialMember) return Astro.redirect('/admin/',303);
+if (Astro.request.method === 'POST') {
+  try {
+    const form = await readEditorialForm(Astro.request);
+    email = form.get('email')?.trim() ?? '';
+    const password = form.get('password') ?? '';
+    if (!email || email.length > 254 || !password || password.length > 1024) throw new Error('Invalid credentials');
+    const result = await Astro.locals.editorialClient!.auth.signInWithPassword({ email, password });
+    if (result.error) throw result.error;
+    return Astro.redirect('/admin/',303);
+  } catch { message = 'Unable to sign in. Check your credentials and invitation, or try again later.'; Astro.response.status = 400; }
+}
+---
+<EditorialLayout title="Team sign in">
+  <p>For Victor and invited Sonic Collective team members.</p>
+  {message && <p class="notice error" role="alert">{message}</p>}
+  <form method="post"><label>Email<input type="email" name="email" value={email} autocomplete="username" maxlength="254" required /></label><label>Password<input type="password" name="password" autocomplete="current-password" maxlength="1024" required /></label><button>Sign in</button></form>
+  <p><a href="/admin/recover/">Forgot your password?</a></p>
+</EditorialLayout>

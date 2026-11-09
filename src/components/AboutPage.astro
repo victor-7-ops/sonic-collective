@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { resolveSiteContent } from '../lib/editorial/site-content';
+import type { SiteConfig } from '../lib/schemas';
+interface Props {site:SiteConfig;preview?:boolean;editorPath?:string;}
+const {site,preview=false,editorPath}=Astro.props;
+const {about}=resolveSiteContent(site);
+---
+<BaseLayout site={site} preview={preview} editorPath={editorPath} title="About Sonic Collective" description="Meet Sonic Collective and explore the Sonic Sessions and Sonic Covers." canonicalPath="/about/" currentPath="/about/">
+  <section class="page-intro wrap"><p class="eyebrow">{about.eyebrow}</p><h1>{about.heading}</h1></section>
+  <section class="page-copy wrap">
+    <p>{about.intro}</p>
+    <h2>{about.sessionsHeading}</h2><p>{about.sessionsDescription}</p>
+    <h2>{about.coversHeading}</h2><p>{about.coversDescription}</p>
+    <p><a href={site.channelUrl} target="_blank" rel="noreferrer">{about.youtubeLinkText}</a></p>
+  </section>
+</BaseLayout>

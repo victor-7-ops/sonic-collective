@@ -1,0 +1,32 @@
+---
+import EditorialLayout from '../../layouts/EditorialLayout.astro';
+export const prerender=false;
+const code=Astro.url.searchParams.get('code');
+let error='';
+if(code) {
+  const result=code.length<=4096?await Astro.locals.editorialClient!.auth.exchangeCodeForSession(code):null;
+  if(result&&!result.error) return Astro.redirect('/admin/account/',303);
+  error='This link could not be verified. Older recovery links must open in the browser that requested them. Request a new recovery email.';
+}
+---
+<EditorialLayout title="Complete team sign in">
+  <p data-email-status role="status">{error||'Confirming your invitation or recovery link…'}</p>
+  <noscript>Enable JavaScript to complete a default Supabase email link.</noscript>
+  {Astro.locals.editorialMember&&<p><a href="/admin/account/">Continue to your account</a></p>}
+  <p><a href="/admin/recover/">Request a new recovery email</a></p>
+  <p><a href="/admin/login/">Back to sign in</a></p>
+</EditorialLayout>
+<script>
+  import { emailSession,emailLinkError } from '../../lib/editorial/email-session';
+  const fragment=window.location.hash;
+  const session=emailSession(fragment);
+  const error=emailLinkError(fragment);
+  window.history.replaceState(null,'',window.location.pathname);
+  const status=document.querySelector<HTMLElement>('[data-email-status]')!;
+  if(session) {
+    fetch('/auth/session/',{method:'POST',credentials:'same-origin',body:new URLSearchParams(session)})
+      .then(response=>{if(!response.ok)throw new Error();window.location.replace('/admin/account/');})
+      .catch(()=>{status.textContent='This link could not be accepted. Request a new invitation or recovery link.';});
+  } else if(error) status.textContent=error;
+  else if(status.textContent?.includes('Confirming')) status.textContent='No valid sign-in link was found. Request a new recovery email and open its latest link.';
+</script>
