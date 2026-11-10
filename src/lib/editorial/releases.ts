@@ -10,6 +10,7 @@ import {catalogSchema, type Catalog} from '../schemas';
 import {youtubeOverridesSchema,type YoutubeOverride} from '../merge-catalog';
 import {validateSnapshot} from '../youtube-import';
 import {validateCatalog} from '../validate-catalog';
+import {cmsAssetFile,cmsAssetIds,withCmsAssets} from './cms-assets';
 import {parseEditorialPayload, editorialKindSchema, type EditorialKind} from './content';
 
 export type ApprovedReleaseRecord={kind:EditorialKind;stableId:string;revisionId:string;payload:unknown};
@@ -62,12 +63,16 @@ export function buildReleaseArtifact(releaseId:string,input:unknown):ReleaseArti
       if(override.format!=='short'||override.fullYoutubeId===override.youtubeId) throw new Error('Invalid YouTube short-to-full mapping.');
     }
   }
+  // Structure-only: readiness and real dimensions are verified at preparation and materialization.
+  const cmsIds=cmsAssetIds(parsed);
+  const releaseManifest=withCmsAssets(manifest,cmsIds.map(id=>({id,width:1,height:1})));
   const mediaPaths=new Set<string>([
+    ...cmsIds.map(cmsAssetFile),
     ...Object.values(manifest).flatMap(entry=>entry.variants.map(variant=>variant.src)),
     ...clipsSeed.flatMap(clip=>[clip.src,clip.poster]),
     siteSeed.hero.portraitPoster,siteSeed.hero.portraitLoopSrc,
   ]);
-  const validation=validateCatalog(parsed,manifest,path=>mediaPaths.has(path),true);
+  const validation=validateCatalog(parsed,releaseManifest,path=>mediaPaths.has(path),true);
   if(!validation.ok) throw new Error(`Invalid release catalog: ${validation.errors.join('; ')}`);
   const catalog=validation.catalog!;
   const revisionMap=records.map(({kind,stableId,revisionId})=>({kind,stableId,revisionId}));

@@ -1,4 +1,5 @@
 import type {EditorialKind} from './content';
+import {cmsAssetBase} from './cms-assets';
 import {artistSchema,performanceSchema} from '../schemas';
 import type {SupabaseClient} from '@supabase/supabase-js';
 import type {Database,Json} from './database.types';
@@ -30,6 +31,12 @@ export function createEditorialPayload(kind:string,form:URLSearchParams,choices:
     const payload={id,title:form.get('title')?.trim()??'',aliases:[],artistIds:[artistId],seriesId:form.get('seriesId')??'',youtubeId,thumbnail,thumbnailAlt:form.get('thumbnailAlt')?.trim()??'',featuredOrder:0,approvedForSite:false};
     return performanceSchema.parse(payload);
   }
+}
+
+/** `/media/cms/<id>` choices for ready media-library images the signed-in member may read. */
+export async function readyLibraryPaths(client:SupabaseClient<Database>):Promise<string[]> {
+  const result=await client.from('editorial_assets').select('id').eq('status','ready').order('created_at',{ascending:false}).limit(50);
+  return result.error?[]:(result.data??[]).map(row=>cmsAssetBase(row.id));
 }
 
 export async function saveNewEditorialDraft(client:SupabaseClient<Database>,kind:EditorialKind,id:string,payload:Json) {

@@ -3,6 +3,7 @@ import type {ApprovedReleaseRecord} from './releases';
 import type {SupabaseClient} from '@supabase/supabase-js';
 import type {Database} from './database.types';
 import {buildReleaseArtifact} from './releases';
+import {cmsAssetIds} from './cms-assets';
 
 export type ApprovedItemRow={id:string;kind:string;stable_id:string;approved_revision_id:string|null};
 export type ApprovedRevisionMapEntry={kind:EditorialKind;stableId:string;revisionId:string};
@@ -49,6 +50,15 @@ export async function loadApprovedReleaseRecords(reader:ApprovedSnapshotReader):
   return {records,expectedMap};
 }
 
+export async function requireReadyCmsAssets(client:SupabaseClient<Database>,ids:string[]) {
+  if(!ids.length) return;
+  const found=await client.from('editorial_assets').select('id').eq('status','ready').in('id',ids);
+  if(found.error) throw new Error('Referenced images could not be verified.');
+  const ready=new Set((found.data??[]).map(row=>row.id));
+  const missing=ids.filter(id=>!ready.has(id));
+  if(missing.length) throw new Error(`Approved content references images that are not ready: ${missing.join(', ')}.`);
+}
+
 export async function prepareEditorialRelease(client:SupabaseClient<Database>,requestId:string):Promise<string> {
   const snapshot=await loadApprovedReleaseRecords({
     async items(from,to) {
@@ -62,7 +72,8 @@ export async function prepareEditorialRelease(client:SupabaseClient<Database>,re
       return {data:result.data,error:result.error};
     },
   });
-  buildReleaseArtifact('00000000-0000-4000-8000-000000000000',snapshot.records);
+  const preview=buildReleaseArtifact('00000000-0000-4000-8000-000000000000',snapshot.records);
+  await requireReadyCmsAssets(client,cmsAssetIds(preview.catalog));
   const created=await client.rpc('create_editorial_release',{p_request_id:requestId,p_expected_map:snapshot.expectedMap});
   if(created.error||!created.data) {
     if(created.error?.code==='40001') throw new Error('Approved content changed while preparing the release. Reload and try again.');

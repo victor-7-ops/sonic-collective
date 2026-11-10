@@ -8,7 +8,7 @@ import {ZodError} from 'zod';
 import {mediaManifestEntrySchema} from '../../../lib/schemas';
 import {validateSnapshot} from '../../../lib/youtube-import';
 import {readEditorialForm} from '../../../lib/editorial/access';
-import {createEditorialPayload,requestedEditorialCreateKind,saveNewEditorialDraft} from '../../../lib/editorial/create';
+import {createEditorialPayload,readyLibraryPaths,requestedEditorialCreateKind,saveNewEditorialDraft} from '../../../lib/editorial/create';
 
 export const prerender=false;
 const client=Astro.locals.editorialClient!;
@@ -23,10 +23,11 @@ if(Astro.request.method==='POST') {
     const itemsResult=await client.from('content_items').select('stable_id,kind').eq('kind','artist');
     if(itemsResult.error) throw new Error('Available references could not be loaded. Try again later.');
     const mediaPaths=Object.keys(manifest).filter(path=>mediaManifestEntrySchema.safeParse(manifest[path as keyof typeof manifest]).success);
+    const libraryPaths=await readyLibraryPaths(client);
     const payload=createEditorialPayload(kind,values,{
       artistIds:(itemsResult.data??[]).map(item=>item.stable_id),
-      artistMedia:mediaPaths.filter(path=>path.startsWith('/media/artists/')),
-      performanceMedia:mediaPaths.filter(path=>path.startsWith('/media/performances/')),
+      artistMedia:[...mediaPaths.filter(path=>path.startsWith('/media/artists/')),...libraryPaths],
+      performanceMedia:[...mediaPaths.filter(path=>path.startsWith('/media/performances/')),...libraryPaths],
       youtubeIds:validatedVideos.map(video=>video.youtubeId),
     });
     const stableId=values.get('id')?.trim()??'';
@@ -42,8 +43,9 @@ if(artistResult.error) { Astro.response.status=503;message='Available references
 const artistOptions=artistResult.data??[];
 const artistNames=new Map(artists.map(artist=>[artist.id,artist.name]));
 const mediaPaths=Object.keys(manifest).filter(path=>mediaManifestEntrySchema.safeParse(manifest[path as keyof typeof manifest]).success);
-const artistMedia=mediaPaths.filter(path=>path.startsWith('/media/artists/'));
-const performanceMedia=mediaPaths.filter(path=>path.startsWith('/media/performances/'));
+const libraryPaths=await readyLibraryPaths(client);
+const artistMedia=[...mediaPaths.filter(path=>path.startsWith('/media/artists/')),...libraryPaths];
+const performanceMedia=[...mediaPaths.filter(path=>path.startsWith('/media/performances/')),...libraryPaths];
 const youtubeVideos=validatedVideos;
 const q=(key:string)=>values.get(key)??'';
 ---

@@ -11,3 +11,5 @@ dist/
 .env.*
 !.env.example
 .dev.vars*
+public/media/cms/
+src/data/cms-media/

@@ -16,6 +16,13 @@ This section supersedes older checkpoint notes below. The CMS is not complete an
 - Other outstanding work: public media manifest integration, revision comparison/provenance/inbox, backup rehearsal, device and end-to-end acceptance. The new community-pick editor is included in the 101-test pass. Performance previews can include explicitly supplied permitted artist drafts; unselected drafts are not assembled automatically.
 - Lower-cost workers exhausted their usage allowance; root integrated their saved changes. Commit `3acf0f4` (`Build editorial CMS foundations and handoff`) contains the working tree; it is clean. Generated package-lock.json exceeds 1,000 lines (6,178 lines); decomposition is Victor’s decision. The standalone review covered an earlier snapshot; Victor should explicitly run `$thermo-nuclear-code-quality-review` before merging or deploying. Restore history action now relies on the generated RPC void return and expected next version; included in this check/test/build.
 
+## Update — November 11, 2026 (media-library artwork in releases)
+
+- Production runs commit `9e88757` on the existing Vercel project `sonic-collective`; SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY and a Sensitive SUPABASE_SECRET_KEY are set. Admin login page reachable; real login/upload/release not exercised on production.
+- Packet 4 core (local commit, not deployed): content may reference a ready media-library image as `/media/cms/<asset-uuid>` (portrait/thumbnail). Release build validates the reference structurally, `prepareEditorialRelease` requires every referenced asset to be `ready`, `npm run cms:materialize` (needs CMS_RELEASE_FILE, SUPABASE_URL, SUPABASE_SECRET_KEY) copies derivatives to ignored `public/media/cms/` and sizes to ignored `src/data/cms-media/`, and MediaImage merges them. The new-content form offers ready library images.
+- Not done: picker for existing records, draft preview rendering of private images, history/inbox (Packet 5), release automation/Vercel promotion (Packet 6), backup rehearsal (Packet 7). Vercel builds do not run cms:materialize, so a release with library images cannot be built in production yet.
+- Verification: 106 tests, Astro check 146 files clean, 111-route build. No AI attribution in commits (Victor's rule).
+
 ## Historical checkpoints
 
 The notes below describe earlier snapshots; their local-only, secret-pending and test-count statements are superseded above.

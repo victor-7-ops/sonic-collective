@@ -15,6 +15,7 @@
     "youtube:sync": "tsx scripts/sync-youtube.ts",
     "youtube:hydrate": "tsx scripts/hydrate-youtube-snapshot.ts",
     "cms:seed": "tsx scripts/prepare-editorial-seed.ts",
+    "cms:materialize": "tsx scripts/materialize-release-assets.ts",
     "validate:output": "tsx scripts/validate-build.ts",
     "output:validate": "node scripts/validate-output.mjs",
     "test": "tsx --test tests/*.test.ts"

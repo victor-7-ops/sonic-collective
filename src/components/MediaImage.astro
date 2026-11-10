@@ -1,5 +1,9 @@
 ---
-import manifest from '../data/media-manifest.json';
+import packaged from '../data/media-manifest.json';
+import {withCmsAssets,type CmsAssetDimensions} from '../lib/editorial/cms-assets';
+// Written by `npm run cms:materialize` for release builds; empty otherwise.
+const cmsAssets=Object.values(import.meta.glob<CmsAssetDimensions>('../data/cms-media/*.json',{eager:true,import:'default'}));
+const manifest=withCmsAssets(packaged,cmsAssets) as typeof packaged;
 interface Props { base: string; alt: string; sizes?: string; eager?: boolean; focalPoint?: string; class?: string; }
 const {base,alt,sizes='(max-width: 640px) 100vw, (max-width: 1100px) 50vw, 33vw',eager=false,focalPoint='center',class:className=''}=Astro.props;
 const entry=manifest[base as keyof typeof manifest];

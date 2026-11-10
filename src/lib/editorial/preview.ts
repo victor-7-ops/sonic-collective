@@ -7,6 +7,7 @@ import manifest from '../../data/media-manifest.json';
 import { catalogSchema,artistSchema,performanceSchema } from '../schemas';
 import { validateCatalog } from '../validate-catalog';
 import { parseEditorialPayload, type EditorialKind } from './content';
+import { cmsAssetFile, cmsAssetIds, withCmsAssets } from './cms-assets';
 import type {SupabaseClient} from '@supabase/supabase-js';
 import type {Database} from './database.types';
 
@@ -50,7 +51,9 @@ export function previewCatalog(kind:EditorialKind,id:string,input:unknown,artist
     for(const dependency of artistDrafts)replaceOrAppend(raw.artists,artistSchema.parse(parseEditorialPayload('artist',dependency.id,dependency.payload)));
     replaceOrAppend(raw.performances,performanceSchema.parse(payload));
   }
-  const result=validateCatalog(raw,manifest,path=>assets.has(path),false);
+  // Library images are private until a release; previews validate their references but cannot render them publicly.
+  const cmsIds=cmsAssetIds(raw);
+  const result=validateCatalog(raw,withCmsAssets(manifest,cmsIds.map(id=>({id,width:1,height:1}))),path=>assets.has(path)||cmsIds.some(id=>cmsAssetFile(id)===path),false);
   if(!result.ok) throw new Error(result.errors.join('; '));
   return result.catalog!;
 }
