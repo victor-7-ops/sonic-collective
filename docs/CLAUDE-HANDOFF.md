@@ -23,6 +23,8 @@ This section supersedes older checkpoint notes below. The CMS is not complete an
 - Not done: picker for existing records, draft preview rendering of private images, history/inbox (Packet 5), release automation/Vercel promotion (Packet 6), backup rehearsal (Packet 7). Vercel builds do not run cms:materialize, so a release with library images cannot be built in production yet.
 - Verification: 106 tests, Astro check 146 files clean, 111-route build. No AI attribution in commits (Victor's rule).
 
+- Packet 5 slice 1 (local commit, not pushed): revision history is paginated (20/page via ?history=N) and shows a readable diff against the previous revision (history.ts + revision-diff.ts). Still open in Packet 5: YouTube inbox page and editable Short→full mapping, reviewer comments, draft/review/approved/live labeling, single snapshot assembler for exact release preview.
+
 ## Historical checkpoints
 
 The notes below describe earlier snapshots; their local-only, secret-pending and test-count statements are superseded above.

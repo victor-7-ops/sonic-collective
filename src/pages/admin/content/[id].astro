@@ -7,6 +7,7 @@ import { readEditorialForm } from '../../../lib/editorial/access';
 import { editorialKindSchema,editorialKindLabels,editorialStatusLabels } from '../../../lib/editorial/content';
 import { editorialFields,editorialPickerOptions } from '../../../lib/editorial/forms';
 import { applyContentAction } from '../../../lib/editorial/actions';
+import { historyPage,historyPageSize,loadRevisionHistory } from '../../../lib/editorial/history';
 import type { SiteConfig } from '../../../lib/schemas';
 import { homepagePerformanceOptions,homepageTeaserOptions,resolveSiteContent } from '../../../lib/editorial/site-content';
 export const prerender=false;
@@ -39,7 +40,8 @@ const isArchived=item.archived_at!==null;
 const hasFields=(editorialFields[kind].length>0||kind==='site')&&!isArchived;
 const canReview=Astro.locals.editorialMember!.role!=='contributor';
 const canManageArchive=canReview;
-const history=await client.from('content_revisions').select('id,version,created_at').eq('item_id',id).order('version',{ascending:false}).limit(20);
+const historyNumber=historyPage(Astro.url.searchParams.get('history'));
+const history=await loadRevisionHistory(client,id,historyNumber);
 const siteCopy=kind==='site'?resolveSiteContent(payload as SiteConfig):undefined;
 const siteHero=kind==='site'&&payload.hero&&typeof payload.hero==='object'?payload.hero as Record<string,unknown>:undefined;
 const selectedHeroId=typeof siteHero?.performanceId==='string'?siteHero.performanceId:'';
@@ -81,12 +83,14 @@ const teaserOptions=editorialPickerOptions(selectedClipId?[selectedClipId]:[],ho
   <form method="post"><input type="hidden" name="revision" value={item.draft_revision_id} /><button class="secondary" name="action" value="submit">Submit for review</button>{canReview&&<><button name="action" value="approve">Approve saved revision</button><button class="secondary" name="action" value="request-changes">Request changes</button></>}</form></>}
   <p><a href="/admin/content/">← Content library</a></p>
   <section aria-labelledby="revision-history"><h2 id="revision-history">Saved revision history</h2>
-    <p>The latest 20 revisions. Restoring creates a new private draft; it does not change the approved version.</p>
-    {history.error?<p role="alert">History could not be loaded. Reload to try again.</p>:<ol>{history.data.map(revision=><li>
-      <strong>Revision {revision.version}</strong> · <time datetime={revision.created_at}>{new Date(revision.created_at).toISOString().replace('T',' ').slice(0,16)} UTC</time>
+    <p>Newest first, {historyPageSize} per page. Each revision lists what changed from the one before it. Restoring creates a new private draft; it does not change the approved version.</p>
+    {history.error?<p role="alert">History could not be loaded. Reload to try again.</p>:history.entries.length===0?<p>No revisions on this page.</p>:<ol>{history.entries.map(revision=><li>
+      <strong>Revision {revision.version}</strong> · <time datetime={revision.createdAt}>{new Date(revision.createdAt).toISOString().replace('T',' ').slice(0,16)} UTC</time>
+      <details><summary>{revision.first?'First saved revision':revision.changes.length?`${revision.changes.length} change${revision.changes.length===1?'':'s'}`:'No content changes'}</summary>{revision.changes.length>0&&<ul>{revision.changes.map(change=><li><strong>{change.field}</strong>: <del>{change.before}</del> → <ins>{change.after}</ins></li>)}</ul>}</details>
       {['artist','performance','site'].includes(kind)&&<> · <a href={`/preview/${id}/?revision=${revision.id}`} target="_blank" rel="noopener">Preview revision {revision.version} ↗</a>{kind==='site'&&<> · <a href={`/preview/${id}/?revision=${revision.id}&view=about`} target="_blank" rel="noopener">About page</a></>}</>}
       {!isArchived&&revision.id!==item.draft_revision_id&&<form method="post"><input type="hidden" name="action" value="restore" /><input type="hidden" name="revision" value={revision.id} /><input type="hidden" name="version" value={item.version} /><button class="secondary">Restore revision {revision.version} as new draft</button></form>}
     </li>)}</ol>}
+    {!history.error&&(historyNumber>1||history.hasMore)&&<p>{historyNumber>1&&<a href={`?history=${historyNumber-1}#revision-history`}>← Newer revisions</a>}{historyNumber>1&&history.hasMore&&' · '}{history.hasMore&&<a href={`?history=${historyNumber+1}#revision-history`}>Older revisions →</a>}</p>}
   </section>
 </EditorialLayout>
 <script>
