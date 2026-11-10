@@ -55,8 +55,11 @@ test('preview validates library image references',()=>{
 });
 
 test('release preparation rejects references to images that are not ready',async()=>{
-  const client=(rows:{id:string}[]|null,error:unknown=null)=>({from:()=>({select:()=>({eq:()=>({in:async()=>({data:rows,error})})})})}) as never;
-  await requireReadyCmsAssets(client([{id}]),[id]);
+  const client=(rows:{id:string;derivative_path?:string|null;width?:number|null;height?:number|null}[]|null,error:unknown=null)=>({from:()=>({select:()=>({eq:()=>({in:async()=>({data:rows,error})})})})}) as never;
+  const complete={id,derivative_path:'a/b.webp',width:10,height:5};
+  await requireReadyCmsAssets(client([complete]),[id]);
+  await assert.rejects(()=>requireReadyCmsAssets(client([{...complete,derivative_path:null}]),[id]),/not ready/);
+  await assert.rejects(()=>requireReadyCmsAssets(client([{...complete,width:0}]),[id]),/not ready/);
   await requireReadyCmsAssets(client(null),[]);
   await assert.rejects(()=>requireReadyCmsAssets(client([]),[id]),/not ready/);
   await assert.rejects(()=>requireReadyCmsAssets(client(null,new Error('x')),[id]),/could not be verified/);

@@ -52,9 +52,9 @@ export async function loadApprovedReleaseRecords(reader:ApprovedSnapshotReader):
 
 export async function requireReadyCmsAssets(client:SupabaseClient<Database>,ids:string[]) {
   if(!ids.length) return;
-  const found=await client.from('editorial_assets').select('id').eq('status','ready').in('id',ids);
+  const found=await client.from('editorial_assets').select('id,derivative_path,width,height').eq('status','ready').in('id',ids);
   if(found.error) throw new Error('Referenced images could not be verified.');
-  const ready=new Set((found.data??[]).map(row=>row.id));
+  const ready=new Set((found.data??[]).filter(row=>row.derivative_path&&row.width&&row.height).map(row=>row.id));
   const missing=ids.filter(id=>!ready.has(id));
   if(missing.length) throw new Error(`Approved content references images that are not ready: ${missing.join(', ')}.`);
 }
