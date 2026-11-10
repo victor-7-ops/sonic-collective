@@ -1,0 +1,50 @@
+---
+import EditorialLayout from '../../../layouts/EditorialLayout.astro';
+import {readEditorialForm} from '../../../lib/editorial/access';
+import {saveNewEditorialDraft} from '../../../lib/editorial/create';
+import {buildInbox,inboxCounts,inboxFilter,inboxFilters,inboxPage,loadPerformanceVideoIds,loadReviewRows} from '../../../lib/editorial/inbox';
+import {getYoutubeSnapshot} from '../../../lib/discovery';
+export const prerender=false;
+const client=Astro.locals.editorialClient!;
+const snapshot=await getYoutubeSnapshot();
+const videos=snapshot.initialized&&!snapshot.purged?snapshot.videos:[];
+let message='';
+if(Astro.request.method==='POST') {
+  try {
+    const form=await readEditorialForm(Astro.request);
+    const videoId=form.get('youtubeId')??'';
+    if(!videos.some(video=>video.youtubeId===videoId)) throw new Error('Choose a video from the validated YouTube snapshot.');
+    const itemId=await saveNewEditorialDraft(client,'youtube-review',videoId,{youtubeId:videoId} as import('../../../lib/editorial/database.types').Json);
+    return Astro.redirect(`/admin/content/${itemId}/`,303);
+  } catch(error) {
+    message=error instanceof Error?error.message:'The review could not be started.';Astro.response.status=400;
+  }
+}
+const [reviews,performanceIds]=await Promise.all([loadReviewRows(client),loadPerformanceVideoIds(client)]);
+if(!reviews||!performanceIds) {Astro.response.status=503;}
+const rows=buildInbox(videos,reviews??[],new Set(performanceIds??[]));
+const counts=inboxCounts(rows);
+const filter=inboxFilter(Astro.url.searchParams.get('filter'));
+const view=inboxPage(rows,filter,Number(Astro.url.searchParams.get('page')??1));
+const href=(nextFilter:string,page=1)=>`/admin/youtube/?filter=${nextFilter}&page=${page}`;
+const labels:Record<string,string>={all:'All',unreviewed:'Needs review',reviewed:'Reviewed',excluded:'Excluded',authored:'Authored performances'};
+const date=(value:string)=>new Date(value).toISOString().slice(0,10);
+const minutes=(seconds:number)=>`${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`;
+---
+<EditorialLayout title="YouTube inbox" description="Imported channel videos are read-only here. Your decisions are saved as reviewable drafts.">
+  <p>Video details come from the validated YouTube snapshot and cannot be edited. Classification, artists, exclusion and Short-to-full links are saved as review drafts and take effect only after approval and a release. Automatic imports never overwrite these decisions.</p>
+  {!snapshot.initialized||snapshot.purged?<p class="notice error" role="alert">No fresh YouTube snapshot is available, so there are no videos to review.</p>:<p><small>Snapshot validated {snapshot.validatedAt?date(snapshot.validatedAt):'—'} · {videos.length} videos</small></p>}
+  {message&&<p class="notice error" role="alert">{message}</p>}
+  {(!reviews||!performanceIds)&&<p class="notice error" role="alert">Review decisions could not be loaded. Reload before starting a review.</p>}
+  <nav aria-label="Inbox filter"><p>{inboxFilters.map(value=><><a href={href(value)} aria-current={filter===value?'page':undefined}>{labels[value]} ({counts[value]})</a>{' '}</>)}</p></nav>
+  {view.total===0?<p>No videos in this view.</p>:<div class="table-scroll"><table>
+    <thead><tr><th>Video</th><th>Published</th><th>Length</th><th>Decision</th><th></th></tr></thead>
+    <tbody>{view.rows.map(row=><tr>
+      <td><a href={`https://www.youtube.com/watch?v=${row.video.youtubeId}`} target="_blank" rel="noopener noreferrer">{row.video.title}</a><br /><small>{row.video.youtubeId}{row.video.embeddable?'':' · embedding disabled'}</small></td>
+      <td>{date(row.video.publishedAt)}</td><td>{minutes(row.video.durationSeconds)}</td>
+      <td>{row.status==='authored'?'Authored performance':row.status==='unreviewed'?'Needs review':<>{row.status==='excluded'?'Excluded':'Reviewed'}{row.format?` · ${row.format}`:''}{row.artistIds.length?` · ${row.artistIds.join(', ')}`:''}{row.fullYoutubeId?` · full: ${row.fullYoutubeId}`:''}<br /><small>{row.reviewState}</small></>}</td>
+      <td>{row.itemId?<a href={`/admin/content/${row.itemId}/`}>Open review</a>:row.status==='unreviewed'?<form method="post"><input type="hidden" name="youtubeId" value={row.video.youtubeId} /><button class="secondary">Start review</button></form>:null}</td>
+    </tr>)}</tbody>
+  </table></div>}
+  {view.pages>1&&<p>{view.page>1&&<a href={href(filter,view.page-1)}>← Previous</a>}{view.page>1&&view.page<view.pages&&' · '}{view.page<view.pages&&<a href={href(filter,view.page+1)}>Next →</a>} <small>Page {view.page} of {view.pages}</small></p>}
+</EditorialLayout>

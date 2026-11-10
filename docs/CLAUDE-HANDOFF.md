@@ -25,6 +25,8 @@ This section supersedes older checkpoint notes below. The CMS is not complete an
 
 - Packet 5 slice 1 (local commit, not pushed): revision history is paginated (20/page via ?history=N) and shows a readable diff against the previous revision (history.ts + revision-diff.ts). Still open in Packet 5: YouTube inbox page and editable Short→full mapping, reviewer comments, draft/review/approved/live labeling, single snapshot assembler for exact release preview.
 
+- Packet 5 slice 2 (local commit, not pushed): /admin/youtube/ inbox lists snapshot videos read-only with filters/pagination, shows human decisions from youtube-review drafts, and starts a review draft ({youtubeId} only). Short→full mapping is a validated select (only authored performances or reviewed full videos; Shorts only), enforced in applyContentAction before the RPC. Not browser/hosted tested. Still open in Packet 5: reviewer comments, draft/review/approved/live labels, single snapshot assembler for exact release preview.
+
 ## Historical checkpoints
 
 The notes below describe earlier snapshots; their local-only, secret-pending and test-count statements are superseded above.

@@ -8,6 +8,7 @@ import { editorialKindSchema,editorialKindLabels,editorialStatusLabels } from '.
 import { editorialFields,editorialPickerOptions } from '../../../lib/editorial/forms';
 import { applyContentAction } from '../../../lib/editorial/actions';
 import { historyPage,historyPageSize,loadRevisionHistory } from '../../../lib/editorial/history';
+import { fullTargetIds,loadPerformanceVideoIds,loadReviewRows } from '../../../lib/editorial/inbox';
 import type { SiteConfig } from '../../../lib/schemas';
 import { homepagePerformanceOptions,homepageTeaserOptions,resolveSiteContent } from '../../../lib/editorial/site-content';
 export const prerender=false;
@@ -24,9 +25,15 @@ const revisionResult=await client.from('content_revisions').select('payload').eq
 if(revisionResult.error) return new Response('The current revision could not be loaded.',{status:503});
 let payload=revisionResult.data.payload as Record<string,unknown>;
 let message='';let conflict=false;
+let fullChoices:string[]=[];
+if(kind==='youtube-review') {
+  const [reviews,performanceIds]=await Promise.all([loadReviewRows(client),loadPerformanceVideoIds(client)]);
+  if(!reviews||!performanceIds) return new Response('Video references could not be loaded.',{status:503});
+  fullChoices=fullTargetIds(performanceIds,reviews).filter(videoId=>videoId!==item.stable_id);
+}
 if(Astro.request.method==='POST') {
   try {
-    const result=await applyContentAction(client,item,kind,payload,await readEditorialForm(Astro.request));
+    const result=await applyContentAction(client,item,kind,payload,await readEditorialForm(Astro.request),{fullYoutubeIds:fullChoices});
     if('redirect' in result) return Astro.redirect(result.redirect,303);
     payload=result.payload;message=result.message;conflict=result.status===409;
     Astro.response.status=result.status;
@@ -64,7 +71,7 @@ const teaserOptions=editorialPickerOptions(selectedClipId?[selectedClipId]:[],ho
   {message&&<p class="notice error" role="alert">{message}</p>}
   {isArchived?<p>This record cannot be edited, reviewed, or restored from history while archived.</p>:hasFields?<form method="post" data-editorial-form>
     <input type="hidden" name="action" value="save" /><input type="hidden" name="version" value={item.version} />
-    {editorialFields[kind].map(field=><label>{field.label}{field.type==='textarea'||field.type==='lines'?<textarea name={field.key} required={field.required} maxlength="12000">{field.type==='lines'?strings(field.key).join('\n'):String(payload[field.key]??'')}</textarea>:field.type==='choice'&&kind==='youtube-review'&&field.key==='seriesId'?<select name={field.key}><option value="__inherit__" selected={payload.seriesId===undefined}>Use automatic classification</option><option value="__unclassified__" selected={payload.seriesId===null}>Unclassified</option><option value="sessions" selected={payload.seriesId==='sessions'}>Sonic Sessions</option><option value="covers" selected={payload.seriesId==='covers'}>Sonic Covers</option></select>:field.type==='choice'?<select name={field.key}>{field.options!.map(option=><option value={option} selected={String(payload[field.key]??'')===option}>{option||'Unclassified'}</option>)}</select>:field.type==='checkbox'?<input type="checkbox" name={field.key} checked={payload[field.key]===true} />:<input name={field.key} type={field.type} value={String(payload[field.key]??'')} required={field.required} maxlength={field.type==='text'?'1000':undefined} />}</label>)}
+    {editorialFields[kind].map(field=><label>{field.label}{field.key==='fullYoutubeId'?<select name={field.key}><option value="">No full performance</option>{[...new Set([...fullChoices,...(typeof payload.fullYoutubeId==='string'?[payload.fullYoutubeId]:[])])].map(option=><option value={option} selected={payload.fullYoutubeId===option}>{option}</option>)}</select>:field.type==='textarea'||field.type==='lines'?<textarea name={field.key} required={field.required} maxlength="12000">{field.type==='lines'?strings(field.key).join('\n'):String(payload[field.key]??'')}</textarea>:field.type==='choice'&&kind==='youtube-review'&&field.key==='seriesId'?<select name={field.key}><option value="__inherit__" selected={payload.seriesId===undefined}>Use automatic classification</option><option value="__unclassified__" selected={payload.seriesId===null}>Unclassified</option><option value="sessions" selected={payload.seriesId==='sessions'}>Sonic Sessions</option><option value="covers" selected={payload.seriesId==='covers'}>Sonic Covers</option></select>:field.type==='choice'?<select name={field.key}>{field.options!.map(option=><option value={option} selected={String(payload[field.key]??'')===option}>{option||'Unclassified'}</option>)}</select>:field.type==='checkbox'?<input type="checkbox" name={field.key} checked={payload[field.key]===true} />:<input name={field.key} type={field.type} value={String(payload[field.key]??'')} required={field.required} maxlength={field.type==='text'?'1000':undefined} />}</label>)}
     {kind==='site'&&siteCopy&&<>
       <SiteSettingsFields copy={siteCopy} />
       <CommunityPicksFields picks={(payload as SiteConfig).communityPicks} />

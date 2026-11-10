@@ -36,6 +36,7 @@ export const editorialFields: Record<EditorialKind,EditorialField[]> = {
   'youtube-review':[
     {key:'format',label:'Video format',type:'choice',options:['','full','short']},
     {key:'seriesId',label:'Series',type:'choice',options:['','sessions','covers']},
+    {key:'fullYoutubeId',label:'Full performance (Shorts only)',type:'text'},
     {key:'excluded',label:'Exclude from the public catalog',type:'checkbox'},
   ],
 };

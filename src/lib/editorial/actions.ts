@@ -3,6 +3,7 @@ import {ZodError} from 'zod';
 import type {Database,Tables} from './database.types';
 import {parseEditorialPayload,type EditorialKind} from './content';
 import {applyEditorialForm} from './forms';
+import {checkFullMapping} from './inbox';
 
 type Outcome = {redirect:string} | {payload:Record<string,unknown>;message:string;status:400|409};
 export async function applyContentAction(
@@ -11,6 +12,7 @@ export async function applyContentAction(
   kind:EditorialKind,
   current:Record<string,unknown>,
   form:URLSearchParams,
+  choices?:{fullYoutubeIds:readonly string[]},
 ):Promise<Outcome> {
   let payload=current;
   let status:400|409=400;
@@ -43,6 +45,7 @@ export async function applyContentAction(
         restoredFrom=revision;
       } else payload=applyEditorialForm(kind,payload,form);
       const validated=parseEditorialPayload(kind,item.stable_id,payload);
+      if(kind==='youtube-review'&&action==='save') checkFullMapping(item.stable_id,payload,current,choices?.fullYoutubeIds??[]);
       const expected=Number(form.get('version'));
       if(!form.has('version')||!Number.isSafeInteger(expected)||expected<1) throw new Error('Invalid revision. Reload the content.');
       const result=await client.rpc('save_editorial_content',{p_kind:kind,p_stable_id:item.stable_id,p_payload:validated,p_expected_version:expected});
