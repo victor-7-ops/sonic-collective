@@ -1,7 +1,7 @@
 // Production build entry. Without CMS_RELEASE_ID it is exactly `npm run build` (repository content).
 // With CMS_RELEASE_ID it builds from that immutable release and fails closed: any doubt aborts the build,
 // so the previously deployed site keeps serving.
-import {mkdir,writeFile} from 'node:fs/promises';
+import {mkdir,rm,writeFile} from 'node:fs/promises';
 import {resolve} from 'node:path';
 import {spawnSync} from 'node:child_process';
 import {createClient} from '@supabase/supabase-js';
@@ -33,7 +33,11 @@ const copied=await materializeReleaseAssets(catalog);
 if(releaseId) console.log(`Release images copied: ${copied}.`);
 
 // Public marker so the admin can verify which content is actually live.
-await writeFile(resolve(process.cwd(),'public/release.json'),JSON.stringify(buildReleaseMarker(marked,env.VERCEL_GIT_COMMIT_SHA))+'\n');
+const marker=resolve(process.cwd(),'public/release.json');
+await writeFile(marker,JSON.stringify(buildReleaseMarker(marked,env.VERCEL_GIT_COMMIT_SHA))+'\n');
 
-const build=spawnSync('npm',['run','build'],{stdio:'inherit',env,shell:true});
+// npm is a .cmd shim on Windows and needs a shell there; elsewhere run it directly so the secret never passes through one.
+const build=spawnSync('npm',['run','build'],{stdio:'inherit',env,shell:process.platform==='win32'});
+// A failed build must not leave a marker claiming content that never went live.
+if(build.status!==0) await rm(marker,{force:true});
 process.exit(build.status??1);
