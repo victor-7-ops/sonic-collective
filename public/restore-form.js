@@ -22,6 +22,9 @@
     var index = used[name] || 0;
     if (index < values.length) { el.value = values[index]; used[name] = index + 1; }
   });
-  // Count the restored values as unsaved edits, so leaving the page still warns.
-  form.dispatchEvent(new Event('input', { bubbles: true }));
+  // Count the restored values as unsaved edits, so leaving the page still warns. The page's own listener is attached
+  // by a later deferred script, so announce the edit once every script has run.
+  function announce() { form.dispatchEvent(new Event('input', { bubbles: true })); }
+  if (document.readyState === 'complete') announce();
+  else document.addEventListener('DOMContentLoaded', announce);
 })();
