@@ -7,7 +7,7 @@ import {pathToFileURL} from 'node:url';
 import {createClient} from '@supabase/supabase-js';
 import sharp from 'sharp';
 import {parseReleaseArtifact} from '../src/lib/editorial/releases';
-import {cmsAssetIds} from '../src/lib/editorial/cms-assets';
+import {cmsAssetIds,cmsThumbWidth} from '../src/lib/editorial/cms-assets';
 import type {Catalog} from '../src/lib/schemas';
 import type {Database} from '../src/lib/editorial/database.types';
 
@@ -33,7 +33,13 @@ export async function materializeReleaseAssets(catalog:Catalog|null,root=process
     const meta=await sharp(bytes,{limitInputPixels:25_000_000,failOn:'error'}).metadata();
     if(meta.format!=='webp'||meta.width!==row.width||meta.height!==row.height) throw new Error(`Release image ${id} does not match its validated record.`);
     await writeFile(join(publicDir,`${id}.webp`),bytes);
-    await writeFile(join(dataDir,`${id}.json`),JSON.stringify({id,width:row.width,height:row.height})+'\n');
+    const record:Record<string,number|string>={id,width:row.width,height:row.height};
+    if(row.width>cmsThumbWidth) {
+      const thumb=await sharp(bytes,{limitInputPixels:25_000_000}).resize({width:cmsThumbWidth,withoutEnlargement:true}).webp({quality:78}).toBuffer({resolveWithObject:true});
+      await writeFile(join(publicDir,`${id}-${cmsThumbWidth}.webp`),thumb.data);
+      record.thumbWidth=thumb.info.width;record.thumbHeight=thumb.info.height;
+    }
+    await writeFile(join(dataDir,`${id}.json`),JSON.stringify(record)+'\n');
   }
   return ids.length;
 }

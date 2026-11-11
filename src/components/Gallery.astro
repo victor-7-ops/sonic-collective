@@ -1,0 +1,41 @@
+---
+import MediaImage from './MediaImage.astro';
+import {hasSiteMedia} from '../lib/site-media';
+interface Item {image:string;alt:string;caption?:string}
+interface Props {items:Item[];heading?:string;preview?:boolean;}
+const {items,heading='Gallery',preview=false}=Astro.props;
+// Public pages show only images that exist in this build. A preview also lists private ones by description.
+const shown=items.filter(item=>preview||hasSiteMedia(item.image));
+let viewIndex=0;
+const entries=shown.map(item=>({item,view:hasSiteMedia(item.image)?viewIndex++:-1}));
+const viewable=entries.filter(entry=>entry.view>=0).map(entry=>entry.item);
+---
+{shown.length>0&&<section class="gallery" aria-labelledby="gallery-heading" data-gallery>
+  <h2 id="gallery-heading">{heading}</h2>
+  <ul class="gallery__grid">
+    {entries.map(({item,view})=><li>
+      {view>=0
+        ?<button type="button" class="gallery__open" data-gallery-open={view} aria-label={`Enlarge photo: ${item.alt}`}><MediaImage base={item.image} alt={item.alt} sizes="(max-width: 640px) 50vw, 25vw" class="gallery__thumb" /></button>
+        :<p class="gallery__private">{item.alt}<br /><small>Private image, shown after release</small></p>}
+      {item.caption&&<p class="gallery__caption">{item.caption}</p>}
+    </li>)}
+  </ul>
+  {viewable.length>0&&<dialog class="gallery__viewer" aria-label={`${heading} viewer`} data-gallery-viewer>
+    <div class="gallery__bar">
+      <p class="gallery__count" aria-live="polite" data-gallery-count></p>
+      <button type="button" class="gallery__close" data-gallery-close>Close</button>
+    </div>
+    <div class="gallery__stage">
+      <button type="button" class="gallery__nav" data-gallery-prev aria-label="Previous photo">‹</button>
+      {viewable.map((item,index)=><figure hidden data-gallery-slide={index}>
+        <MediaImage base={item.image} alt={item.alt} sizes="100vw" class="gallery__full" />
+        {item.caption&&<figcaption>{item.caption}</figcaption>}
+      </figure>)}
+      <button type="button" class="gallery__nav" data-gallery-next aria-label="Next photo">›</button>
+    </div>
+  </dialog>}
+</section>}
+<link rel="stylesheet" href="/gallery.css" />
+<script is:inline src="/gallery.js" defer></script>
+
+

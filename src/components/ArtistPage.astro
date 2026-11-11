@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import CatalogCard from '../components/CatalogCard.astro';
 import PerformanceCard from '../components/PerformanceCard.astro';
 import ArtistPortrait from '../components/ArtistPortrait.astro';
+import Gallery from '../components/Gallery.astro';
 import type { getDiscoveryCatalog } from '../lib/discovery';
 import { artistUrl } from '../lib/urls';
 import '../styles/discovery.css';
@@ -25,6 +26,7 @@ const description = artist.bio ?? `${artist.name} appears in ${appearances.lengt
         {artist.links.length > 0 && <nav class="artist-external-links" aria-label={`${artist.name} verified links`}>{artist.links.map((link) => <a class="button button--quiet" href={link.url} target="_blank" rel="noopener noreferrer">{link.label} ↗</a>)}</nav>}
       </div>
     </section>
+    {(artist.gallery?.length??0)>0&&<Gallery items={artist.gallery!} heading={`Photos of ${artist.name}`} preview={preview} />}
     {appearances.length>0&&<section class="profile-appearances"><h2>Performances</h2><div class="catalog-grid">{appearances.map((performance) => <PerformanceCard performance={performance} artistNames={performance.artistIds.map((id) => catalog.raw.artists.find((item) => item.id === id)?.name ?? '').filter(Boolean)} playable={catalog.availability[performance.youtubeId]!=='external-only'} preview={catalog.clips.find((clip)=>clip.performanceId===performance.id)} />)}</div></section>}
     {uploads.length>0&&<section class="profile-appearances"><h2>More from {artist.name}</h2><div class="catalog-grid">{uploads.map(item=><CatalogCard item={item} />)}</div></section>}
   </div></article>

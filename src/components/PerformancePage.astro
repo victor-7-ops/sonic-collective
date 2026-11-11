@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PerformanceCard from '../components/PerformanceCard.astro';
 import PerformancePlayer from '../components/PerformancePlayer.astro';
+import Gallery from '../components/Gallery.astro';
 import type { getDiscoveryCatalog } from '../lib/discovery';
 import { getRelated } from '../lib/related';
 import { artistNamesFor, artistUrl, performanceUrl } from '../lib/urls';
@@ -33,6 +34,7 @@ const playbackRecords=catalog.performances.map(({id,title,youtubeId})=>({id,titl
       {!preview&&<div class="share-row"><button class="button button--quiet" type="button" data-share-page>Copy page link</button><span role="status" aria-live="polite" data-share-status></span><input aria-label="Canonical page link" readonly hidden data-share-url /></div>}
       <script>import '../../scripts/share.ts';</script>
     </section>
+    {(performance.gallery?.length??0)>0&&<Gallery items={performance.gallery!} heading="Photos" preview={preview} />}
     {next&&<section class="related-performances" aria-labelledby="watch-next">
       <h2 id="watch-next">Watch next</h2>
       <div class="catalog-grid"><PerformanceCard performance={next} artistNames={artistNamesFor(next,catalog.raw.artists)} playable={catalog.availability[next.youtubeId]!=='external-only'} /></div>

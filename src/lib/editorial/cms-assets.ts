@@ -19,10 +19,16 @@ export function cmsAssetIds(catalog:Pick<Catalog,'artists'|'performances'>):stri
   return [...new Set(paths.flatMap(path=>{const id=path?cmsAssetId(path):null;return id?[id]:[];}))].sort();
 }
 
-export type CmsAssetDimensions={id:string;width:number;height:number};
+/** Small copy made at build time so grids do not load full-size photos. */
+export const cmsThumbWidth=800;
+export const cmsThumbFile=(id:string)=>`/media/cms/${id}-${cmsThumbWidth}.webp`;
 
-export function cmsManifestEntry({id,width,height}:CmsAssetDimensions) {
-  return {fit:'contain' as const,aspectRatio:width/height,variants:[{src:cmsAssetFile(id),width,height,format:'webp' as const}]};
+export type CmsAssetDimensions={id:string;width:number;height:number;thumbWidth?:number;thumbHeight?:number};
+
+export function cmsManifestEntry({id,width,height,thumbWidth,thumbHeight}:CmsAssetDimensions) {
+  const full={src:cmsAssetFile(id),width,height,format:'webp' as const};
+  const variants=thumbWidth&&thumbHeight&&thumbWidth<width?[{src:cmsThumbFile(id),width:thumbWidth,height:thumbHeight,format:'webp' as const},full]:[full];
+  return {fit:'contain' as const,aspectRatio:width/height,variants};
 }
 
 /** Manifest entries and file paths for the given assets, merged over the packaged manifest. */

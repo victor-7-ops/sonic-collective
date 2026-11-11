@@ -74,3 +74,14 @@ test('the database rejects gallery references to another member\'s image, for co
   await save('own-gallery',[mine]);
   await assert.rejects(save('mixed-gallery',[mine,theirs]),/belongs to another team member/);
 });
+
+test('library images get a small grid copy and a full-size copy in the media manifest',async()=>{
+  const {cmsManifestEntry,cmsThumbFile,cmsAssetFile,withCmsAssets}=await import('../src/lib/editorial/cms-assets');
+  const id=uuid(55);
+  const both=cmsManifestEntry({id,width:2400,height:1600,thumbWidth:800,thumbHeight:533});
+  assert.deepEqual(both.variants.map(variant=>[variant.src,variant.width]),[[cmsThumbFile(id),800],[cmsAssetFile(id),2400]]);
+  // Small originals and release-time placeholders keep a single variant.
+  assert.equal(cmsManifestEntry({id,width:600,height:400,thumbWidth:600,thumbHeight:400}).variants.length,1);
+  assert.equal(cmsManifestEntry({id,width:1,height:1}).variants.length,1);
+  assert.equal((withCmsAssets({},[{id,width:2400,height:1600,thumbWidth:800,thumbHeight:533}])[cmsAssetBase(id)] as {variants:unknown[]}).variants.length,2);
+});
