@@ -33,6 +33,8 @@ This section supersedes older checkpoint notes below. The CMS is not complete an
 
 - Packet 6 build step (Nov 11): vercel.json now runs `npm run build:release` (scripts/build-with-release.ts). No CMS_RELEASE_ID => identical to `npm run build` (repo content). Setting CMS_RELEASE_ID=<release uuid> as a Production env var and redeploying fetches that immutable release (service key), validates/hashes it, copies library images (materialize), builds from it, and fails closed (build error, old deployment keeps serving). CMS_RELEASE_ID and CMS_RELEASE_FILE are mutually exclusive. Not yet done: automatic promotion/status (Live vs failed), serialization with the hourly YouTube job, rollback rehearsal. First real release build is untested on Vercel.
 
+- Rehearsal (Nov 11): prepared release ea664a7a-cc56-495c-9c64-38722ad05184 on production (no authenticator needed), then ran scripts/build-with-release.ts locally with CMS_RELEASE_ID. Build passed all validators (111 pages) and all 253 output files were byte-identical to the repository-content build, so cutting production over to that release would not change the public site. Production CMS_RELEASE_ID is still UNSET; nothing was deployed from the release.
+
 ## Historical checkpoints
 
 The notes below describe earlier snapshots; their local-only, secret-pending and test-count statements are superseded above.

@@ -33,7 +33,7 @@ const prepared=Astro.url.searchParams.get('prepared');
   {prepared&&<p class="notice" role="status">Release snapshot prepared. Download the validated artifact below.</p>}
   {message&&<p class="notice error" role="alert">{message} <a href="/admin/security/">Account security</a></p>}
   <section class="panel" aria-labelledby="prepare-release"><h2 id="prepare-release">Prepare approved snapshot</h2>
-    <p>The system rechecks every approved revision and reference before it records an immutable snapshot. MFA is required.</p>
+    <p>The system rechecks every approved revision and reference before it records an immutable snapshot. If your account uses an authenticator, verify it first.</p>
     <form method="post"><input type="hidden" name="action" value="prepare" /><input type="hidden" name="requestId" value={requestId} /><button>Prepare release snapshot</button></form>
   </section>
   <section class="panel" aria-labelledby="release-history"><h2 id="release-history">Recent snapshots</h2>
