@@ -31,6 +31,8 @@ This section supersedes older checkpoint notes below. The CMS is not complete an
 
 - Team roster bug (Nov 11): list_team_members returned auth.users.email (varchar(255)) into a text column, so the hosted roster failed (tests used text). Fixed by migration 20261111030000_editorial_roster_email_type.sql (::text cast); tests now stub varchar(255). Apply to hosted Supabase manually.
 
+- Packet 6 build step (Nov 11): vercel.json now runs `npm run build:release` (scripts/build-with-release.ts). No CMS_RELEASE_ID => identical to `npm run build` (repo content). Setting CMS_RELEASE_ID=<release uuid> as a Production env var and redeploying fetches that immutable release (service key), validates/hashes it, copies library images (materialize), builds from it, and fails closed (build error, old deployment keeps serving). CMS_RELEASE_ID and CMS_RELEASE_FILE are mutually exclusive. Not yet done: automatic promotion/status (Live vs failed), serialization with the hourly YouTube job, rollback rehearsal. First real release build is untested on Vercel.
+
 ## Historical checkpoints
 
 The notes below describe earlier snapshots; their local-only, secret-pending and test-count statements are superseded above.

@@ -10,6 +10,7 @@
     "preview": "astro preview --host 127.0.0.1 --port 4321",
     "check": "astro check",
     "build": "astro build && tsx scripts/validate-build.ts && node scripts/validate-output.mjs",
+    "build:release": "tsx scripts/build-with-release.ts",
     "media:prepare": "node scripts/prepare-media.mjs",
     "content:validate": "tsx scripts/validate-content.ts",
     "youtube:sync": "tsx scripts/sync-youtube.ts",
