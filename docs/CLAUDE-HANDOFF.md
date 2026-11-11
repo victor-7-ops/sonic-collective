@@ -29,6 +29,8 @@ This section supersedes older checkpoint notes below. The CMS is not complete an
 
 - Authenticator is now OPTIONAL (Victor's decision, Nov 11): required only for accounts with a verified factor. App helper src/lib/editorial/mfa.ts; DB migration 20261111020000_editorial_mfa_optional.sql rewrites the aal2 condition in 4 functions via editorial_private.mfa_unmet(). Migration must be applied to hosted Supabase manually (no MCP access this session). Team roster/actions page reports the MFA requirement clearly.
 
+- Team roster bug (Nov 11): list_team_members returned auth.users.email (varchar(255)) into a text column, so the hosted roster failed (tests used text). Fixed by migration 20261111030000_editorial_roster_email_type.sql (::text cast); tests now stub varchar(255). Apply to hosted Supabase manually.
+
 ## Historical checkpoints
 
 The notes below describe earlier snapshots; their local-only, secret-pending and test-count statements are superseded above.

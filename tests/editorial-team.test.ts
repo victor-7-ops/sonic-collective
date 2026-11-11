@@ -40,7 +40,7 @@ test('team RPCs enforce owner MFA, serialized last-owner protection, assignment 
   t.after(() => db.close());
   await db.exec(`
     create role anon; create role authenticated; create role service_role bypassrls;
-    create schema auth; create table auth.users(id uuid primary key,email text); create table auth.mfa_factors(user_id uuid,status text);
+    create schema auth; create table auth.users(id uuid primary key,email varchar(255)); create table auth.mfa_factors(user_id uuid,status text);
     create function auth.uid() returns uuid language sql stable as
       $$ select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$;
     create function auth.jwt() returns jsonb language sql stable as
