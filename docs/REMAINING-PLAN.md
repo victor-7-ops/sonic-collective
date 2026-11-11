@@ -22,11 +22,11 @@ Artists and performances can each have a photo gallery (max 24, each photo with 
 |---|---|---|---|---|
 | G1 | **[DEFERRED]** Add real photos to a real artist, approve, prepare a release, Make live | You (Claude verifies) | 20 min | Photos show in the artist page grid with working enlarge viewer on the public site; the 800px grid copies load, not the 2400px originals. Not yet exercised live: a gallery going through a release |
 | G2 | **[DONE]** Resize photos in the browser on the Media page form too | Claude | done | Uploads over 4.5 MB from Media no longer fail on Vercel (only the gallery uploader shrinks today) |
-| G3 | **[BUILT, needs SQL then push]** Archive library images (Media page; files are kept, nothing deleted) | Claude | built |  Unused test photos can be removed; guards refuse archiving an image still referenced by approved content or a release |
+| G3 | **[DONE]** Archive library images (Media page; files are kept, nothing deleted). Verified live: refused while in use, allowed after removal | Claude | done |  Unused test photos can be removed; guards refuse archiving an image still referenced by approved content or a release |
 | G4 | HEIC (iPhone) photos | Claude | 1-2 h | HEIC is converted in the browser or on the server; today the uploader asks for JPEG, PNG or WebP |
 | G5 | Drag to reorder, bulk captions | Claude | 2-3 h | Optional polish; position numbers work today |
 
-Left in the private library from testing: two photos named Upload test photo one / two (no delete button yet, see G3). Archived throwaway records (not visible to visitors): acceptance-test-artist, guard-check-artist, picker-check-artist, gallery-check-artist, upload-check-artist.
+Test photos (Upload test photo one / two) are archived and no longer selectable; their private files are kept in storage. Archived throwaway records (not visible to visitors): acceptance-test-artist, guard-check-artist, picker-check-artist, gallery-check-artist, upload-check-artist.
 
 ## B. Decisions only you can make
 
