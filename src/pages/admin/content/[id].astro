@@ -18,6 +18,7 @@ import { readyLibraryChoices } from '../../../lib/editorial/create';
 import { galleryThumbnails } from '../../../lib/editorial/gallery-previews';
 import { editorialAdminClient } from '../../../lib/editorial/server';
 import { maxGalleryImages } from '../../../lib/schemas';
+import { cmsAssetBase } from '../../../lib/editorial/cms-assets';
 import type { SiteConfig } from '../../../lib/schemas';
 import { homepagePerformanceOptions,homepageTeaserOptions,resolveSiteContent } from '../../../lib/editorial/site-content';
 export const prerender=false;
@@ -39,9 +40,11 @@ let fullChoices:string[]=[];
 let mediaChoices:MediaChoices|undefined;
 let mediaOptions:{path:string;label:string}[]=[];
 let addOptions:{path:string;label:string}[]=[];
+let libraryPhotos:{path:string;label:string;alt:string}[]=[];
 if(kind==='artist'||kind==='performance') {
   const packaged=Object.keys(mediaManifest).filter(path=>mediaManifestEntrySchema.safeParse(mediaManifest[path as keyof typeof mediaManifest]).success);
   const library=await readyLibraryChoices(client);
+  libraryPhotos=library;
   mediaChoices=mediaChoicesFrom(packaged,library.map(choice=>choice.path));
   const prefix=kind==='artist'?'/media/artists/':'/media/performances/';
   addOptions=[...packaged.filter(path=>path.startsWith('/media/artists/')||path.startsWith('/media/performances/')).map(path=>({path,label:path.slice('/media/'.length)})),...library];
@@ -69,8 +72,11 @@ const hasFields=(editorialFields[kind].length>0||kind==='site')&&!isArchived;
 const canReview=Astro.locals.editorialMember!.role!=='contributor';
 const canManageArchive=canReview;
 const galleryRows=(kind==='artist'||kind==='performance')&&Array.isArray(payload.gallery)?payload.gallery as {image:string;alt:string;caption?:string}[]:[];
-const galleryThumbs=kind==='artist'||kind==='performance'?await galleryThumbnails(client,editorialAdminClient(),galleryRows.map(row=>row.image)):new Map<string,string>();
 const inGallery=new Set(galleryRows.map(row=>row.image));
+// Library photos not yet in this gallery; ones just uploaded are pre-ticked so a single save adds them.
+const justUploaded=new Set((Astro.url.searchParams.get('uploaded')??'').split(',').filter(value=>/^[a-f\d]{8}-[a-f\d]{4}-[1-8][a-f\d]{3}-[89ab][a-f\d]{3}-[a-f\d]{12}$/.test(value)).map(value=>cmsAssetBase(value)));
+const candidates=libraryPhotos.filter(photo=>!inGallery.has(photo.path));
+const galleryThumbs=kind==='artist'||kind==='performance'?await galleryThumbnails(client,editorialAdminClient(),[...galleryRows.map(row=>row.image),...candidates.map(photo=>photo.path)]):new Map<string,string>();
 const feedback=await loadReviewFeedback(client,id);
 const facts=await loadContentFacts(client,item,Astro.url.origin);
 const historyNumber=historyPage(Astro.url.searchParams.get('history'));
@@ -140,6 +146,26 @@ const teaserOptions=editorialPickerOptions(selectedClipId?[selectedClipId]:[],ho
         <label>Caption (optional)<input name="gallery.add.caption" maxlength="300" /></label>
         <small>Photos appear on the public page only after an approved release is made live. Position numbers set the order.</small>
       </div>}
+      {candidates.length>0&&galleryRows.length<maxGalleryImages&&<div class="gallery-editor__library" id="gallery-library">
+        <h3>Photos in your library</h3>
+        <p><small>Tick the photos to add, then save. The description from the upload is filled in and can be edited here.</small></p>
+        {candidates.map((photo,index)=><div class="gallery-editor__row gallery-editor__candidate">
+          {galleryThumbs.get(photo.path)?<img src={galleryThumbs.get(photo.path)} alt="" width="96" height="72" loading="lazy" />:<span class="gallery-editor__nothumb">No preview</span>}
+          <input type="hidden" name={`gallery.add.${index}.image`} value={photo.path} />
+          <label class="gallery-editor__remove"><input type="checkbox" name={`gallery.add.${index}.take`} checked={justUploaded.has(photo.path)} /> Add to gallery</label>
+          <label>Description<input name={`gallery.add.${index}.alt`} value={photo.alt} maxlength="300" /></label>
+          <label>Caption (optional)<input name={`gallery.add.${index}.caption`} maxlength="300" /></label>
+        </div>)}
+      </div>}
+      <div class="gallery-editor__upload" data-gallery-upload>
+        <h3>Upload new photos</h3>
+        <p><small>Choose JPEG, PNG or WebP photos. They are resized in your browser first (largest side 2400 px), which also removes camera and location data, then stored privately in your library. Save any other edits first: uploading reloads this page.</small></p>
+        <label>Photos<input type="file" accept="image/jpeg,image/png,image/webp" multiple /></label>
+        <div data-upload-list></div>
+        <button type="button" class="secondary" data-upload-start hidden>Upload photos</button>
+        <p data-upload-status aria-live="polite"></p>
+      </div>
+      <script is:inline src="/gallery-upload.js" defer></script>
     </fieldset>}
     {(kind==='performance'||kind==='youtube-review')&&<EditorialPicker name="artistIds" label="Performing artists" selected={strings('artistIds')} options={options('artist')} />}
     {kind==='site'&&<>{['spotlightPerformanceIds','featuredPerformanceIds','featuredCoverIds','featuredArtistIds'].map(key=><EditorialPicker name={key} label={({spotlightPerformanceIds:'Homepage spotlights (maximum four)',featuredPerformanceIds:'Featured performances',featuredCoverIds:'Featured covers',featuredArtistIds:'Featured artists'})[key]!} selected={strings(key)} options={options(key==='featuredArtistIds'?'artist':'performance')} />)}</>}
@@ -175,6 +201,9 @@ const teaserOptions=editorialPickerOptions(selectedClipId?[selectedClipId]:[],ho
   .gallery-editor__row img, .gallery-editor__nothumb { width:96px; height:72px; object-fit:cover; border-radius:8px; background:var(--surface-muted); font-size:.75rem; display:flex; align-items:center; justify-content:center; }
   .gallery-editor__add { margin-top:14px; padding-top:12px; border-top:2px solid var(--line); display:grid; gap:10px; }
   .gallery-editor__remove { white-space:nowrap; }
+  .gallery-editor__library, .gallery-editor__upload { margin-top:14px; padding-top:12px; border-top:2px solid var(--line); display:grid; gap:10px; }
+  .gallery-editor__candidate { grid-template-columns:96px auto repeat(2,minmax(0,1fr)); }
+  :global(.gallery-upload__row) { display:flex; gap:10px; align-items:end; flex-wrap:wrap; }
   @media (max-width:800px) { .gallery-editor__row { grid-template-columns:1fr; } }
   .content-facts { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; margin:12px 0 20px; }
   .content-facts div { padding:12px 14px; border:1px solid var(--line); border-radius:10px; background:var(--surface); }

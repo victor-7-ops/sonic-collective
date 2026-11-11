@@ -34,9 +34,9 @@ export function createEditorialPayload(kind:string,form:URLSearchParams,choices:
 }
 
 /** `/media/cms/<id>` choices for ready media-library images the signed-in member may read. */
-export async function readyLibraryChoices(client:SupabaseClient<Database>):Promise<{path:string;label:string}[]> {
+export async function readyLibraryChoices(client:SupabaseClient<Database>):Promise<{path:string;label:string;alt:string}[]> {
   const result=await client.from('editorial_assets').select('id,alt_text').eq('status','ready').order('created_at',{ascending:false}).limit(50);
-  return result.error?[]:(result.data??[]).map(row=>({path:cmsAssetBase(row.id),label:`Library image: ${row.alt_text.slice(0,60)}`}));
+  return result.error?[]:(result.data??[]).map(row=>({path:cmsAssetBase(row.id),label:`Library image: ${row.alt_text.slice(0,60)}`,alt:row.alt_text}));
 }
 export async function readyLibraryPaths(client:SupabaseClient<Database>):Promise<string[]> {
   return (await readyLibraryChoices(client)).map(choice=>choice.path);

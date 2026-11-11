@@ -80,3 +80,22 @@ test('the editor form applies the gallery together with the other fields',()=>{
   const cleared=applyEditorialForm('artist',base,form({name:'A',kind:'solo',focalPoint:'50% 50%',portraitLayout:'portrait'},unchanged.map(row=>({...row,remove:true}))),choices);
   assert.equal('gallery' in cleared,false);
 });
+
+test('several library photos can be added at once with their own descriptions',()=>{
+  const rows=(entries:{image:string;alt:string;caption?:string;take?:boolean}[])=>{
+    const params=form({},unchanged);
+    entries.forEach((entry,index)=>{
+      params.set(`gallery.add.${index}.image`,entry.image);params.set(`gallery.add.${index}.alt`,entry.alt);params.set(`gallery.add.${index}.caption`,entry.caption??'');
+      if(entry.take!==false) params.set(`gallery.add.${index}.take`,'1');
+    });
+    return params;
+  };
+  const result=run(rows([{image:lib(3),alt:'Third',caption:'Cap'},{image:'/media/artists/blair',alt:'Blair'}]))!;
+  assert.deepEqual(result.slice(-2),[{image:lib(3),alt:'Third',caption:'Cap'},{image:'/media/artists/blair',alt:'Blair'}]);
+  // Unticked rows are ignored, even with no description.
+  assert.equal(run(rows([{image:lib(3),alt:'',take:false}]))!.length,3);
+  assert.throws(()=>run(rows([{image:lib(3),alt:' '}])),/Describe every new photo/);
+  assert.throws(()=>run(rows([{image:lib(99),alt:'x'}])),/available images/);
+  assert.throws(()=>run(rows([{image:lib(1),alt:'x'}])),/already in the gallery/);
+  assert.throws(()=>run(rows([{image:lib(3),alt:'a'},{image:lib(3),alt:'b'}])),/already in the gallery/);
+});

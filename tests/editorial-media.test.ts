@@ -95,3 +95,32 @@ test('failed private writes clean only this UUID and leave a failed record',asyn
   assert.deepEqual(removed,[`originals/${assetId}/source`,`derivatives/${assetId}.webp`]);
   assert.equal(status,'failed');
 });
+
+test('a successful upload redirects forms to the media page and returns JSON to the editor uploader',async()=>{
+  const trusted=()=>{
+    let status='pending';
+    return {
+      from:()=>({
+        insert:()=>({select:()=>({single:async()=>({data:{original_path:'originals/x/source',derivative_path:'derivatives/x.webp'},error:null})})}),
+        update:(row:{status:string})=>({eq:()=>({eq:()=>({select:()=>({maybeSingle:async()=>{if(row.status==='ready')status='ready';return {data:{id:'x'},error:null};}})})})}),
+        select:()=>({eq:()=>({maybeSingle:async()=>({data:{status},error:null})})}),
+      }),
+      storage:{from:()=>({upload:async()=>({error:null}),remove:async()=>({error:null})})},
+    } as never;
+  };
+  const upload=async(headers:Record<string,string>)=>{
+    const form=new FormData();form.append('file',new Blob([await sample('png')],{type:'image/png'}),'photo.png');form.set('altText','Backstage');
+    return handleEditorialMediaUpload(new Request('https://sonic.test/api/editorial/media/upload/',{method:'POST',headers:{origin:'https://sonic.test',...headers},body:form}),memberClient('user-1'),()=>trusted());
+  };
+  const page=await upload({});
+  assert.equal(page.status,303);assert.match(page.headers.get('location')??'',/^\/admin\/media\/\?uploaded=[\w-]+$/);
+  const scripted=await upload({accept:'application/json'});
+  assert.equal(scripted.status,201);
+  const body=await scripted.json() as {id:string};
+  assert.match(body.id,/^[a-f\d-]{36}$/i);
+  assert.equal(scripted.headers.get('cache-control'),'no-store');
+  // Cross-origin posts are still refused, in both modes.
+  const form=new FormData();form.append('file',new Blob([await sample('png')]),'p.png');form.set('altText','x');
+  const cross=await handleEditorialMediaUpload(new Request('https://sonic.test/api/editorial/media/upload/',{method:'POST',headers:{origin:'https://evil.test',accept:'application/json'},body:form}),memberClient('user-1'),()=>trusted());
+  assert.equal(cross.status,403);
+});

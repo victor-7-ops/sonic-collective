@@ -37,6 +37,17 @@ export function applyGalleryForm(kind:EditorialKind,payload:Record<string,unknow
   rows.sort((a,b)=>a.position-b.position||a.order-b.order);
   const items=rows.map(row=>row.item);
 
+  // Several library photos can be added at once: rows gallery.add.<n>.* whose "take" box is ticked.
+  for(let index=0;form.has(`gallery.add.${index}.image`);index++) {
+    if(!form.has(`gallery.add.${index}.take`)) continue;
+    const image=(form.get(`gallery.add.${index}.image`)??'').trim();
+    if(items.some(item=>item.image===image)) throw new Error('That image is already in the gallery.');
+    if(!offered.has(image)) throw new Error('Choose one of the available images.');
+    const alt=(form.get(`gallery.add.${index}.alt`)??'').trim();
+    if(!alt) throw new Error('Describe every new photo before adding it (alt text is required).');
+    const caption=(form.get(`gallery.add.${index}.caption`)??'').trim();
+    items.push({image,alt,...(caption?{caption}:{})});
+  }
   const addImage=(form.get('gallery.add.image')??'').trim();
   if(addImage) {
     if(items.some(item=>item.image===addImage)) throw new Error('That image is already in the gallery.');

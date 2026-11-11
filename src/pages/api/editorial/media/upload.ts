@@ -34,6 +34,8 @@ export async function handleEditorialMediaUpload(request:Request,client:MemberCl
   let id:string;
   try {id=await persistEditorialImage(admin,verified.user.id,image);}
   catch(error) {return new Response(error instanceof Error?error.message:'The image could not be saved privately.',{status:503});}
+  // The editor's multi-photo uploader sends several photos one at a time and needs the new asset's ID back.
+  if((request.headers.get('accept')??'').includes('application/json'))return Response.json({id},{status:201,headers:{'Cache-Control':'no-store'}});
   return new Response(null,{status:303,headers:{Location:`/admin/media/?uploaded=${encodeURIComponent(id)}`}});
 }
 
