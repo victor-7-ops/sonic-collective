@@ -2,6 +2,7 @@ import type { EditorialKind } from './content';
 import {homepagePerformance,homepageTeaser} from './site-content';
 import {applySiteSettingsForm} from './site-form';
 import {applyArtworkChoice,type MediaChoices} from './media-choices';
+import {applyGalleryForm} from './gallery-form';
 
 export function editorialPickerOptions(selected:string[],options:{id:string;label:string}[]) {
   const known=new Set(options.map(option=>option.id));
@@ -59,6 +60,7 @@ export function applyEditorialForm(kind: EditorialKind, current:Record<string,un
     else payload[field.key]=value;
   }
   applyArtworkChoice(kind,payload,current,form,media);
+  applyGalleryForm(kind,payload,current,form,media);
   if(kind==='performance'||kind==='youtube-review') payload.artistIds=form.getAll('artistIds').filter(Boolean);
   if(kind==='site') {
     for(const key of ['spotlightPerformanceIds','featuredPerformanceIds','featuredCoverIds','featuredArtistIds']) if(form.has(key)) payload[key]=form.getAll(key).filter(Boolean);

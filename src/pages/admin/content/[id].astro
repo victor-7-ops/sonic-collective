@@ -15,6 +15,9 @@ import mediaManifest from '../../../data/media-manifest.json';
 import { mediaManifestEntrySchema } from '../../../lib/schemas';
 import { mediaChoicesFrom,type MediaChoices } from '../../../lib/editorial/media-choices';
 import { readyLibraryChoices } from '../../../lib/editorial/create';
+import { galleryThumbnails } from '../../../lib/editorial/gallery-previews';
+import { editorialAdminClient } from '../../../lib/editorial/server';
+import { maxGalleryImages } from '../../../lib/schemas';
 import type { SiteConfig } from '../../../lib/schemas';
 import { homepagePerformanceOptions,homepageTeaserOptions,resolveSiteContent } from '../../../lib/editorial/site-content';
 export const prerender=false;
@@ -35,11 +38,13 @@ let fullChoices:string[]=[];
 // Artwork choices for artists and performances: packaged images plus the library images this member may use.
 let mediaChoices:MediaChoices|undefined;
 let mediaOptions:{path:string;label:string}[]=[];
+let addOptions:{path:string;label:string}[]=[];
 if(kind==='artist'||kind==='performance') {
   const packaged=Object.keys(mediaManifest).filter(path=>mediaManifestEntrySchema.safeParse(mediaManifest[path as keyof typeof mediaManifest]).success);
   const library=await readyLibraryChoices(client);
   mediaChoices=mediaChoicesFrom(packaged,library.map(choice=>choice.path));
   const prefix=kind==='artist'?'/media/artists/':'/media/performances/';
+  addOptions=[...packaged.filter(path=>path.startsWith('/media/artists/')||path.startsWith('/media/performances/')).map(path=>({path,label:path.slice('/media/'.length)})),...library];
   mediaOptions=[...packaged.filter(path=>path.startsWith(prefix)).map(path=>({path,label:path.slice(prefix.length)})),...library];
 }
 if(kind==='youtube-review') {
@@ -63,6 +68,9 @@ const isArchived=item.archived_at!==null;
 const hasFields=(editorialFields[kind].length>0||kind==='site')&&!isArchived;
 const canReview=Astro.locals.editorialMember!.role!=='contributor';
 const canManageArchive=canReview;
+const galleryRows=(kind==='artist'||kind==='performance')&&Array.isArray(payload.gallery)?payload.gallery as {image:string;alt:string;caption?:string}[]:[];
+const galleryThumbs=kind==='artist'||kind==='performance'?await galleryThumbnails(client,editorialAdminClient(),galleryRows.map(row=>row.image)):new Map<string,string>();
+const inGallery=new Set(galleryRows.map(row=>row.image));
 const feedback=await loadReviewFeedback(client,id);
 const facts=await loadContentFacts(client,item,Astro.url.origin);
 const historyNumber=historyPage(Astro.url.searchParams.get('history'));
@@ -113,6 +121,26 @@ const teaserOptions=editorialPickerOptions(selectedClipId?[selectedClipId]:[],ho
       return <label>{kind==='artist'?'Portrait image':'Artwork image'}<select name={key}>{kind==='artist'&&<option value="" selected={!current}>No portrait</option>}{offered.map(option=><option value={option.path} selected={option.path===current}>{option.label}</option>)}</select></label>;
     })()}
     <small>{kind==='artist'?'Choosing a portrait needs a portrait description. ':''}Library images stay private until a release containing them is made live; previews show the page without private images.</small>
+    {(kind==='artist'||kind==='performance')&&<fieldset class="gallery-editor">
+      <legend>Photo gallery ({galleryRows.length} of {maxGalleryImages})</legend>
+      <input type="hidden" name="gallery.present" value="1" />
+      {galleryRows.length===0&&<p>No photos yet. Add the first one below.</p>}
+      {galleryRows.map((row,index)=><div class="gallery-editor__row">
+        {galleryThumbs.get(row.image)?<img src={galleryThumbs.get(row.image)} alt="" width="96" height="72" loading="lazy" />:<span class="gallery-editor__nothumb">No preview</span>}
+        <input type="hidden" name={`gallery.${index}.image`} value={row.image} />
+        <label>Description (required)<input name={`gallery.${index}.alt`} value={row.alt} required maxlength="300" /></label>
+        <label>Caption (optional)<input name={`gallery.${index}.caption`} value={row.caption??''} maxlength="300" /></label>
+        <label>Position<input type="number" name={`gallery.${index}.position`} value={index+1} min="1" max={maxGalleryImages} /></label>
+        <label class="gallery-editor__remove"><input type="checkbox" name={`gallery.${index}.remove`} /> Remove</label>
+      </div>)}
+      {galleryRows.length<maxGalleryImages&&<div class="gallery-editor__add">
+        <h3>Add a photo</h3>
+        <label>Image<select name="gallery.add.image"><option value="">Choose an image…</option>{addOptions.filter(option=>!inGallery.has(option.path)).map(option=><option value={option.path}>{option.label}</option>)}</select></label>
+        <label>Description<input name="gallery.add.alt" maxlength="300" /></label>
+        <label>Caption (optional)<input name="gallery.add.caption" maxlength="300" /></label>
+        <small>Photos appear on the public page only after an approved release is made live. Position numbers set the order.</small>
+      </div>}
+    </fieldset>}
     {(kind==='performance'||kind==='youtube-review')&&<EditorialPicker name="artistIds" label="Performing artists" selected={strings('artistIds')} options={options('artist')} />}
     {kind==='site'&&<>{['spotlightPerformanceIds','featuredPerformanceIds','featuredCoverIds','featuredArtistIds'].map(key=><EditorialPicker name={key} label={({spotlightPerformanceIds:'Homepage spotlights (maximum four)',featuredPerformanceIds:'Featured performances',featuredCoverIds:'Featured covers',featuredArtistIds:'Featured artists'})[key]!} selected={strings(key)} options={options(key==='featuredArtistIds'?'artist':'performance')} />)}</>}
     <button disabled={conflict}>Save private draft</button>
@@ -142,6 +170,12 @@ const teaserOptions=editorialPickerOptions(selectedClipId?[selectedClipId]:[],ho
 </script>
 
 <style>
+  .gallery-editor { margin:20px 0; padding:14px; border:1px solid var(--line); border-radius:12px; }
+  .gallery-editor__row { display:grid; grid-template-columns:96px repeat(3,minmax(0,1fr)) auto; gap:10px; align-items:end; padding:10px 0; border-top:1px solid var(--line); }
+  .gallery-editor__row img, .gallery-editor__nothumb { width:96px; height:72px; object-fit:cover; border-radius:8px; background:var(--surface-muted); font-size:.75rem; display:flex; align-items:center; justify-content:center; }
+  .gallery-editor__add { margin-top:14px; padding-top:12px; border-top:2px solid var(--line); display:grid; gap:10px; }
+  .gallery-editor__remove { white-space:nowrap; }
+  @media (max-width:800px) { .gallery-editor__row { grid-template-columns:1fr; } }
   .content-facts { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; margin:12px 0 20px; }
   .content-facts div { padding:12px 14px; border:1px solid var(--line); border-radius:10px; background:var(--surface); }
   .content-facts dt { font-size:.75rem; text-transform:uppercase; letter-spacing:.06em; opacity:.7; }
