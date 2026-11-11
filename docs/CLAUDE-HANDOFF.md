@@ -39,6 +39,8 @@ This section supersedes older checkpoint notes below. The CMS is not complete an
 
 - Status labels (Nov 11): content editor shows four separate facts (Draft, Review, Approved, Live) via src/lib/editorial/status.ts. Live is derived from the deployed release marker plus that release's revision map; unknown/repository states are stated, never presented as live. Packet 5 remaining: reviewer comments, shared snapshot assembler for exact release preview.
 
+- Reviewer comments (Nov 11, local commit; push AFTER migration 20261111040000_editorial_review_comments.sql is applied to hosted Supabase): table editorial_review_comments (immutable, RLS follows item visibility) and RPC request_editorial_changes (requires reason 1-2000 chars, calls review_content in one transaction). Editor page has a reason box, and a Reviewer feedback list. Packet 5 remaining: shared snapshot assembler for exact release preview.
+
 ## Historical checkpoints
 
 The notes below describe earlier snapshots; their local-only, secret-pending and test-count statements are superseded above.

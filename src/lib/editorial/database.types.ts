@@ -282,6 +282,36 @@ export type Database = {
         }
         Relationships: []
       }
+      editorial_review_comments: {
+        Row: {
+          action: string
+          author_id: string
+          body: string
+          created_at: string
+          id: string
+          item_id: string
+          revision_id: string
+        }
+        Insert: {
+          action: string
+          author_id: string
+          body: string
+          created_at?: string
+          id?: string
+          item_id: string
+          revision_id: string
+        }
+        Update: {
+          action?: string
+          author_id?: string
+          body?: string
+          created_at?: string
+          id?: string
+          item_id?: string
+          revision_id?: string
+        }
+        Relationships: []
+      }
       editorial_releases: {
         Row: {
           created_at: string
@@ -443,6 +473,10 @@ export type Database = {
           error_code: string
           status: string
         }[]
+      }
+      request_editorial_changes: {
+        Args: { p_body: string; p_item_id: string; p_revision_id: string }
+        Returns: undefined
       }
       review_editorial_content: {
         Args: { p_action: string; p_item_id: string; p_revision_id: string }

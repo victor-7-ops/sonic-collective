@@ -64,7 +64,12 @@ export async function applyContentAction(
       const unmet=await mfaRequirementUnmet(client);
       if(unmet) throw new Error('Verify your authenticator in Account before approving content.');
     }
-    const result=await client.rpc('review_editorial_content',{p_item_id:item.id,p_revision_id:revision,p_action:action});
+    let result;
+    if(action==='request-changes') {
+      const comment=(form.get('comment')??'').trim();
+      if(!comment||comment.length>2000) throw new Error('Explain what needs to change (1 to 2000 characters).');
+      result=await client.rpc('request_editorial_changes',{p_item_id:item.id,p_revision_id:revision,p_body:comment});
+    } else result=await client.rpc('review_editorial_content',{p_item_id:item.id,p_revision_id:revision,p_action:action});
     if(result.error) {
       status=result.error.code==='40001'?409:400;
       throw new Error(status===409?'A newer revision exists. Reload and review it.':'The review action was not permitted or could not be saved.');

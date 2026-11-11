@@ -10,6 +10,7 @@ import { applyContentAction } from '../../../lib/editorial/actions';
 import { historyPage,historyPageSize,loadRevisionHistory } from '../../../lib/editorial/history';
 import { fullTargetIds,loadPerformanceVideoIds,loadReviewRows } from '../../../lib/editorial/inbox';
 import { loadContentFacts } from '../../../lib/editorial/status';
+import { loadReviewFeedback } from '../../../lib/editorial/comments';
 import type { SiteConfig } from '../../../lib/schemas';
 import { homepagePerformanceOptions,homepageTeaserOptions,resolveSiteContent } from '../../../lib/editorial/site-content';
 export const prerender=false;
@@ -48,6 +49,7 @@ const isArchived=item.archived_at!==null;
 const hasFields=(editorialFields[kind].length>0||kind==='site')&&!isArchived;
 const canReview=Astro.locals.editorialMember!.role!=='contributor';
 const canManageArchive=canReview;
+const feedback=await loadReviewFeedback(client,id);
 const facts=await loadContentFacts(client,item,Astro.url.origin);
 const historyNumber=historyPage(Astro.url.searchParams.get('history'));
 const history=await loadRevisionHistory(client,id,historyNumber);
@@ -96,8 +98,11 @@ const teaserOptions=editorialPickerOptions(selectedClipId?[selectedClipId]:[],ho
     {conflict&&<p><a href={`/admin/content/${id}/`}>Reload the latest revision after copying your changes</a></p>}
   </form>:<p>Media source editing will become available after upload validation is connected. Existing clip sources are preserved.</p>}
   {!isArchived&&<><h2>Review this saved revision</h2><p>Save form changes before submitting or approving. These actions apply to revision {item.version} shown when this page loaded.</p>
-  <form method="post"><input type="hidden" name="revision" value={item.draft_revision_id} /><button class="secondary" name="action" value="submit">Submit for review</button>{canReview&&<><button name="action" value="approve">Approve saved revision</button><button class="secondary" name="action" value="request-changes">Request changes</button></>}</form></>}
+  <form method="post"><input type="hidden" name="revision" value={item.draft_revision_id} />{canReview&&<label>Reason for requested changes (required when requesting changes)<textarea name="comment" maxlength="2000"></textarea></label>}<button class="secondary" name="action" value="submit">Submit for review</button>{canReview&&<><button name="action" value="approve">Approve saved revision</button><button class="secondary" name="action" value="request-changes">Request changes</button></>}</form></>}
   <p><a href="/admin/content/">← Content library</a></p>
+  <section aria-labelledby="reviewer-feedback"><h2 id="reviewer-feedback">Reviewer feedback</h2>
+    {feedback.error?<p role="alert">Feedback could not be loaded. Reload to try again.</p>:feedback.items.length===0?<p>No changes have been requested.</p>:<ol>{feedback.items.map(entry=><li><strong>Changes requested{entry.revision!==null?` on revision ${entry.revision}`:""}</strong> · <time datetime={entry.createdAt}>{new Date(entry.createdAt).toISOString().replace("T"," ").slice(0,16)} UTC</time><p>{entry.body}</p></li>)}</ol>}
+  </section>
   <section aria-labelledby="revision-history"><h2 id="revision-history">Saved revision history</h2>
     <p>Newest first, {historyPageSize} per page. Each revision lists what changed from the one before it. Restoring creates a new private draft; it does not change the approved version.</p>
     {history.error?<p role="alert">History could not be loaded. Reload to try again.</p>:history.entries.length===0?<p>No revisions on this page.</p>:<ol>{history.entries.map(revision=><li>
