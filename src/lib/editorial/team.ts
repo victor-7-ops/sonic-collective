@@ -8,7 +8,10 @@ type InvitationOutcome = {redirect:string}|{message:string;status:400|403|409|50
 const roles=['owner','editor','contributor'] as const;
 const uuid=/^[a-f\d]{8}-(?:[a-f\d]{4}-){3}[a-f\d]{12}$/i;
 
-export async function listEditorialTeam(client:SupabaseClient<Database>) {
+export async function listEditorialTeam(client:SupabaseClient<Database>):Promise<{members:Database['public']['Functions']['list_editorial_members']['Returns']|null;error:TeamError}> {
+  // The roster RPC requires an MFA-verified session; report that plainly instead of a generic failure.
+  const assurance=await client.auth.mfa.getAuthenticatorAssuranceLevel();
+  if(!assurance.error&&assurance.data.currentLevel!=='aal2') return {members:null,error:{code:'PT002'}};
   const result=await client.rpc('list_editorial_members');
   return {members:result.data,error:result.error};
 }
