@@ -24,7 +24,7 @@ Artists and performances can each have a photo gallery (max 24, each photo with 
 | G2 | **[DONE]** Resize photos in the browser on the Media page form too | Claude | done | Uploads over 4.5 MB from Media no longer fail on Vercel (only the gallery uploader shrinks today) |
 | G3 | **[DONE]** Archive library images (Media page; files are kept, nothing deleted). Verified live: refused while in use, allowed after removal | Claude | done |  Unused test photos can be removed; guards refuse archiving an image still referenced by approved content or a release |
 | G4 | **[NOT NEEDED]** HEIC (iPhone) photos | n/a | n/a | The server image library here reads only the AVIF flavour of HEIF, not HEIC. The upload boxes accept JPEG, PNG and WebP only, and iPhones convert to JPEG automatically in that case. Revisit only if a photo ever arrives as HEIC |
-| G5 | **[DONE, drag + buttons]** Drag to reorder (handle plus Earlier/Later buttons, keyboard friendly). Bulk captions not built | done | Position numbers remain the source of truth |
+| G5 | **[DONE, verified live: button reorder saved]** Drag to reorder (handle plus Earlier/Later buttons, keyboard friendly). Bulk captions not built | done | Position numbers remain the source of truth |
 
 Test photos (Upload test photo one / two) are archived and no longer selectable; their private files are kept in storage. Archived throwaway records (not visible to visitors): acceptance-test-artist, guard-check-artist, picker-check-artist, gallery-check-artist, upload-check-artist.
 
@@ -61,7 +61,7 @@ Test photos (Upload test photo one / two) are archived and no longer selectable;
 
 - Login accounts, Vercel/GitHub settings and the YouTube snapshot are outside the CMS backup.
 - Private library images show in previews only as references, not pixels, until a release is live.
-- The archived test artists (`acceptance-test-artist`, `guard-check-artist`, `picker-check-artist`, `gallery-check-artist`, `upload-check-artist`, `restore-check-artist`) remain in the database, archived and invisible to visitors.
+- The archived test artists (`acceptance-test-artist`, `guard-check-artist`, `picker-check-artist`, `gallery-check-artist`, `upload-check-artist`, `restore-check-artist`, `reorder-check-artist`) remain in the database, archived and invisible to visitors.
 - `CMS_RELEASE_ID` in Vercel is now only a fallback; the Make live choice in the database wins.
 - Claude cannot edit or delete Vercel environment variables (blocked by the tool permissions); you do that in the dashboard.
 
