@@ -2,6 +2,7 @@
 import EditorialLayout from '../../../layouts/EditorialLayout.astro';
 import {readEditorialForm} from '../../../lib/editorial/access';
 import {prepareEditorialRelease} from '../../../lib/editorial/release-server';
+import {mfaRequirementUnmet} from '../../../lib/editorial/mfa';
 export const prerender=false;
 const member=Astro.locals.editorialMember!;
 if(member.role==='contributor') return new Response('Only active editors and owners can prepare release snapshots.',{status:403});
@@ -14,8 +15,8 @@ if(Astro.request.method==='POST') {
     const submittedRequestId=form.get('requestId')??'';
     if(form.get('action')!=='prepare'||!/^[a-f\d-]{36}$/i.test(submittedRequestId)) throw new Error('Reload the release page and try again.');
     requestId=submittedRequestId;
-    const assurance=await client.auth.mfa.getAuthenticatorAssuranceLevel();
-    if(assurance.error||assurance.data.currentLevel!=='aal2') throw new Error('Verify your authenticator in Account before preparing a release.');
+    const unmet=await mfaRequirementUnmet(client);
+    if(unmet) throw new Error('Verify your authenticator in Account before preparing a release.');
     const releaseId=await prepareEditorialRelease(client,requestId);
     return Astro.redirect(`/admin/releases/?prepared=${releaseId}`,303);
   } catch(reason) {

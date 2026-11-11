@@ -5,7 +5,7 @@ import {editorialTeamError,listEditorialTeam} from '../src/lib/editorial/team';
 const client=(level:string|null,rpc:()=>Promise<unknown>=async()=>({data:[],error:null}),assuranceError:unknown=null)=>{
   const calls:string[]=[];
   return {calls,client:{
-    auth:{mfa:{getAuthenticatorAssuranceLevel:async()=>({data:level?{currentLevel:level}:null,error:assuranceError})}},
+    auth:{mfa:{getAuthenticatorAssuranceLevel:async()=>({data:level?{currentLevel:level,nextLevel:'aal2'}:null,error:assuranceError})}},
     rpc:async(name:string)=>{calls.push(name);return rpc();},
   } as never};
 };
@@ -27,9 +27,9 @@ test('roster with MFA loads members from the RPC',async()=>{
   assert.deepEqual(mock.calls,['list_editorial_members']);
 });
 
-test('an unreadable assurance level still lets the database decide',async()=>{
-  const mock=client(null,async()=>({data:null,error:{code:'PT002'}}),new Error('x'));
+test('an unreadable assurance level fails closed without calling the database',async()=>{
+  const mock=client(null,async()=>({data:[],error:null}),new Error('x'));
   const result=await listEditorialTeam(mock.client);
-  assert.deepEqual(mock.calls,['list_editorial_members']);
+  assert.deepEqual(mock.calls,[]);
   assert.equal(editorialTeamError(result.error).status,403);
 });

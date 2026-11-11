@@ -1,6 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from './database.types';
 import { z } from 'zod';
+import { mfaRequirementUnmet } from './mfa';
 
 type TeamError = {code?:string;message?:string}|null;
 type TeamOutcome = {redirect:string}|{message:string;status:400|403|409};
@@ -10,8 +11,8 @@ const uuid=/^[a-f\d]{8}-(?:[a-f\d]{4}-){3}[a-f\d]{12}$/i;
 
 export async function listEditorialTeam(client:SupabaseClient<Database>):Promise<{members:Database['public']['Functions']['list_editorial_members']['Returns']|null;error:TeamError}> {
   // The roster RPC requires an MFA-verified session; report that plainly instead of a generic failure.
-  const assurance=await client.auth.mfa.getAuthenticatorAssuranceLevel();
-  if(!assurance.error&&assurance.data.currentLevel!=='aal2') return {members:null,error:{code:'PT002'}};
+  const unmet=await mfaRequirementUnmet(client);
+  if(unmet) return {members:null,error:{code:'PT002'}};
   const result=await client.rpc('list_editorial_members');
   return {members:result.data,error:result.error};
 }
@@ -28,8 +29,8 @@ export function editorialTeamError(error:TeamError):Exclude<TeamOutcome,{redirec
 }
 
 export async function applyEditorialTeamAction(client:SupabaseClient<Database>,form:URLSearchParams):Promise<TeamOutcome> {
-  const assurance=await client.auth.mfa.getAuthenticatorAssuranceLevel();
-  if(assurance.error||assurance.data.currentLevel!=='aal2') {
+  const unmet=await mfaRequirementUnmet(client);
+  if(unmet) {
     return {message:'Verify your authenticator in Account before managing the team.',status:403};
   }
   let error:TeamError=null;
@@ -83,8 +84,8 @@ export async function applyEditorialInvitation(
   } catch { return outcome('The invitation callback is not configured for this site.',400); }
   const callback=new URL('/auth/landing/',origin).href;
   try {
-    const assurance=await client.auth.mfa.getAuthenticatorAssuranceLevel();
-    if(assurance.error||assurance.data.currentLevel!=='aal2') return outcome('Verify your authenticator in Account before inviting a member.',403);
+    const unmet=await mfaRequirementUnmet(client);
+    if(unmet) return outcome('Verify your authenticator in Account before inviting a member.',403);
     const prepared=await client.rpc('prepare_editorial_invitation',{
       p_request_id:requestId,p_email:email,p_role:role,
     });

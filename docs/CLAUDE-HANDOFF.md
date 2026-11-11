@@ -27,6 +27,8 @@ This section supersedes older checkpoint notes below. The CMS is not complete an
 
 - Packet 5 slice 2 (local commit, not pushed): /admin/youtube/ inbox lists snapshot videos read-only with filters/pagination, shows human decisions from youtube-review drafts, and starts a review draft ({youtubeId} only). Short→full mapping is a validated select (only authored performances or reviewed full videos; Shorts only), enforced in applyContentAction before the RPC. Not browser/hosted tested. Still open in Packet 5: reviewer comments, draft/review/approved/live labels, single snapshot assembler for exact release preview.
 
+- Authenticator is now OPTIONAL (Victor's decision, Nov 11): required only for accounts with a verified factor. App helper src/lib/editorial/mfa.ts; DB migration 20261111020000_editorial_mfa_optional.sql rewrites the aal2 condition in 4 functions via editorial_private.mfa_unmet(). Migration must be applied to hosted Supabase manually (no MCP access this session). Team roster/actions page reports the MFA requirement clearly.
+
 ## Historical checkpoints
 
 The notes below describe earlier snapshots; their local-only, secret-pending and test-count statements are superseded above.

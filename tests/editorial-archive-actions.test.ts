@@ -8,7 +8,7 @@ const id='11111111-1111-4111-8111-111111111111';
 function backend(code:string|null,aal='aal2') {
   const calls:{name:string;args:Record<string,unknown>}[]=[];
   const client={
-    auth:{mfa:{getAuthenticatorAssuranceLevel:async()=>({data:{currentLevel:aal},error:null})}},
+    auth:{mfa:{getAuthenticatorAssuranceLevel:async()=>({data:{currentLevel:aal,nextLevel:'aal2'},error:null})}},
     rpc:async(name:string,args:Record<string,unknown>)=>{calls.push({name,args});return {data:3,error:code?{code}:null};},
   } as unknown as SupabaseClient<Database>;
   return {client,calls};

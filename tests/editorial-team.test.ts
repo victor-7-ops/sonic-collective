@@ -8,7 +8,7 @@ import { applyEditorialTeamAction,applyEditorialInvitation } from '../src/lib/ed
 
 test('invitations require a trusted server client and MFA before provider calls',async()=>{
   const form=new URLSearchParams({requestId:'00000000-0000-4000-8000-000000000099',email:'invited@example.com',role:'contributor'});
-  const client={auth:{mfa:{getAuthenticatorAssuranceLevel:async()=>({data:{currentLevel:'aal1'},error:null})}}} as unknown as SupabaseClient<Database>;
+  const client={auth:{mfa:{getAuthenticatorAssuranceLevel:async()=>({data:{currentLevel:'aal1',nextLevel:'aal2'},error:null})}}} as unknown as SupabaseClient<Database>;
   const missing=await applyEditorialInvitation(client,null,form,'http://127.0.0.1:4321');
   assert.ok('status' in missing);assert.equal(missing.status,503);
   const denied=await applyEditorialInvitation(client,{} as SupabaseClient<Database>,form,'http://127.0.0.1:4321');
@@ -40,7 +40,7 @@ test('team RPCs enforce owner MFA, serialized last-owner protection, assignment 
   t.after(() => db.close());
   await db.exec(`
     create role anon; create role authenticated; create role service_role bypassrls;
-    create schema auth; create table auth.users(id uuid primary key,email text);
+    create schema auth; create table auth.users(id uuid primary key,email text); create table auth.mfa_factors(user_id uuid,status text);
     create function auth.uid() returns uuid language sql stable as
       $$ select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$;
     create function auth.jwt() returns jsonb language sql stable as
@@ -58,6 +58,7 @@ test('team RPCs enforce owner MFA, serialized last-owner protection, assignment 
   const [owner, secondOwner, editor, contributor, secondContributor] = [1, 2, 3, 4, 5].map(n => `00000000-0000-4000-8000-${String(n).padStart(12, '0')}`);
   const users = [[owner,'owner@example.test','owner'],[secondOwner,'second@example.test','owner'],[editor,'editor@example.test','editor'],[contributor,'contributor@example.test','contributor'],[secondContributor,'other@example.test','contributor']] as const;
   for (const [id,email] of users) await db.query('insert into auth.users(id,email) values($1,$2)', [id,email]);
+  await db.exec("insert into auth.mfa_factors select id,'verified' from auth.users");
   for (const [id,,role] of users) await db.query('insert into public.team_members(user_id,role) values($1,$2)', [id,role]);
   async function as(id: string | null, aal = 'aal1') {
     await db.exec('reset role');

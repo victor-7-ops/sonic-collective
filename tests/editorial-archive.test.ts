@@ -8,7 +8,7 @@ test('editorial archive requires editor MFA, protects references, and preserves 
   t.after(() => db.close());
   await db.exec(`
     create role anon; create role authenticated; create role service_role bypassrls;
-    create schema auth; create table auth.users(id uuid primary key);
+    create schema auth; create table auth.users(id uuid primary key); create table auth.mfa_factors(user_id uuid,status text);
     create function auth.uid() returns uuid language sql stable as
       $$ select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$;
     create function auth.jwt() returns jsonb language sql stable as
@@ -25,6 +25,7 @@ test('editorial archive requires editor MFA, protects references, and preserves 
   }
   const [owner, editor, contributor] = [1, 2, 3].map(n => `00000000-0000-4000-8000-${String(n).padStart(12, '0')}`);
   for (const id of [owner, editor, contributor]) await db.query('insert into auth.users values($1)', [id]);
+  await db.exec("insert into auth.mfa_factors select id,'verified' from auth.users");
   for (const [id, role] of [[owner, 'owner'], [editor, 'editor'], [contributor, 'contributor']]) {
     await db.query('insert into public.team_members(user_id,role) values($1,$2)', [id, role]);
   }

@@ -4,6 +4,7 @@ import type {Database,Tables} from './database.types';
 import {parseEditorialPayload,type EditorialKind} from './content';
 import {applyEditorialForm} from './forms';
 import {checkFullMapping} from './inbox';
+import {mfaRequirementUnmet} from './mfa';
 
 type Outcome = {redirect:string} | {payload:Record<string,unknown>;message:string;status:400|409};
 export async function applyContentAction(
@@ -25,8 +26,8 @@ export async function applyContentAction(
       if(Boolean(item.archived_at)===archived) throw new Error('The archive state changed. Reload and try again.');
       const expected=Number(form.get('version'));
       if(!form.has('version')||!Number.isSafeInteger(expected)||expected!==item.version) throw new Error('Content changed. Reload before changing its archive state.');
-      const assurance=await client.auth.mfa.getAuthenticatorAssuranceLevel();
-      if(assurance.error||assurance.data.currentLevel!=='aal2') throw new Error('Verify your authenticator in Account before archiving content.');
+      const unmet=await mfaRequirementUnmet(client);
+      if(unmet) throw new Error('Verify your authenticator in Account before archiving content.');
       const result=await client.rpc('archive_editorial_content',{p_item_id:item.id,p_expected_version:expected,p_archived:archived});
       if(result.error) {
         status=result.error.code==='40001'?409:400;
@@ -60,8 +61,8 @@ export async function applyContentAction(
     const revision=form.get('revision');
     if(!revision||!/^[a-f\d-]{36}$/i.test(revision)) throw new Error('Choose a saved revision to review.');
     if(action!=='submit') {
-      const assurance=await client.auth.mfa.getAuthenticatorAssuranceLevel();
-      if(assurance.error||assurance.data.currentLevel!=='aal2') throw new Error('Verify your authenticator in Account before approving content.');
+      const unmet=await mfaRequirementUnmet(client);
+      if(unmet) throw new Error('Verify your authenticator in Account before approving content.');
     }
     const result=await client.rpc('review_editorial_content',{p_item_id:item.id,p_revision_id:revision,p_action:action});
     if(result.error) {

@@ -13,7 +13,7 @@ function backend(code:string|null,aal='aal2') {
   const calls:{name:string;args:Record<string,unknown>}[]=[];
   const filters:Record<string,string>={};
   const query={select:()=>query,eq:(key:string,value:string)=>{filters[key]=value;return query;},maybeSingle:async()=>({data:{payload:artist},error:null})};
-  const client={from:()=>query,auth:{mfa:{getAuthenticatorAssuranceLevel:async()=>({data:{currentLevel:aal},error:null})}},rpc:async(name:string,args:Record<string,unknown>)=>{calls.push({name,args});return {error:code?{code}:null};}} as unknown as SupabaseClient<Database>;
+  const client={from:()=>query,auth:{mfa:{getAuthenticatorAssuranceLevel:async()=>({data:{currentLevel:aal,nextLevel:'aal2'},error:null})}},rpc:async(name:string,args:Record<string,unknown>)=>{calls.push({name,args});return {error:code?{code}:null};}} as unknown as SupabaseClient<Database>;
   return {client,calls,filters};
 }
 test('save conflict preserves submitted input and optimistic version',async()=>{
