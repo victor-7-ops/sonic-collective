@@ -2,12 +2,18 @@ import { z } from 'zod';
 
 export const seriesIdSchema = z.enum(['sessions', 'covers']);
 export const publicPathSchema = z.string().regex(/^\/(?!\/)[^?#]+$/).refine((p) => !p.split('/').includes('..'), 'must be a public-root path');
+export const galleryImageSchema = z.object({
+  image: publicPathSchema, alt: z.string().trim().min(1).max(300), caption: z.string().trim().max(300).optional(),
+});
+export const maxGalleryImages = 24;
+export const gallerySchema = z.array(galleryImageSchema).max(maxGalleryImages)
+  .refine((items) => new Set(items.map((item) => item.image)).size === items.length, 'Gallery images must be unique');
 export const artistSchema = z.object({
   id: z.string().min(1), name: z.string().min(1), aliases: z.array(z.string()),
   kind: z.enum(['solo', 'group']), portrait: publicPathSchema.optional(), portraitAlt: z.string().min(1).optional(),
   focalPoint: z.string().min(1), portraitLayout: z.enum(['portrait', 'landscape']),
   bio: z.string().optional(), links: z.array(z.object({ label: z.string().min(1), url: z.url().refine((u) => u.startsWith('https://')) })),
-  featuredOrder: z.number().optional(),
+  featuredOrder: z.number().optional(), gallery: gallerySchema.optional(),
 });
 export const performanceSchema = z.object({
   id: z.string().min(1), title: z.string().min(1), originalTitle: z.string().optional(), aliases: z.array(z.string()),
@@ -15,7 +21,7 @@ export const performanceSchema = z.object({
   thumbnail: publicPathSchema, thumbnailAlt: z.string().min(1), episode: z.number().int().positive().optional(),
   editorialNote: z.string().min(1).optional(),
   originalArtist: z.string().optional(), publishedAt: z.iso.datetime({ offset: true }).optional(), durationSeconds: z.number().positive().optional(),
-  featuredOrder: z.number(), approvedForSite: z.boolean(),
+  featuredOrder: z.number(), approvedForSite: z.boolean(), gallery: gallerySchema.optional(),
 });
 export const clipSchema = z.object({
   id: z.string().min(1), performanceId: z.string().min(1), poster: publicPathSchema, src: publicPathSchema,

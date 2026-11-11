@@ -12,7 +12,10 @@ export function cmsAssetId(path:string):string|null {
 }
 
 export function cmsAssetIds(catalog:Pick<Catalog,'artists'|'performances'>):string[] {
-  const paths=[...catalog.artists.map(artist=>artist.portrait),...catalog.performances.map(performance=>performance.thumbnail)];
+  const paths=[
+    ...catalog.artists.flatMap(artist=>[artist.portrait,...(artist.gallery??[]).map(item=>item.image)]),
+    ...catalog.performances.flatMap(performance=>[performance.thumbnail,...(performance.gallery??[]).map(item=>item.image)]),
+  ];
   return [...new Set(paths.flatMap(path=>{const id=path?cmsAssetId(path):null;return id?[id]:[];}))].sort();
 }
 

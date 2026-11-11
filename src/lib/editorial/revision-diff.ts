@@ -1,14 +1,16 @@
 export type RevisionChange={field:string;before:string;after:string};
 
 const labels:Record<string,string>={
-  about:'About copy',aliases:'Other names or titles',approvedForSite:'Public-site eligibility',artistIds:'Performing artists',bio:'Biography',channelUrl:'YouTube channel',clips:'Teaser clips',contactEmail:'Contact email',contactLabel:'Contact label',copyrightYear:'Copyright year',featuredArtistIds:'Featured artists',featuredCoverIds:'Featured covers',featuredOrder:'Featured order',featuredPerformanceIds:'Featured performances',footer:'Footer copy',focalPoint:'Portrait focal point',format:'Video format',hero:'Homepage hero and teaser',intro:'Introduction',kind:'Artist type',links:'Verified links',name:'Name',navigation:'Navigation labels',originalArtist:'Original artist',originalTitle:'Original title',performanceId:'Performance',performancesLabel:'Performances link',portrait:'Portrait',portraitAlt:'Portrait description',portraitLayout:'Portrait layout',portraitLoopSrc:'Teaser video',portraitPerformanceId:'Teaser performance',portraitPoster:'Teaser poster',seriesId:'Series',site:'Site configuration',socialUrls:'Social links',spotlightPerformanceIds:'Homepage spotlights',thumbnail:'Artwork',thumbnailAlt:'Artwork description',title:'Title',youtubeLinkText:'YouTube link text',youtubeLabel:'YouTube link',
+  about:'About copy',gallery:'Gallery',aliases:'Other names or titles',approvedForSite:'Public-site eligibility',artistIds:'Performing artists',bio:'Biography',channelUrl:'YouTube channel',clips:'Teaser clips',contactEmail:'Contact email',contactLabel:'Contact label',copyrightYear:'Copyright year',featuredArtistIds:'Featured artists',featuredCoverIds:'Featured covers',featuredOrder:'Featured order',featuredPerformanceIds:'Featured performances',footer:'Footer copy',focalPoint:'Portrait focal point',format:'Video format',hero:'Homepage hero and teaser',intro:'Introduction',kind:'Artist type',links:'Verified links',name:'Name',navigation:'Navigation labels',originalArtist:'Original artist',originalTitle:'Original title',performanceId:'Performance',performancesLabel:'Performances link',portrait:'Portrait',portraitAlt:'Portrait description',portraitLayout:'Portrait layout',portraitLoopSrc:'Teaser video',portraitPerformanceId:'Teaser performance',portraitPoster:'Teaser poster',seriesId:'Series',site:'Site configuration',socialUrls:'Social links',spotlightPerformanceIds:'Homepage spotlights',thumbnail:'Artwork',thumbnailAlt:'Artwork description',title:'Title',youtubeLinkText:'YouTube link text',youtubeLabel:'YouTube link',
 };
 
 function display(value:unknown):string {
   if(value===undefined) return 'Not set';
   if(value===null) return 'Unclassified';
   if(typeof value==='boolean') return value?'Yes':'No';
-  if(Array.isArray(value)) return value.length?value.map(item=>typeof item==='string'?item:JSON.stringify(item)).join(' · '):'None';
+  if(Array.isArray(value)) return value.length?value.map(item=>typeof item==='string'?item
+    :item&&typeof item==='object'&&'image' in item&&'alt' in item?`${String((item as {alt:unknown}).alt)} (${String((item as {image:unknown}).image)})`
+    :JSON.stringify(item)).join(' · '):'None';
   if(typeof value==='object') return JSON.stringify(value);
   return String(value);
 }

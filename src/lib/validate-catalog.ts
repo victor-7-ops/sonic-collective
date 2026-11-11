@@ -12,6 +12,13 @@ export function validateCatalog(input: unknown, manifestInput: unknown, fileExis
     for (const record of records) { if (seen.has(record.id)) errors.push(`${kind}.${record.id}: duplicate id`); seen.add(record.id); }
   };
   checkIds('artist',c.artists); checkIds('performance',c.performances); checkIds('clip',c.clips); checkIds('series',c.series);
+  const checkGallery = (owner: string, gallery: { image: string }[] | undefined) => {
+    for (const [index, item] of (gallery ?? []).entries()) {
+      const entry = mediaManifestEntrySchema.safeParse(manifest[item.image]);
+      if (!entry.success) errors.push(`${owner}.gallery[${index}]: missing or invalid media manifest entry`);
+      else for (const v of entry.data.variants) if (!fileExists(v.src)) errors.push(`${owner}.gallery[${index}]: missing file ${v.src}`);
+    }
+  };
   const seriesIds = new Set(c.series.map((x) => x.id));
   const artistIds = new Set(c.artists.map((x) => x.id));
   const perfs = new Map(c.performances.map((x) => [x.id,x]));
@@ -24,6 +31,7 @@ export function validateCatalog(input: unknown, manifestInput: unknown, fileExis
     const entry=mediaManifestEntrySchema.safeParse(manifest[p.thumbnail]);
     if (!entry.success) errors.push(`performance.${p.id}.thumbnail: missing or invalid media manifest entry`);
     else for(const v of entry.data.variants) if(!fileExists(v.src)) errors.push(`performance.${p.id}.thumbnail: missing file ${v.src}`);
+    checkGallery(`performance.${p.id}`,p.gallery);
   }
   for (const a of c.artists) {
     if (a.portrait) {
@@ -32,6 +40,7 @@ export function validateCatalog(input: unknown, manifestInput: unknown, fileExis
     if (!entry.success) errors.push(`artist.${a.id}.portrait: missing or invalid media manifest entry`);
     else for(const v of entry.data.variants) if(!fileExists(v.src)) errors.push(`artist.${a.id}.portrait: missing file ${v.src}`);
     }
+    checkGallery(`artist.${a.id}`,a.gallery);
     for (const link of a.links) if (!link.url.startsWith('https://')) errors.push(`artist.${a.id}.links: only HTTPS URLs are allowed`);
   }
   for(const clip of c.clips){
