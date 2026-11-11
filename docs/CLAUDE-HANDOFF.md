@@ -41,6 +41,8 @@ This section supersedes older checkpoint notes below. The CMS is not complete an
 
 - Reviewer comments (Nov 11, local commit; push AFTER migration 20261111040000_editorial_review_comments.sql is applied to hosted Supabase): table editorial_review_comments (immutable, RLS follows item visibility) and RPC request_editorial_changes (requires reason 1-2000 chars, calls review_content in one transaction). Editor page has a reason box, and a Reviewer feedback list. Packet 5 remaining: shared snapshot assembler for exact release preview.
 
+- Shared assembler (Nov 11): assembleContent() in releases.ts is the single validator/ordering for releases AND previews. Preview route now builds from CMS-approved records (read with the server credential after access checks) with the selected revision overlaid, instead of repository JSON; previewFromRecords() in preview.ts, previewCatalog() remains a repo-based wrapper for tests. Packet 5 is complete except live verification with real draft edits.
+
 ## Historical checkpoints
 
 The notes below describe earlier snapshots; their local-only, secret-pending and test-count statements are superseded above.

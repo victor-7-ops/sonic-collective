@@ -59,8 +59,8 @@ export async function requireReadyCmsAssets(client:SupabaseClient<Database>,ids:
   if(missing.length) throw new Error(`Approved content references images that are not ready: ${missing.join(', ')}.`);
 }
 
-export async function prepareEditorialRelease(client:SupabaseClient<Database>,requestId:string):Promise<string> {
-  const snapshot=await loadApprovedReleaseRecords({
+export function approvedSnapshotReader(client:SupabaseClient<Database>):ApprovedSnapshotReader {
+  return {
     async items(from,to) {
       const result=await client.from('content_items').select('id,kind,stable_id,approved_revision_id')
         .is('archived_at',null).not('approved_revision_id','is',null)
@@ -71,7 +71,11 @@ export async function prepareEditorialRelease(client:SupabaseClient<Database>,re
       const result=await client.from('content_revisions').select('id,item_id,payload').in('id',ids);
       return {data:result.data,error:result.error};
     },
-  });
+  };
+}
+
+export async function prepareEditorialRelease(client:SupabaseClient<Database>,requestId:string):Promise<string> {
+  const snapshot=await loadApprovedReleaseRecords(approvedSnapshotReader(client));
   const preview=buildReleaseArtifact('00000000-0000-4000-8000-000000000000',snapshot.records);
   await requireReadyCmsAssets(client,cmsAssetIds(preview.catalog));
   const created=await client.rpc('create_editorial_release',{p_request_id:requestId,p_expected_map:snapshot.expectedMap});

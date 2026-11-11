@@ -3,13 +3,13 @@ import HomePage from '../../components/HomePage.astro';
 import AboutPage from '../../components/AboutPage.astro';
 import ArtistPage from '../../components/ArtistPage.astro';
 import PerformancePage from '../../components/PerformancePage.astro';
-import { loadPreviewArtistDrafts,previewCatalog } from '../../lib/editorial/preview';
+import { loadPreviewArtistDrafts,previewFromRecords } from '../../lib/editorial/preview';
+import { approvedSnapshotReader,loadApprovedReleaseRecords } from '../../lib/editorial/release-server';
+import { editorialAdminClient } from '../../lib/editorial/server';
 import { editorialKindSchema } from '../../lib/editorial/content';
 import { getDiscoveryCatalog } from '../../lib/discovery';
 import rawSnapshot from '../../data/youtube-snapshot.json';
-import rawOverrides from '../../data/youtube-overrides.json';
 import { validateSnapshot } from '../../lib/youtube-import';
-import { youtubeOverridesSchema } from '../../lib/merge-catalog';
 import { performanceSchema } from '../../lib/schemas';
 export const prerender=false;
 const id=Astro.params.id??'';
@@ -32,10 +32,16 @@ if(kind==='performance') {
   if(related.error)return new Response('Related preview data could not be loaded. Try again later.',{status:503});
   artistDrafts=related.data;
 }
+// Approved content is the base, exactly as a release would assemble it. It is read with the server credential
+// (after the access checks above) so contributors preview against the same base as editors.
+let base;
+try { base=await loadApprovedReleaseRecords(approvedSnapshotReader(editorialAdminClient()??client)); }
+catch { return new Response('Approved content could not be loaded. Try again later.',{status:503}); }
 let catalog;
 try {
-  const raw=previewCatalog(kind,item.data.stable_id,revision.data.payload,artistDrafts);
-  const discovered=await getDiscoveryCatalog({raw,snapshot:validateSnapshot(rawSnapshot,'UCCxO94rfXnMpYf7DH_sd6Bw'),overrides:youtubeOverridesSchema.parse(rawOverrides)});
+  const assembled=previewFromRecords(base.records,kind,item.data.stable_id,revision.data.payload,artistDrafts);
+  const raw=assembled.catalog;
+  const discovered=await getDiscoveryCatalog({raw,snapshot:validateSnapshot(rawSnapshot,'UCCxO94rfXnMpYf7DH_sd6Bw'),overrides:assembled.overrides});
   catalog={...discovered,artists:[...discovered.artists],performances:[...discovered.performances]};
   if(kind==='artist') {
     const artist=raw.artists.find(candidate=>candidate.id===item.data!.stable_id);

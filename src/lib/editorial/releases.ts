@@ -31,14 +31,10 @@ function canonical(value:unknown):string {
 
 function compareCodepoint(a:string,b:string):number { return a<b?-1:a>b?1:0; }
 
-export function buildReleaseArtifact(releaseId:string,input:unknown):ReleaseArtifact {
-  if(!/^[a-f\d-]{36}$/i.test(releaseId)) throw new Error('Invalid release ID.');
-  if(!Array.isArray(input)) throw new Error('Release snapshot must be a record array.');
-  const records=(input as ApprovedReleaseRecord[]).map(record=>{
-    const kind=editorialKindSchema.parse(record.kind);
-    if(!/^[a-f\d-]{36}$/i.test(record.revisionId)) throw new Error(`Invalid revision ID for ${kind}/${record.stableId}.`);
-    return {kind,stableId:record.stableId,revisionId:record.revisionId,payload:parseEditorialPayload(kind,record.stableId,record.payload)};
-  }).sort((a,b)=>compareCodepoint(a.kind,b.kind)||compareCodepoint(a.stableId,b.stableId));
+/** The one place approved records become a validated catalog. Releases, exports and previews all go through it. */
+export function assembleContent(input:ApprovedReleaseRecord[],release:boolean):{catalog:Catalog;overrides:YoutubeOverride[]} {
+  // Canonical order, so a preview and a release of the same content produce identical catalogs.
+  const records=[...input].sort((a,b)=>compareCodepoint(a.kind,b.kind)||compareCodepoint(a.stableId,b.stableId));
   const keys=new Set<string>();
   for(const record of records) {
     const key=`${record.kind}:${record.stableId}`;
@@ -72,9 +68,21 @@ export function buildReleaseArtifact(releaseId:string,input:unknown):ReleaseArti
     ...clipsSeed.flatMap(clip=>[clip.src,clip.poster]),
     siteSeed.hero.portraitPoster,siteSeed.hero.portraitLoopSrc,
   ]);
-  const validation=validateCatalog(parsed,releaseManifest,path=>mediaPaths.has(path),true);
+  const validation=validateCatalog(parsed,releaseManifest,path=>mediaPaths.has(path),release);
   if(!validation.ok) throw new Error(`Invalid release catalog: ${validation.errors.join('; ')}`);
   const catalog=validation.catalog!;
+  return {catalog,overrides};
+}
+
+export function buildReleaseArtifact(releaseId:string,input:unknown):ReleaseArtifact {
+  if(!/^[a-f\d-]{36}$/i.test(releaseId)) throw new Error('Invalid release ID.');
+  if(!Array.isArray(input)) throw new Error('Release snapshot must be a record array.');
+  const records=(input as ApprovedReleaseRecord[]).map(record=>{
+    const kind=editorialKindSchema.parse(record.kind);
+    if(!/^[a-f\d-]{36}$/i.test(record.revisionId)) throw new Error(`Invalid revision ID for ${kind}/${record.stableId}.`);
+    return {kind,stableId:record.stableId,revisionId:record.revisionId,payload:parseEditorialPayload(kind,record.stableId,record.payload)};
+  }).sort((a,b)=>compareCodepoint(a.kind,b.kind)||compareCodepoint(a.stableId,b.stableId));
+  const {catalog,overrides}=assembleContent(records,true);
   const revisionMap=records.map(({kind,stableId,revisionId})=>({kind,stableId,revisionId}));
   const body={schemaVersion:1 as const,releaseId,revisionMap,catalog,youtubeOverrides:overrides};
   const contentHash=createHash('sha256').update(canonical(body)).digest('hex');

@@ -3,25 +3,22 @@ import performances from '../../data/performances.json';
 import clips from '../../data/clips.json';
 import series from '../../data/series.json';
 import site from '../../data/site.json';
-import manifest from '../../data/media-manifest.json';
-import { catalogSchema,artistSchema,performanceSchema } from '../schemas';
-import { validateCatalog } from '../validate-catalog';
+import overrides from '../../data/youtube-overrides.json';
 import { parseEditorialPayload, type EditorialKind } from './content';
-import { cmsAssetFile, cmsAssetIds, withCmsAssets } from './cms-assets';
+import { assembleContent, type ApprovedReleaseRecord } from './releases';
 import type {SupabaseClient} from '@supabase/supabase-js';
 import type {Database} from './database.types';
 
-const published=catalogSchema.parse({artists,performances,clips,series,site});
-// shortcut: previews accept existing packaged media only, until validated uploads are implemented.
-const assets=new Set([
-  ...Object.values(manifest).flatMap(entry=>entry.variants.map(variant=>variant.src)),
-  ...published.clips.flatMap(clip=>[clip.src,clip.poster]),
-  published.site.hero.portraitPoster,published.site.hero.portraitLoopSrc,
-]);
+const placeholderRevision='00000000-0000-4000-8000-000000000000';
 
-function replaceOrAppend<T extends {id:string}>(records:T[],record:T) {
-  const index=records.findIndex(item=>item.id===record.id);
-  if(index<0) records.push(record); else records[index]=record;
+/** Repository content as records; the base for previews only when no CMS-approved base is supplied (tests). */
+export function repositoryRecords():ApprovedReleaseRecord[] {
+  const records:ApprovedReleaseRecord[]=[];
+  for(const [kind,items] of Object.entries({artist:artists,performance:performances,clip:clips,series}) as [EditorialKind,{id:string}[]][])
+    for(const payload of items) records.push({kind,stableId:payload.id,revisionId:placeholderRevision,payload});
+  records.push({kind:'site',stableId:'site',revisionId:placeholderRevision,payload:site});
+  for(const payload of overrides) records.push({kind:'youtube-review',stableId:payload.youtubeId,revisionId:placeholderRevision,payload});
+  return records;
 }
 
 export async function loadPreviewArtistDrafts(client:SupabaseClient<Database>,stableIds:string[]) {
@@ -41,19 +38,24 @@ export async function loadPreviewArtistDrafts(client:SupabaseClient<Database>,st
   }),error:false};
 }
 
-export function previewCatalog(kind:EditorialKind,id:string,input:unknown,artistDrafts:{id:string;payload:unknown}[] = []) {
+/**
+ * Assembles a preview exactly as a release is assembled (same validator), from the approved records
+ * with the selected revision, and any permitted artist drafts, laid over them.
+ */
+export function previewFromRecords(base:ApprovedReleaseRecord[],kind:EditorialKind,id:string,input:unknown,artistDrafts:{id:string;payload:unknown}[] = []) {
   if(!['artist','performance','site'].includes(kind)) throw new Error('This content type does not have a page preview yet.');
   const payload=parseEditorialPayload(kind,id,input);
-  const raw=structuredClone(published);
-  if(kind==='site') raw.site=payload as typeof raw.site;
-  else if(kind==='artist') replaceOrAppend(raw.artists,artistSchema.parse(payload));
-  else {
-    for(const dependency of artistDrafts)replaceOrAppend(raw.artists,artistSchema.parse(parseEditorialPayload('artist',dependency.id,dependency.payload)));
-    replaceOrAppend(raw.performances,performanceSchema.parse(payload));
-  }
-  // Library images are private until a release; previews validate their references but cannot render them publicly.
-  const cmsIds=cmsAssetIds(raw);
-  const result=validateCatalog(raw,withCmsAssets(manifest,cmsIds.map(id=>({id,width:1,height:1}))),path=>assets.has(path)||cmsIds.some(id=>cmsAssetFile(id)===path),false);
-  if(!result.ok) throw new Error(result.errors.join('; '));
-  return result.catalog!;
+  const records=base.map(record=>({...record}));
+  const put=(recordKind:EditorialKind,stableId:string,recordPayload:unknown)=>{
+    const record={kind:recordKind,stableId,revisionId:placeholderRevision,payload:recordPayload};
+    const index=records.findIndex(candidate=>candidate.kind===recordKind&&candidate.stableId===stableId);
+    if(index<0) records.push(record); else records[index]=record;
+  };
+  if(kind==='performance') for(const dependency of artistDrafts) put('artist',dependency.id,parseEditorialPayload('artist',dependency.id,dependency.payload));
+  put(kind,id,payload);
+  return assembleContent(records,false);
+}
+
+export function previewCatalog(kind:EditorialKind,id:string,input:unknown,artistDrafts:{id:string;payload:unknown}[] = []) {
+  return previewFromRecords(repositoryRecords(),kind,id,input,artistDrafts).catalog;
 }
