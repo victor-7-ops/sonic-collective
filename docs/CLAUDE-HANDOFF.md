@@ -37,6 +37,8 @@ This section supersedes older checkpoint notes below. The CMS is not complete an
 
 - Release status (Nov 11): every build:release build writes public/release.json (source repository|release, releaseId, contentHash, commit, builtAt). /admin/releases/ reads the deployed marker and shows Live now plus Live/Prepared per release; any read failure shows unknown/prepared, never live. YouTube hourly job: it only validates with a repo-content build and commits the snapshot; the resulting Vercel build reads the same CMS_RELEASE_ID from Vercel env, so job and release cannot diverge, and a bad combination fails the Vercel build closed (previous deployment keeps serving). Not provided: Vercel build failure surfaced inside the admin (needs a Vercel API token), rollback rehearsal.
 
+- Status labels (Nov 11): content editor shows four separate facts (Draft, Review, Approved, Live) via src/lib/editorial/status.ts. Live is derived from the deployed release marker plus that release's revision map; unknown/repository states are stated, never presented as live. Packet 5 remaining: reviewer comments, shared snapshot assembler for exact release preview.
+
 ## Historical checkpoints
 
 The notes below describe earlier snapshots; their local-only, secret-pending and test-count statements are superseded above.

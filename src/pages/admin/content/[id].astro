@@ -9,6 +9,7 @@ import { editorialFields,editorialPickerOptions } from '../../../lib/editorial/f
 import { applyContentAction } from '../../../lib/editorial/actions';
 import { historyPage,historyPageSize,loadRevisionHistory } from '../../../lib/editorial/history';
 import { fullTargetIds,loadPerformanceVideoIds,loadReviewRows } from '../../../lib/editorial/inbox';
+import { loadContentFacts } from '../../../lib/editorial/status';
 import type { SiteConfig } from '../../../lib/schemas';
 import { homepagePerformanceOptions,homepageTeaserOptions,resolveSiteContent } from '../../../lib/editorial/site-content';
 export const prerender=false;
@@ -47,6 +48,7 @@ const isArchived=item.archived_at!==null;
 const hasFields=(editorialFields[kind].length>0||kind==='site')&&!isArchived;
 const canReview=Astro.locals.editorialMember!.role!=='contributor';
 const canManageArchive=canReview;
+const facts=await loadContentFacts(client,item,Astro.url.origin);
 const historyNumber=historyPage(Astro.url.searchParams.get('history'));
 const history=await loadRevisionHistory(client,id,historyNumber);
 const siteCopy=kind==='site'?resolveSiteContent(payload as SiteConfig):undefined;
@@ -57,7 +59,14 @@ const heroOptions=editorialPickerOptions(selectedHeroId?[selectedHeroId]:[],home
 const teaserOptions=editorialPickerOptions(selectedClipId?[selectedClipId]:[],homepageTeaserOptions);
 ---
 <EditorialLayout title={String(payload.name??payload.title??item.stable_id)} description="Make your edit, save a private draft, then send it for review.">
-  <p><span class="status-badge" data-state={item.review_state}>{editorialStatusLabels[item.review_state]??item.review_state}</span> <small> · {editorialKindLabels[kind]} · Revision {item.version}</small></p>
+  <p><span class="status-badge" data-state={item.review_state}>{editorialStatusLabels[item.review_state]??item.review_state}</span> <small> · {editorialKindLabels[kind]}</small></p>
+  <dl class="content-facts" aria-label="Content status">
+    <div><dt>Draft</dt><dd>{facts.draft}</dd></div>
+    <div><dt>Review</dt><dd>{facts.review}</dd></div>
+    <div><dt>Approved</dt><dd>{facts.approved}</dd></div>
+    <div><dt>Live</dt><dd>{facts.live}</dd></div>
+  </dl>
+  {facts.draftAhead&&<p class="notice">The draft has changes that are not approved yet. Approving applies only to the saved revision, never to unsaved form fields.</p>}
   {isArchived?<p class="notice">Archived content is read-only and excluded from active references.</p>:<p class="notice">Draft only. Approval records an editorial decision; publishing is not connected yet.</p>}
   {Astro.url.searchParams.has('archived')&&<p role="status">Content archived.</p>}
   {Astro.url.searchParams.has('unarchived')&&<p role="status">Content restored to the active library as a private record.</p>}
@@ -106,3 +115,9 @@ const teaserOptions=editorialPickerOptions(selectedClipId?[selectedClipId]:[],ho
   document.querySelectorAll<HTMLFormElement>('[data-archive-confirm]').forEach(form=>form.addEventListener('submit',event=>{if(!window.confirm(form.dataset.archiveConfirm??'Continue with this archive action?'))event.preventDefault();}));
 </script>
 
+<style>
+  .content-facts { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; margin:12px 0 20px; }
+  .content-facts div { padding:12px 14px; border:1px solid var(--line); border-radius:10px; background:var(--surface); }
+  .content-facts dt { font-size:.75rem; text-transform:uppercase; letter-spacing:.06em; opacity:.7; }
+  .content-facts dd { margin:4px 0 0; }
+</style>
