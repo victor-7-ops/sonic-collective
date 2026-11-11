@@ -61,6 +61,8 @@ This section supersedes older checkpoint notes below. The CMS is not complete an
 
 - Library image archive (Nov 11, committed locally, NOT pushed until migration 20261111070000_editorial_asset_archive.sql is applied to hosted Supabase): RPC archive_editorial_asset (editor/owner or uploader; refuses while any item current draft/approved revision or any prepared release references the image; same authenticator rule; files stay in private storage); Media page Archive image button; assetArchiveError messages. The two test photos (Upload test photo one/two) are still referenced by the archived upload-check-artist draft; to free them: unarchive that record, remove its 2 gallery photos, save, archive again, then archive the images.
 
+- Batch (Nov 11): D5 previously-live label (previouslyLive in live-release.ts), G5 gallery reorder (public/gallery-reorder.js: drag handle + Earlier/Later buttons renumber the position inputs; verified in a local harness incl. DragEvents). HEIC not feasible server-side (sharp reads only AVIF-flavour heif) and not needed (iOS converts to JPEG for a JPEG/PNG/WebP picker). D3 image-metadata cleanup deliberately NOT done: the 162-byte EXIF stub holds only an orientation tag, and regenerating 100+ files adds churn for no information gain.
+
 ## Historical checkpoints
 
 The notes below describe earlier snapshots; their local-only, secret-pending and test-count statements are superseded above.

@@ -5,7 +5,7 @@ import {prepareEditorialRelease} from '../../../lib/editorial/release-server';
 import {mfaRequirementUnmet} from '../../../lib/editorial/mfa';
 import {readLiveRelease,releaseStatus} from '../../../lib/editorial/release-marker';
 import {fetchProductionBuilds,redeployProduction,summarizeBuilds} from '../../../lib/editorial/deployments';
-import {latestLiveChoice} from '../../../lib/editorial/live-release';
+import {latestLiveChoice,previouslyLive} from '../../../lib/editorial/live-release';
 import {isReleaseId} from '../../../lib/editorial/release-build';
 export const prerender=false;
 const member=Astro.locals.editorialMember!;
@@ -46,6 +46,8 @@ const live=await readLiveRelease(Astro.url.origin);
 const chosenParam=Astro.url.searchParams.get('chosen');
 let choice=null;let choiceError=false;
 try { choice=await latestLiveChoice(client); } catch { choiceError=true; }
+const choiceHistory=await client.from('editorial_live_releases').select('release_id,set_at').order('id',{ascending:false}).limit(50);
+const wasLive=previouslyLive(choiceHistory.data??[],live.state==='release'?live.marker.releaseId:null);
 const buildSummary=summarizeBuilds(await fetchProductionBuilds(deploymentConfig),live.state==='unknown'?null:live.marker.commit);
 ---
 <EditorialLayout title="Release snapshots" description="Create an immutable snapshot of the currently approved editorial content.">
@@ -64,7 +66,7 @@ const buildSummary=summarizeBuilds(await fetchProductionBuilds(deploymentConfig)
     <form method="post"><input type="hidden" name="action" value="prepare" /><input type="hidden" name="requestId" value={requestId} /><button>Prepare release snapshot</button></form>
   </section>
   <section class="panel" aria-labelledby="release-history"><h2 id="release-history">Recent snapshots</h2>
-    {releases.error?<p class="notice error" role="alert">Release history could not be loaded.</p>:releases.data.length===0?<p>No release snapshots have been prepared.</p>:<div class="table-scroll"><table><thead><tr><th scope="col">Release ID</th><th scope="col">Prepared</th><th scope="col">Status</th><th scope="col">Artifact</th>{member.role==='owner'&&<th scope="col">Go live</th>}</tr></thead><tbody>{releases.data.map(release=><tr><td><code>{release.id}</code></td><td><time datetime={release.created_at}>{new Date(release.created_at).toISOString().replace('T',' ').slice(0,16)} UTC</time></td><td>{releaseStatus(release.id,undefined,live)==='live'?'Live':'Prepared, not live'}</td><td><a href={`/admin/releases/${release.id}.json/`}>Download validated JSON</a></td>{member.role==='owner'&&<td>{releaseStatus(release.id,undefined,live)==='live'?<small>Already live</small>:<form method="post" onsubmit="return confirm('Make this release live? Production will rebuild from it.')"><input type="hidden" name="action" value="go-live" /><input type="hidden" name="releaseId" value={release.id} /><button class="secondary">Make live</button></form>}</td>}</tr>)}</tbody></table></div>}
+    {releases.error?<p class="notice error" role="alert">Release history could not be loaded.</p>:releases.data.length===0?<p>No release snapshots have been prepared.</p>:<div class="table-scroll"><table><thead><tr><th scope="col">Release ID</th><th scope="col">Prepared</th><th scope="col">Status</th><th scope="col">Artifact</th>{member.role==='owner'&&<th scope="col">Go live</th>}</tr></thead><tbody>{releases.data.map(release=><tr><td><code>{release.id}</code></td><td><time datetime={release.created_at}>{new Date(release.created_at).toISOString().replace('T',' ').slice(0,16)} UTC</time></td><td>{releaseStatus(release.id,undefined,live)==='live'?'Live':(wasLive.has(release.id)?`Previously live (${wasLive.get(release.id)!.slice(0,10)})`:'Prepared, not live')}</td><td><a href={`/admin/releases/${release.id}.json/`}>Download validated JSON</a></td>{member.role==='owner'&&<td>{releaseStatus(release.id,undefined,live)==='live'?<small>Already live</small>:<form method="post" onsubmit="return confirm('Make this release live? Production will rebuild from it.')"><input type="hidden" name="action" value="go-live" /><input type="hidden" name="releaseId" value={release.id} /><button class="secondary">Make live</button></form>}</td>}</tr>)}</tbody></table></div>}
   </section>
 </EditorialLayout>
 

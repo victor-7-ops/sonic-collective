@@ -171,6 +171,7 @@ const teaserOptions=editorialPickerOptions(selectedClipId?[selectedClipId]:[],ho
         <button type="button" class="secondary" data-upload-start hidden>Upload photos</button>
         <p data-upload-status aria-live="polite"></p>
       </div>
+      <script is:inline src="/gallery-reorder.js" defer></script>
       <script is:inline src="/photo-shrink.js" defer></script>
       <script is:inline src="/gallery-upload.js" defer></script>
     </fieldset>}
@@ -210,6 +211,9 @@ const teaserOptions=editorialPickerOptions(selectedClipId?[selectedClipId]:[],ho
   .gallery-editor__row img, .gallery-editor__nothumb { width:96px; height:72px; object-fit:cover; border-radius:8px; background:var(--surface-muted); font-size:.75rem; display:flex; align-items:center; justify-content:center; }
   .gallery-editor__add { margin-top:14px; padding-top:12px; border-top:2px solid var(--line); display:grid; gap:10px; }
   .gallery-editor__remove { white-space:nowrap; }
+  .gallery-editor__move { grid-column:1 / -1; display:flex; gap:8px; align-items:center; }
+  .gallery-editor__handle { cursor:grab; padding:6px 10px; border:1px dashed var(--line); border-radius:8px; font-size:.85rem; user-select:none; }
+  .gallery-editor__dragging { opacity:.5; }
   .gallery-editor__library, .gallery-editor__upload { margin-top:14px; padding-top:12px; border-top:2px solid var(--line); display:grid; gap:10px; }
   .gallery-editor__candidate { grid-template-columns:96px auto repeat(2,minmax(0,1fr)); }
   :global(.gallery-upload__row) { display:flex; gap:10px; align-items:end; flex-wrap:wrap; }

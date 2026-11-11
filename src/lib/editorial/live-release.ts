@@ -27,3 +27,14 @@ export async function resolveReleaseId(env:Record<string,string|undefined>,clien
   }
   return fromEnv?{id:fromEnv,source:'environment'}:null;
 }
+
+/** For each release that was chosen live before (and is not the current choice), when it was last chosen. */
+export function previouslyLive(history:{release_id:string;set_at:string}[],currentReleaseId:string|null):Map<string,string> {
+  const result=new Map<string,string>();
+  for(const row of history) {
+    if(row.release_id===currentReleaseId) continue;
+    const existing=result.get(row.release_id);
+    if(!existing||row.set_at>existing) result.set(row.release_id,row.set_at);
+  }
+  return result;
+}

@@ -23,8 +23,8 @@ Artists and performances can each have a photo gallery (max 24, each photo with 
 | G1 | **[DEFERRED]** Add real photos to a real artist, approve, prepare a release, Make live | You (Claude verifies) | 20 min | Photos show in the artist page grid with working enlarge viewer on the public site; the 800px grid copies load, not the 2400px originals. Not yet exercised live: a gallery going through a release |
 | G2 | **[DONE]** Resize photos in the browser on the Media page form too | Claude | done | Uploads over 4.5 MB from Media no longer fail on Vercel (only the gallery uploader shrinks today) |
 | G3 | **[DONE]** Archive library images (Media page; files are kept, nothing deleted). Verified live: refused while in use, allowed after removal | Claude | done |  Unused test photos can be removed; guards refuse archiving an image still referenced by approved content or a release |
-| G4 | HEIC (iPhone) photos | Claude | 1-2 h | HEIC is converted in the browser or on the server; today the uploader asks for JPEG, PNG or WebP |
-| G5 | Drag to reorder, bulk captions | Claude | 2-3 h | Optional polish; position numbers work today |
+| G4 | **[NOT NEEDED]** HEIC (iPhone) photos | n/a | n/a | The server image library here reads only the AVIF flavour of HEIF, not HEIC. The upload boxes accept JPEG, PNG and WebP only, and iPhones convert to JPEG automatically in that case. Revisit only if a photo ever arrives as HEIC |
+| G5 | **[DONE, drag + buttons]** Drag to reorder (handle plus Earlier/Later buttons, keyboard friendly). Bulk captions not built | done | Position numbers remain the source of truth |
 
 Test photos (Upload test photo one / two) are archived and no longer selectable; their private files are kept in storage. Archived throwaway records (not visible to visitors): acceptance-test-artist, guard-check-artist, picker-check-artist, gallery-check-artist, upload-check-artist.
 
@@ -54,7 +54,7 @@ Test photos (Upload test photo one / two) are archived and no longer selectable;
 | D2 | **[DONE]** Library picker pages 24 at a time; every image stays selectable (search not built) | done |
 | D3 | Clean embedded metadata: 102 older images carry an empty EXIF stub; videos carry the ffmpeg encoder tag | 1–2 h; videos need ffmpeg installed |
 | D4 | Email or notify on a failed production build | 2 h; needs a notification channel from you |
-| D5 | Show which release a pending Make live replaces, and a one-click "previous release" revert | 2 h |
+| D5 | **[DONE]** Releases page marks releases that were live before ("Previously live (date)"); every release already has a Make live button, so reverting is one click | done |
 | D6 | Remove AI-tool mentions from `docs/*.md` if the repository will ever be public | 30 min |
 
 ## E. Known limits (accepted, no action unless needed)

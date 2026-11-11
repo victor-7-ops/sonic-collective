@@ -91,3 +91,19 @@ test('redeploy targets the newest finished production build and reports failures
   const odd=await redeployProduction(config,fetcher([build('dpl_ready','ready')],{ok:true,status:200,body:{}})) as {reason:string};
   assert.match(odd.reason,/did not return/);
 });
+
+test('releases that were live before are identified, newest choice first, excluding the current one',async()=>{
+  const {previouslyLive}=await import('../src/lib/editorial/live-release');
+  const history=[
+    {release_id:r2,set_at:'2026-11-11T05:00:00Z'},
+    {release_id:r1,set_at:'2026-11-11T04:00:00Z'},
+    {release_id:r2,set_at:'2026-11-11T03:00:00Z'},
+    {release_id:uuid(13),set_at:'2026-11-10T01:00:00Z'},
+  ];
+  const result=previouslyLive(history,r2);
+  assert.deepEqual([...result.keys()].sort(),[r1,uuid(13)].sort());
+  assert.equal(result.get(r1),'2026-11-11T04:00:00Z');
+  assert.equal(result.has(r2),false);
+  assert.equal(previouslyLive(history,null).get(r2),'2026-11-11T05:00:00Z');
+  assert.equal(previouslyLive([],r1).size,0);
+});
