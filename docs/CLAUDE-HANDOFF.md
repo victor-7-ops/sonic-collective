@@ -45,6 +45,8 @@ This section supersedes older checkpoint notes below. The CMS is not complete an
 
 - Backup rehearsal (Nov 11): npm run cms:backup (read-only export of 10 tables + image files to ignored .local/backups) and npm run cms:restore-rehearsal (scratch-DB restore + exact digest, integrity and release-validity checks). Passed on the live project. See docs/CMS-BACKUP.md. Auth accounts are not included; restoring into a real second Supabase project is manual and untested. Vercel rehearsal: branch builds from release ea664a7a succeeded (READY, marker shows release) and a nonexistent release id failed the build (ERROR), production untouched; two stray branch-scoped preview CMS_RELEASE_ID vars remain on Vercel (harmless, delete in dashboard).
 
+- Build status (Nov 11): /admin/releases/ shows Production builds from the Vercel API (src/lib/editorial/deployments.ts) using Production-only env VERCEL_API_TOKEN (Sensitive) plus plain DEPLOYMENTS_PROJECT_ID and DEPLOYMENTS_TEAM_ID. A failed newest build is shown as failed with the site unchanged; live is confirmed only when the newest ready build commit matches the live marker commit. Missing config or API errors show unconfigured/unavailable, never success. The token can deploy/delete across the whole team; rotate it if exposed.
+
 ## Historical checkpoints
 
 The notes below describe earlier snapshots; their local-only, secret-pending and test-count statements are superseded above.
