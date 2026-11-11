@@ -12,6 +12,20 @@ Owner column: **You** = needs your account or a decision. **Claude** = can be bu
 | A2 | Invite one real contributor and have them draft and submit something | You | 30 min | Contributor sees only their own items, cannot approve or request changes, and an editor can review their draft |
 | A3 | Make one real content edit end to end (edit, approve, release, Make live) | You | 15 min | Public page shows the change; history, feedback and status boxes all read correctly |
 
+## A+. Galleries (built Nov 11; verify with real photos)
+
+Artists and performances can each have a photo gallery (max 24, each photo with a required description and optional caption). Built and tested on production with throwaway records: data rules, public grid + enlarge viewer, editor (add, reorder, caption, remove), and multi-photo upload inside the editor with in-browser shrinking.
+
+| # | Item | Owner | Effort | Done when |
+|---|---|---|---|---|
+| G1 | Add real photos to a real artist, approve, prepare a release, Make live | You (Claude verifies) | 20 min | Photos show in the artist page grid with working enlarge viewer on the public site; the 800px grid copies load, not the 2400px originals. Not yet exercised live: a gallery going through a release |
+| G2 | Resize photos in the browser on the Media page form too | Claude | 1 h | Uploads over 4.5 MB from Media no longer fail on Vercel (only the gallery uploader shrinks today) |
+| G3 | Archive or delete library images (Media page) | Claude | 2 h | Unused test photos can be removed; guards refuse archiving an image still referenced by approved content or a release |
+| G4 | HEIC (iPhone) photos | Claude | 1-2 h | HEIC is converted in the browser or on the server; today the uploader asks for JPEG, PNG or WebP |
+| G5 | Drag to reorder, bulk captions | Claude | 2-3 h | Optional polish; position numbers work today |
+
+Left in the private library from testing: two photos named Upload test photo one / two (no delete button yet, see G3). Archived throwaway records (not visible to visitors): acceptance-test-artist, guard-check-artist, picker-check-artist, gallery-check-artist, upload-check-artist.
+
 ## B. Decisions only you can make
 
 | # | Decision | Notes |
@@ -45,7 +59,7 @@ Owner column: **You** = needs your account or a decision. **Claude** = can be bu
 
 - Login accounts, Vercel/GitHub settings and the YouTube snapshot are outside the CMS backup.
 - Private library images show in previews only as references, not pixels, until a release is live.
-- The archived test artists (`acceptance-test-artist`, `guard-check-artist`, `picker-check-artist`) remain in the database, archived and invisible to visitors.
+- The archived test artists (`acceptance-test-artist`, `guard-check-artist`, `picker-check-artist`, `gallery-check-artist`, `upload-check-artist`) remain in the database, archived and invisible to visitors.
 - `CMS_RELEASE_ID` in Vercel is now only a fallback; the Make live choice in the database wins.
 - Claude cannot edit or delete Vercel environment variables (blocked by the tool permissions); you do that in the dashboard.
 
