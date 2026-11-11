@@ -3,6 +3,7 @@ import EditorialLayout from '../../../layouts/EditorialLayout.astro';
 import {readEditorialForm} from '../../../lib/editorial/access';
 import {prepareEditorialRelease} from '../../../lib/editorial/release-server';
 import {mfaRequirementUnmet} from '../../../lib/editorial/mfa';
+import {readLiveRelease,releaseStatus} from '../../../lib/editorial/release-marker';
 export const prerender=false;
 const member=Astro.locals.editorialMember!;
 if(member.role==='contributor') return new Response('Only active editors and owners can prepare release snapshots.',{status:403});
@@ -27,9 +28,11 @@ if(Astro.request.method==='POST') {
 const releases=await client.from('editorial_releases').select('id,created_at').order('created_at',{ascending:false}).limit(50);
 if(releases.error) Astro.response.status=503;
 const prepared=Astro.url.searchParams.get('prepared');
+const live=await readLiveRelease(Astro.url.origin);
 ---
 <EditorialLayout title="Release snapshots" description="Create an immutable snapshot of the currently approved editorial content.">
-  <p class="notice">Preparing a snapshot does not publish or deploy the site. Deployment remains a separate, unconnected step.</p>
+  <p class="notice">Preparing a snapshot does not publish or deploy the site. A release goes live only when the production build is pointed at it (CMS_RELEASE_ID) and redeployed.</p>
+  <p role="status"><strong>Live now:</strong> {live.state==='release'?<>release <code>{live.marker.releaseId}</code> <small>(built {new Date(live.marker.builtAt).toISOString().replace('T',' ').slice(0,16)} UTC)</small></>:live.state==='repository'?<>repository content, no CMS release <small>(built {new Date(live.marker.builtAt).toISOString().replace('T',' ').slice(0,16)} UTC)</small></>:<>unknown — the site did not report a release marker</>}</p>
   {prepared&&<p class="notice" role="status">Release snapshot prepared. Download the validated artifact below.</p>}
   {message&&<p class="notice error" role="alert">{message} <a href="/admin/security/">Account security</a></p>}
   <section class="panel" aria-labelledby="prepare-release"><h2 id="prepare-release">Prepare approved snapshot</h2>
@@ -37,7 +40,7 @@ const prepared=Astro.url.searchParams.get('prepared');
     <form method="post"><input type="hidden" name="action" value="prepare" /><input type="hidden" name="requestId" value={requestId} /><button>Prepare release snapshot</button></form>
   </section>
   <section class="panel" aria-labelledby="release-history"><h2 id="release-history">Recent snapshots</h2>
-    {releases.error?<p class="notice error" role="alert">Release history could not be loaded.</p>:releases.data.length===0?<p>No release snapshots have been prepared.</p>:<div class="table-scroll"><table><thead><tr><th scope="col">Release ID</th><th scope="col">Prepared</th><th scope="col">Artifact</th></tr></thead><tbody>{releases.data.map(release=><tr><td><code>{release.id}</code></td><td><time datetime={release.created_at}>{new Date(release.created_at).toISOString().replace('T',' ').slice(0,16)} UTC</time></td><td><a href={`/admin/releases/${release.id}.json/`}>Download validated JSON</a></td></tr>)}</tbody></table></div>}
+    {releases.error?<p class="notice error" role="alert">Release history could not be loaded.</p>:releases.data.length===0?<p>No release snapshots have been prepared.</p>:<div class="table-scroll"><table><thead><tr><th scope="col">Release ID</th><th scope="col">Prepared</th><th scope="col">Status</th><th scope="col">Artifact</th></tr></thead><tbody>{releases.data.map(release=><tr><td><code>{release.id}</code></td><td><time datetime={release.created_at}>{new Date(release.created_at).toISOString().replace('T',' ').slice(0,16)} UTC</time></td><td>{releaseStatus(release.id,undefined,live)==='live'?'Live':'Prepared, not live'}</td><td><a href={`/admin/releases/${release.id}.json/`}>Download validated JSON</a></td></tr>)}</tbody></table></div>}
   </section>
 </EditorialLayout>
 

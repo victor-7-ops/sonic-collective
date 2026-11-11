@@ -13,3 +13,4 @@ dist/
 .dev.vars*
 public/media/cms/
 src/data/cms-media/
+public/release.json

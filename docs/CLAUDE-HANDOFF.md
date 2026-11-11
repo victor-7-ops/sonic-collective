@@ -35,6 +35,8 @@ This section supersedes older checkpoint notes below. The CMS is not complete an
 
 - Rehearsal (Nov 11): prepared release ea664a7a-cc56-495c-9c64-38722ad05184 on production (no authenticator needed), then ran scripts/build-with-release.ts locally with CMS_RELEASE_ID. Build passed all validators (111 pages) and all 253 output files were byte-identical to the repository-content build, so cutting production over to that release would not change the public site. Production CMS_RELEASE_ID is still UNSET; nothing was deployed from the release.
 
+- Release status (Nov 11): every build:release build writes public/release.json (source repository|release, releaseId, contentHash, commit, builtAt). /admin/releases/ reads the deployed marker and shows Live now plus Live/Prepared per release; any read failure shows unknown/prepared, never live. YouTube hourly job: it only validates with a repo-content build and commits the snapshot; the resulting Vercel build reads the same CMS_RELEASE_ID from Vercel env, so job and release cannot diverge, and a bad combination fails the Vercel build closed (previous deployment keeps serving). Not provided: Vercel build failure surfaced inside the admin (needs a Vercel API token), rollback rehearsal.
+
 ## Historical checkpoints
 
 The notes below describe earlier snapshots; their local-only, secret-pending and test-count statements are superseded above.
