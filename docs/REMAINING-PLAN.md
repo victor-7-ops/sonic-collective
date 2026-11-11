@@ -61,7 +61,7 @@ Left in the private library from testing: two photos named Upload test photo one
 
 - Login accounts, Vercel/GitHub settings and the YouTube snapshot are outside the CMS backup.
 - Private library images show in previews only as references, not pixels, until a release is live.
-- The archived test artists (`acceptance-test-artist`, `guard-check-artist`, `picker-check-artist`, `gallery-check-artist`, `upload-check-artist`) remain in the database, archived and invisible to visitors.
+- The archived test artists (`acceptance-test-artist`, `guard-check-artist`, `picker-check-artist`, `gallery-check-artist`, `upload-check-artist`, `restore-check-artist`) remain in the database, archived and invisible to visitors.
 - `CMS_RELEASE_ID` in Vercel is now only a fallback; the Make live choice in the database wins.
 - Claude cannot edit or delete Vercel environment variables (blocked by the tool permissions); you do that in the dashboard.
 
