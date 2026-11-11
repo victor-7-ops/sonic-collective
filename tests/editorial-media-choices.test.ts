@@ -65,3 +65,19 @@ test('saving refuses an unavailable image before reaching the database',async()=
   assert.ok('redirect' in await applyContentAction(client,item,'artist',current,form(library),{media:choices}));
   assert.deepEqual(calls,['save_editorial_content']);
 });
+
+test('a refused save returns what was typed so the editor can restore it, without internal fields',async()=>{
+  const {submittedValues}=await import('../src/lib/editorial/actions');
+  assert.deepEqual(submittedValues(new URLSearchParams([['action','save'],['version','3'],['revision','r'],['requestId','q'],['name','Typed name'],['gallery.0.alt','Alt'],['artistIds','a'],['artistIds','b']])),
+    [['name','Typed name'],['gallery.0.alt','Alt'],['artistIds','a'],['artistIds','b']]);
+  const client={rpc:async()=>({data:'rev',error:null})} as never;
+  const item={id:'11111111-1111-4111-8111-111111111111',stable_id:'a',archived_at:null,version:1} as never;
+  const current={id:'a',name:'A',aliases:[],kind:'solo',focalPoint:'50% 50%',portraitLayout:'portrait',links:[]};
+  const bad=await applyContentAction(client,item,'artist',current,new URLSearchParams({action:'save',version:'1',name:'My new name',kind:'solo',focalPoint:'50% 50%',portraitLayout:'portrait',portrait:'/media/artists/nope'}),{media:choices});
+  assert.ok('message' in bad);
+  assert.ok(bad.submitted.some(([key,value])=>key==='name'&&value==='My new name'));
+  assert.equal(bad.submitted.some(([key])=>key==='version'),false);
+  // Only the editor form is restored: a refused review action returns nothing to restore.
+  const review=await applyContentAction(client,item,'artist',current,new URLSearchParams({action:'request-changes',revision:'22222222-2222-4222-8222-222222222222',comment:''}));
+  assert.ok('message' in review);assert.deepEqual(review.submitted,[]);
+});

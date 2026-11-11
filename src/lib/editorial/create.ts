@@ -33,13 +33,27 @@ export function createEditorialPayload(kind:string,form:URLSearchParams,choices:
   }
 }
 
-/** `/media/cms/<id>` choices for ready media-library images the signed-in member may read. */
-export async function readyLibraryChoices(client:SupabaseClient<Database>):Promise<{path:string;label:string;alt:string}[]> {
-  const result=await client.from('editorial_assets').select('id,alt_text').eq('status','ready').order('created_at',{ascending:false}).limit(50);
-  return result.error?[]:(result.data??[]).map(row=>({path:cmsAssetBase(row.id),label:`Library image: ${row.alt_text.slice(0,60)}`,alt:row.alt_text}));
+export const libraryPageSize=24;
+const libraryIdLimit=1000;
+
+/** One page of ready media-library images the signed-in member may read, newest first, with the total count. */
+export async function readyLibraryChoices(client:SupabaseClient<Database>,page=1):Promise<{items:{path:string;label:string;alt:string}[];total:number;page:number;pages:number}> {
+  const safePage=Number.isSafeInteger(page)&&page>=1&&page<=1000?page:1;
+  const from=(safePage-1)*libraryPageSize;
+  const result=await client.from('editorial_assets').select('id,alt_text',{count:'exact'}).eq('status','ready')
+    .order('created_at',{ascending:false}).range(from,from+libraryPageSize-1);
+  if(result.error) return {items:[],total:0,page:safePage,pages:1};
+  const total=result.count??(result.data??[]).length;
+  return {
+    items:(result.data??[]).map(row=>({path:cmsAssetBase(row.id),label:`Library image: ${row.alt_text.slice(0,60)}`,alt:row.alt_text})),
+    total,page:safePage,pages:Math.max(1,Math.ceil(total/libraryPageSize)),
+  };
 }
+
+/** Every ready library image this member may use (up to 1000), for validating a choice; not for display. */
 export async function readyLibraryPaths(client:SupabaseClient<Database>):Promise<string[]> {
-  return (await readyLibraryChoices(client)).map(choice=>choice.path);
+  const result=await client.from('editorial_assets').select('id').eq('status','ready').order('created_at',{ascending:false}).range(0,libraryIdLimit-1);
+  return result.error?[]:(result.data??[]).map(row=>cmsAssetBase(row.id));
 }
 
 export async function saveNewEditorialDraft(client:SupabaseClient<Database>,kind:EditorialKind,id:string,payload:Json) {

@@ -14,7 +14,7 @@ import { loadReviewFeedback } from '../../../lib/editorial/comments';
 import mediaManifest from '../../../data/media-manifest.json';
 import { mediaManifestEntrySchema } from '../../../lib/schemas';
 import { mediaChoicesFrom,type MediaChoices } from '../../../lib/editorial/media-choices';
-import { readyLibraryChoices } from '../../../lib/editorial/create';
+import { libraryPageSize,readyLibraryChoices,readyLibraryPaths } from '../../../lib/editorial/create';
 import { galleryThumbnails } from '../../../lib/editorial/gallery-previews';
 import { editorialAdminClient } from '../../../lib/editorial/server';
 import { maxGalleryImages } from '../../../lib/schemas';
@@ -35,20 +35,25 @@ const revisionResult=await client.from('content_revisions').select('payload').eq
 if(revisionResult.error) return new Response('The current revision could not be loaded.',{status:503});
 let payload=revisionResult.data.payload as Record<string,unknown>;
 let message='';let conflict=false;
+let submitted:[string,string][]=[];
 let fullChoices:string[]=[];
 // Artwork choices for artists and performances: packaged images plus the library images this member may use.
 let mediaChoices:MediaChoices|undefined;
 let mediaOptions:{path:string;label:string}[]=[];
 let addOptions:{path:string;label:string}[]=[];
 let libraryPhotos:{path:string;label:string;alt:string}[]=[];
+let library:{total:number;page:number;pages:number}={total:0,page:1,pages:1};
+const libraryPage=Number(Astro.url.searchParams.get('library'))||1;
 if(kind==='artist'||kind==='performance') {
   const packaged=Object.keys(mediaManifest).filter(path=>mediaManifestEntrySchema.safeParse(mediaManifest[path as keyof typeof mediaManifest]).success);
-  const library=await readyLibraryChoices(client);
-  libraryPhotos=library;
-  mediaChoices=mediaChoicesFrom(packaged,library.map(choice=>choice.path));
+  // Validation uses every library image the member may use; the screen shows one page of them.
+  const [allLibraryPaths,shown]=await Promise.all([readyLibraryPaths(client),readyLibraryChoices(client,libraryPage)]);
+  library=shown;
+  libraryPhotos=shown.items;
+  mediaChoices=mediaChoicesFrom(packaged,allLibraryPaths);
   const prefix=kind==='artist'?'/media/artists/':'/media/performances/';
-  addOptions=[...packaged.filter(path=>path.startsWith('/media/artists/')||path.startsWith('/media/performances/')).map(path=>({path,label:path.slice('/media/'.length)})),...library];
-  mediaOptions=[...packaged.filter(path=>path.startsWith(prefix)).map(path=>({path,label:path.slice(prefix.length)})),...library];
+  addOptions=[...packaged.filter(path=>path.startsWith('/media/artists/')||path.startsWith('/media/performances/')).map(path=>({path,label:path.slice('/media/'.length)})),...shown.items];
+  mediaOptions=[...packaged.filter(path=>path.startsWith(prefix)).map(path=>({path,label:path.slice(prefix.length)})),...shown.items];
 }
 if(kind==='youtube-review') {
   const [reviews,performanceIds]=await Promise.all([loadReviewRows(client),loadPerformanceVideoIds(client)]);
@@ -59,7 +64,7 @@ if(Astro.request.method==='POST') {
   try {
     const result=await applyContentAction(client,item,kind,payload,await readEditorialForm(Astro.request),{fullYoutubeIds:fullChoices,media:mediaChoices});
     if('redirect' in result) return Astro.redirect(result.redirect,303);
-    payload=result.payload;message=result.message;conflict=result.status===409;
+    payload=result.payload;message=result.message;conflict=result.status===409;submitted=result.submitted;
     Astro.response.status=result.status;
   } catch {message='The form could not be read. Reload and try again.';Astro.response.status=400;}
 }
@@ -156,6 +161,7 @@ const teaserOptions=editorialPickerOptions(selectedClipId?[selectedClipId]:[],ho
           <label>Description<input name={`gallery.add.${index}.alt`} value={photo.alt} maxlength="300" /></label>
           <label>Caption (optional)<input name={`gallery.add.${index}.caption`} maxlength="300" /></label>
         </div>)}
+        {library.pages>1&&<p class="gallery-editor__paging">Library photos {(library.page-1)*libraryPageSize+1}–{Math.min(library.page*libraryPageSize,library.total)} of {library.total}{library.page>1&&<> · <a href={`?library=${library.page-1}#gallery-library`}>← Newer</a></>}{library.page<library.pages&&<> · <a href={`?library=${library.page+1}#gallery-library`}>Older →</a></>}<br /><small>Paging reloads the page; save your edits first.</small></p>}
       </div>}
       <div class="gallery-editor__upload" data-gallery-upload>
         <h3>Upload new photos</h3>
@@ -188,6 +194,7 @@ const teaserOptions=editorialPickerOptions(selectedClipId?[selectedClipId]:[],ho
     </li>)}</ol>}
     {!history.error&&(historyNumber>1||history.hasMore)&&<p>{historyNumber>1&&<a href={`?history=${historyNumber-1}#revision-history`}>← Newer revisions</a>}{historyNumber>1&&history.hasMore&&' · '}{history.hasMore&&<a href={`?history=${historyNumber+1}#revision-history`}>Older revisions →</a>}</p>}
   </section>
+  {submitted.length>0&&<><script type="application/json" id="submitted-values" set:html={JSON.stringify(submitted).replace(/</g,'\\u003c')}></script><script is:inline src="/restore-form.js" defer></script></>}
 </EditorialLayout>
 <script>
   const form=document.querySelector<HTMLFormElement>('[data-editorial-form]');

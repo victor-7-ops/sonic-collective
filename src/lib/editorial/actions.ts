@@ -7,7 +7,12 @@ import type {MediaChoices} from './media-choices';
 import {checkFullMapping} from './inbox';
 import {mfaRequirementUnmet} from './mfa';
 
-type Outcome = {redirect:string} | {payload:Record<string,unknown>;message:string;status:400|409};
+type Outcome = {redirect:string} | {payload:Record<string,unknown>;message:string;status:400|409;submitted:[string,string][]};
+
+/** What the editor submitted, returned with a refused save so the page can put it back in the form. */
+export function submittedValues(form:URLSearchParams):[string,string][] {
+  return [...form.entries()].filter(([key])=>!['action','version','revision','requestId'].includes(key));
+}
 export async function applyContentAction(
   client:SupabaseClient<Database>,
   item:Tables<'content_items'>,
@@ -78,6 +83,6 @@ export async function applyContentAction(
     return {redirect:editorPath};
   } catch(error) {
     const message=error instanceof ZodError?error.issues.map(issue=>`${issue.path.join('.')}: ${issue.message}`).join('; '):error instanceof Error?error.message:'Unable to save.';
-    return {payload,message,status};
+    return {payload,message,status,submitted:form.get('action')==='save'?submittedValues(form):[]};
   }
 }
