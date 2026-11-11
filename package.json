@@ -17,6 +17,8 @@
     "youtube:hydrate": "tsx scripts/hydrate-youtube-snapshot.ts",
     "cms:seed": "tsx scripts/prepare-editorial-seed.ts",
     "cms:materialize": "tsx scripts/materialize-release-assets.ts",
+    "cms:backup": "tsx --env-file=.env.local scripts/backup-editorial.ts",
+    "cms:restore-rehearsal": "tsx scripts/restore-rehearsal.ts",
     "validate:output": "tsx scripts/validate-build.ts",
     "output:validate": "node scripts/validate-output.mjs",
     "test": "tsx --test tests/*.test.ts"

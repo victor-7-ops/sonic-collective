@@ -43,6 +43,8 @@ This section supersedes older checkpoint notes below. The CMS is not complete an
 
 - Shared assembler (Nov 11): assembleContent() in releases.ts is the single validator/ordering for releases AND previews. Preview route now builds from CMS-approved records (read with the server credential after access checks) with the selected revision overlaid, instead of repository JSON; previewFromRecords() in preview.ts, previewCatalog() remains a repo-based wrapper for tests. Packet 5 is complete except live verification with real draft edits.
 
+- Backup rehearsal (Nov 11): npm run cms:backup (read-only export of 10 tables + image files to ignored .local/backups) and npm run cms:restore-rehearsal (scratch-DB restore + exact digest, integrity and release-validity checks). Passed on the live project. See docs/CMS-BACKUP.md. Auth accounts are not included; restoring into a real second Supabase project is manual and untested. Vercel rehearsal: branch builds from release ea664a7a succeeded (READY, marker shows release) and a nonexistent release id failed the build (ERROR), production untouched; two stray branch-scoped preview CMS_RELEASE_ID vars remain on Vercel (harmless, delete in dashboard).
+
 ## Historical checkpoints
 
 The notes below describe earlier snapshots; their local-only, secret-pending and test-count statements are superseded above.
