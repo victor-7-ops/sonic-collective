@@ -1,0 +1,47 @@
+---
+import EditorialLayout from '../../layouts/EditorialLayout.astro';
+import {editorialAdminClient} from '../../lib/editorial/server';
+import {editorialKindLabels} from '../../lib/editorial/content';
+import {activityFilter,activityTypes,buildActivity} from '../../lib/editorial/activity';
+export const prerender=false;
+const client=Astro.locals.editorialClient!;
+const member=Astro.locals.editorialMember!;
+const filter=activityFilter(Astro.url.searchParams.get('type'));
+// Row-level security decides what each person may read: contributors see only activity on records they can open.
+const [audit,releases,live,team]=await Promise.all([
+  client.from('editorial_audit').select('id,actor_id,item_id,action,created_at').order('id',{ascending:false}).limit(100),
+  client.from('editorial_releases').select('id,created_by,created_at').order('created_at',{ascending:false}).limit(50),
+  client.from('editorial_live_releases').select('id,release_id,set_by,set_at').order('id',{ascending:false}).limit(50),
+  client.from('team_audit').select('id,actor_id,target_user_id,item_id,action,old_role,new_role,old_active,new_active,created_at').order('id',{ascending:false}).limit(50),
+]);
+const failed=[audit,releases,live,team].some(result=>result.error);
+const itemIds=[...new Set([...(audit.data??[]).map(row=>row.item_id),...(team.data??[]).map(row=>row.item_id)].filter((id):id is string=>!!id))];
+const items=itemIds.length?await client.from('content_items').select('id,kind,stable_id').in('id',itemIds):{data:[],error:null};
+const itemLabels=new Map((items.data??[]).map(item=>[item.id,{label:`${editorialKindLabels[item.kind]??item.kind} ${item.stable_id}`,href:`/admin/content/${item.id}/`}]));
+// Owners and editors see who did what by email; contributors see only their own name and "a team member".
+const actorIds=[...new Set([...(audit.data??[]).map(row=>row.actor_id),...(releases.data??[]).map(row=>row.created_by),...(live.data??[]).map(row=>row.set_by),...(team.data??[]).flatMap(row=>[row.actor_id,row.target_user_id])].filter((id):id is string=>!!id))];
+const admin=member.role!=='contributor'?editorialAdminClient():null;
+const names=new Map<string,string>();
+await Promise.all(actorIds.map(async id=>{
+  if(id===member.userId) {names.set(id,'You');return;}
+  const found=admin?await admin.auth.admin.getUserById(id):null;
+  names.set(id,found?.data.user?.email??'A team member');
+}));
+const events=buildActivity(
+  {audit:audit.data??[],releases:releases.data??[],live:live.data??[],team:team.data??[]},
+  {actor:id=>id?names.get(id)??'A team member':'A team member',item:id=>id?itemLabels.get(id)??null:null},
+  filter,
+);
+const labels:Record<string,string>={all:'Everything',content:'Content',release:'Releases',team:'Team'};
+const when=(value:string)=>new Date(value).toISOString().replace('T',' ').slice(0,16)+' UTC';
+---
+<EditorialLayout title="Activity" description="Who changed what, and when. Every action in the studio is recorded permanently.">
+  <p>The latest 100 actions. Records are permanent and cannot be edited or deleted.</p>
+  <nav aria-label="Activity filter"><p>{activityTypes.map(type=><><a href={`/admin/activity/?type=${type}`} aria-current={filter===type?'page':undefined}>{labels[type]}</a>{' '}</>)}</p></nav>
+  {failed&&<p class="notice error" role="alert">Some activity could not be loaded. Reload to try again.</p>}
+  {events.length===0?<p>No activity to show.</p>:<ol class="activity-feed">{events.map(event=><li><time datetime={event.at}>{when(event.at)}</time> · <strong>{event.actor}</strong> {event.href?<a href={event.href}>{event.summary}</a>:event.summary}</li>)}</ol>}
+</EditorialLayout>
+<style>
+  .activity-feed { display:grid; gap:10px; padding-left:20px; }
+  .activity-feed time { opacity:.75; white-space:nowrap; }
+</style>

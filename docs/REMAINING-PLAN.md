@@ -57,6 +57,11 @@ Test photos (Upload test photo one / two) are archived and no longer selectable;
 | D5 | **[DONE]** Releases page marks releases that were live before ("Previously live (date)"); every release already has a Make live button, so reverting is one click | done |
 | D6 | Remove AI-tool mentions from `docs/*.md` if the repository will ever be public | 30 min |
 
+## D+. Built later (done)
+
+- Activity page at /admin/activity/ (who changed what and when).
+- Content library search by artist name or song title, not only technical id.
+
 ## E. Known limits (accepted, no action unless needed)
 
 - Login accounts, Vercel/GitHub settings and the YouTube snapshot are outside the CMS backup.

@@ -11,6 +11,7 @@ const links=[
 ];
 if(member?.role==='owner') links.push({href:'/admin/team/',label:'Team',icon:'M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6 M2 21v-3a6 6 0 0 1 12 0v3 M17 5a3 3 0 0 1 0 6 M18 15a5 5 0 0 1 4 5',active:path==='/admin/team/'});
 if(member&&member.role!=='contributor') links.push({href:'/admin/releases/',label:'Releases',icon:'M12 3v12 M7 8l5-5 5 5 M4 14v7h16v-7',active:path.startsWith('/admin/releases/')});
+if(member) links.push({href:'/admin/activity/',label:'Activity',icon:'M3 12h4l3-8 4 16 3-8h4',active:path==='/admin/activity/'});
 if(member) links.push({href:'/admin/youtube/',label:'YouTube inbox',icon:'M3 6h18v12H3z M10 9l5 3-5 3z',active:path==='/admin/youtube/'});
 if(member) links.push({href:'/admin/media/',label:'Media',icon:'M3 3h18v18H3z M3 17l6-6 5 5 3-3 4 4',active:path==='/admin/media/'});
 ---

@@ -63,6 +63,8 @@ This section supersedes older checkpoint notes below. The CMS is not complete an
 
 - Batch (Nov 11): D5 previously-live label (previouslyLive in live-release.ts), G5 gallery reorder (public/gallery-reorder.js: drag handle + Earlier/Later buttons renumber the position inputs; verified in a local harness incl. DragEvents). HEIC not feasible server-side (sharp reads only AVIF-flavour heif) and not needed (iOS converts to JPEG for a JPEG/PNG/WebP picker). D3 image-metadata cleanup deliberately NOT done: the 162-byte EXIF stub holds only an orientation tag, and regenerating 100+ files adds churn for no information gain.
 
+- Activity + name search (Nov 11): /admin/activity/ (activity.ts buildActivity) merges editorial_audit, prepared releases, live choices and team_audit into a plain-language newest-first feed (latest 100, filter all/content/release/team); RLS decides what each role sees; owners/editors see emails (via the server credential), contributors see only You / A team member. Content library search now matches name or title of the current draft/approved revision as well as stable id (library-search.ts; jsonb ilike via PostgREST or()).
+
 ## Historical checkpoints
 
 The notes below describe earlier snapshots; their local-only, secret-pending and test-count statements are superseded above.

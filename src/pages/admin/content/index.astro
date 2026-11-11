@@ -2,6 +2,7 @@
 import EditorialLayout from '../../../layouts/EditorialLayout.astro';
 import { editorialKindLabels,editorialStatusLabels } from '../../../lib/editorial/content';
 import { editorialLibraryWindow } from '../../../lib/editorial/library';
+import { itemSearchFilter,matchingRevisionIds,searchTerm } from '../../../lib/editorial/library-search';
 export const prerender=false;
 const client=Astro.locals.editorialClient!;
 const params=Astro.url.searchParams;
@@ -14,12 +15,13 @@ const archiveState=['active','archived','all'].includes(params.get('archive')??'
 const requestedPage=Number(params.get('page')??1);
 const page=Number.isSafeInteger(requestedPage)&&requestedPage>0?requestedPage:1;
 const filters={...(kind?{kind}:{}),...(reviewState?{review_state:reviewState}:{})};
-const search=query.replace(/[\\%_]/g,'\\$&');
+const search=searchTerm(query);
+const searchClause=search?itemSearchFilter(search,await matchingRevisionIds(client,search)):'';
 let countQuery=client.from('content_items').select('*',{count:'exact',head:true}).match(filters);
 let itemsQuery=client.from('content_items').select('id,kind,stable_id,review_state,version,updated_at,draft_revision_id,archived_at').match(filters);
 if(archiveState==='active'){countQuery=countQuery.is('archived_at',null);itemsQuery=itemsQuery.is('archived_at',null);}
 if(archiveState==='archived'){countQuery=countQuery.not('archived_at','is',null);itemsQuery=itemsQuery.not('archived_at','is',null);}
-if(search){countQuery=countQuery.ilike('stable_id',`%${search}%`);itemsQuery=itemsQuery.ilike('stable_id',`%${search}%`);}
+if(searchClause){countQuery=countQuery.or(searchClause);itemsQuery=itemsQuery.or(searchClause);}
 const countResult=await countQuery;
 const pageWindow=editorialLibraryWindow(page,countResult.count??0);
 const itemsResult=await itemsQuery.order('updated_at',{ascending:false}).order('id',{ascending:true}).range(pageWindow.from,pageWindow.to);
@@ -40,7 +42,7 @@ const pageUrl=(next:number)=>`/admin/content/?${new URLSearchParams({...(query?{
   {error?<p class="notice error" role="alert">The content library could not be loaded. Try again later.</p>:<>
     <div class="library-intro"><p>{countResult.count??0} accessible records</p><span>Private drafts · Review before publishing</span></div>
     <form method="get" class="library-filters">
-      <label>Search stable ID<input type="search" name="q" value={query} maxlength="80" /></label>
+      <label>Search by name, title or ID<input type="search" name="q" value={query} maxlength="80" /></label>
       <label>Content type<select name="kind"><option value="">All types</option>{kinds.map(value=><option value={value} selected={kind===value}>{editorialKindLabels[value]}</option>)}</select></label>
       <label>Review status<select name="status"><option value="">All statuses</option>{statuses.map(value=><option value={value} selected={reviewState===value}>{editorialStatusLabels[value]}</option>)}</select></label>
       <label>Archive state<select name="archive"><option value="active" selected={archiveState==='active'}>Active</option><option value="archived" selected={archiveState==='archived'}>Archived</option><option value="all" selected={archiveState==='all'}>All</option></select></label>
