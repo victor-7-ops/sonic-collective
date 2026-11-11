@@ -1,4 +1,5 @@
-export type EditorialRole = 'owner' | 'editor' | 'contributor';
+export const editorialRoles = ['owner', 'editor', 'contributor'] as const;
+export type EditorialRole = (typeof editorialRoles)[number];
 
 export function isEditorialPath(path: string): boolean {
   return ['/admin', '/auth', '/preview', '/api/editorial'].some(prefix => path === prefix || path.startsWith(`${prefix}/`));

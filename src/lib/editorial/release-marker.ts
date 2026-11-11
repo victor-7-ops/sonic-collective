@@ -27,7 +27,7 @@ export async function readLiveRelease(origin:string,fetcher:typeof fetch=fetch):
     if(!response.ok) return {state:'unknown'};
     const marker=releaseMarkerSchema.parse(await response.json());
     return {state:marker.source,marker};
-  } catch {return {state:'unknown'};}
+  } catch(error) {console.error('Live release marker could not be read',error);return {state:'unknown'};}
 }
 
 export function releaseStatus(releaseId:string,contentHash:string|undefined,live:LiveRelease):'live'|'prepared' {

@@ -32,7 +32,7 @@ export async function fetchProductionBuilds(config:DeploymentConfig,fetcher:type
     const response=await fetcher(url,{headers:{authorization:`Bearer ${config.token}`},cache:'no-store',signal:AbortSignal.timeout(5000)});
     if(!response.ok) return [];
     return parseBuilds(await response.json());
-  } catch {return [];}
+  } catch(error) {console.error('Vercel deployments lookup failed',error);return [];}
 }
 
 export type BuildSummary={
@@ -70,5 +70,5 @@ export async function redeployProduction(config:DeploymentConfig,fetcher:typeof 
     if(!response.ok) return {ok:false,reason:`Vercel refused the redeploy (HTTP ${response.status}).`};
     const body=await response.json() as {id?:unknown};
     return typeof body.id==='string'?{ok:true,id:body.id}:{ok:false,reason:'Vercel did not return a deployment.'};
-  } catch {return {ok:false,reason:'Vercel could not be reached.'};}
+  } catch(error) {console.error('Vercel redeploy request failed',error);return {ok:false,reason:'Vercel could not be reached.'};}
 }

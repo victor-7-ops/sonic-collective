@@ -2,11 +2,12 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from './database.types';
 import { z } from 'zod';
 import { mfaRequirementUnmet } from './mfa';
+import { editorialRoles } from './access';
 
 type TeamError = {code?:string;message?:string}|null;
 type TeamOutcome = {redirect:string}|{message:string;status:400|403|409};
 type InvitationOutcome = {redirect:string}|{message:string;status:400|403|409|503;requestId:string;email:string;role:string};
-const roles=['owner','editor','contributor'] as const;
+const roles=editorialRoles;
 const uuid=/^[a-f\d]{8}-(?:[a-f\d]{4}-){3}[a-f\d]{12}$/i;
 
 export async function listEditorialTeam(client:SupabaseClient<Database>):Promise<{members:Database['public']['Functions']['list_editorial_members']['Returns']|null;error:TeamError}> {
@@ -106,7 +107,7 @@ export async function applyEditorialInvitation(
       const invitation=await admin.auth.admin.inviteUserByEmail(email,{redirectTo:callback});
       invitedUserId=invitation.data.user?.id??null;
       providerFailed=Boolean(invitation.error)||!invitedUserId;
-    } catch { providerFailed=true; }
+    } catch(error) { console.error('Auth invitation call failed',error); providerFailed=true; }
     const actor=(await client.auth.getUser()).data.user;
     if(!actor) return outcome('Your session changed. Check the saved invitation status before retrying.',503);
     const recorded=await admin.rpc('record_editorial_invitation_result',{
@@ -124,7 +125,8 @@ export async function applyEditorialInvitation(
     const activated=await client.rpc('activate_editorial_invitation',{p_request_id:requestId});
     if(activated.error) {const error=invitationError(activated.error);return outcome(`Auth accepted the invitation, but team access is not active yet. ${error.message} Retry this request to finish activation without resending email.`,error.status);}
     return activated.data==='sent'?{redirect:'/admin/team/?invitation=sent'}:outcome('The Auth invitation exists, but team access needs owner review.',409);
-  } catch {
+  } catch(error) {
+    console.error('Invitation request did not finish',error);
     return outcome('The invitation request did not finish. Check its saved status before retrying.',503);
   }
 }

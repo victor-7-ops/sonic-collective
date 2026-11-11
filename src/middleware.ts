@@ -1,6 +1,6 @@
 import { defineMiddleware } from 'astro:middleware';
 import { editorialClient } from './lib/editorial/server';
-import { isEditorialPath, isSameOriginMutation, privateHeaders } from './lib/editorial/access';
+import { editorialRoles, isEditorialPath, isSameOriginMutation, privateHeaders } from './lib/editorial/access';
 
 export const onRequest = defineMiddleware(async (context, next) => {
   if (!isEditorialPath(context.url.pathname)) return next();
@@ -28,7 +28,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
     const membership = await client.from('team_members').select('role').eq('user_id',user.id).eq('active',true).maybeSingle();
     if (membership.error) return finish(new Response('Editorial access could not be verified. Try again later.', { status: 503 }));
     const role = membership.data?.role;
-    if (role !== 'owner' && role !== 'editor' && role !== 'contributor') {
+    if (!role || !(editorialRoles as readonly string[]).includes(role)) {
       if (open) return finish(await next());
       return finish(new Response('An active Sonic Collective team invitation is required.', { status: 403 }));
     }

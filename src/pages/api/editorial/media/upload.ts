@@ -2,7 +2,7 @@ import type {APIRoute} from 'astro';
 import type {SupabaseClient} from '@supabase/supabase-js';
 import type {Database} from '../../../../lib/editorial/database.types';
 import {editorialAdminClient} from '../../../../lib/editorial/server';
-import {isSameOriginMutation} from '../../../../lib/editorial/access';
+import {editorialRoles,isSameOriginMutation} from '../../../../lib/editorial/access';
 import {readBoundedEditorialUpload,persistEditorialImage} from '../../../../lib/editorial/media';
 
 export const prerender=false;
@@ -14,7 +14,7 @@ async function currentMember(client:MemberClient):Promise<{response:Response}|{u
   if(error||!user)return {response:new Response('Sign in before uploading media.',{status:401})};
   const member=await client.from('team_members').select('role').eq('user_id',user.id).eq('active',true).maybeSingle();
   if(member.error)return {response:new Response('Team access could not be checked. Try again later.',{status:503})};
-  if(!member.data||!['owner','editor','contributor'].includes(member.data.role))return {response:new Response('An active team membership is required.',{status:403})};
+  if(!member.data||!(editorialRoles as readonly string[]).includes(member.data.role))return {response:new Response('An active team membership is required.',{status:403})};
   return {user};
 }
 

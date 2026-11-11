@@ -2,61 +2,13 @@ import {createHash,randomUUID} from 'node:crypto';
 import sharp, {type Metadata} from 'sharp';
 import type {SupabaseClient} from '@supabase/supabase-js';
 import type {Database} from './database.types';
+import {editorialImageFormat} from './image-sniff';
+export {editorialImageFormat};
 
 export const editorialMediaMaxBytes=15*1024*1024;
 const maxMultipartBytes=editorialMediaMaxBytes+32*1024;
 const maxPixels=25_000_000;
 const maxDimension=12_000;
-
-function pngIsComplete(bytes:Uint8Array) {
-  if(bytes.length<20)return false;
-  let offset=8;
-  while(offset+12<=bytes.length) {
-    const length=new DataView(bytes.buffer,bytes.byteOffset+offset,4).getUint32(0);
-    if(length>bytes.length-offset-12)return false;
-    const type=String.fromCharCode(...bytes.subarray(offset+4,offset+8));
-    offset+=length+12;
-    if(type==='IEND')return length===0&&offset===bytes.length;
-  }
-  return false;
-}
-
-function jpegIsComplete(bytes:Uint8Array) {
-  if(bytes.length<4||bytes[0]!==0xff||bytes[1]!==0xd8)return false;
-  let offset=2;
-  while(offset<bytes.length) {
-    if(bytes[offset++]!==0xff)return false;
-    while(bytes[offset]===0xff)offset++;
-    const marker=bytes[offset++];
-    if(marker===undefined||marker===0||marker===0xd8)return false;
-    if(marker===0xd9)return offset===bytes.length;
-    if(marker===0x01||(marker>=0xd0&&marker<=0xd7))continue;
-    if(offset+2>bytes.length)return false;
-    const segmentLength=(bytes[offset]<<8)|bytes[offset+1];
-    if(segmentLength<2||offset+segmentLength>bytes.length)return false;
-    offset+=segmentLength;
-    if(marker===0xda) {
-      while(offset<bytes.length) {
-        if(bytes[offset++]!==0xff)continue;
-        const markerStart=offset-1;
-        while(bytes[offset]===0xff)offset++;
-        const scanMarker=bytes[offset];
-        if(scanMarker===0||scanMarker===undefined||(scanMarker>=0xd0&&scanMarker<=0xd7)){offset++;continue;}
-        offset=markerStart;
-        break;
-      }
-    }
-  }
-  return false;
-}
-
-export function editorialImageFormat(bytes:Uint8Array):'jpeg'|'png'|'webp' {
-  if(bytes.length>=12&&String.fromCharCode(...bytes.subarray(0,4))==='RIFF'&&String.fromCharCode(...bytes.subarray(8,12))==='WEBP'
-    &&new DataView(bytes.buffer,bytes.byteOffset+4,4).getUint32(0,true)+8===bytes.length)return 'webp';
-  if(bytes.length>=8&&[137,80,78,71,13,10,26,10].every((byte,index)=>bytes[index]===byte)&&pngIsComplete(bytes))return 'png';
-  if(jpegIsComplete(bytes))return 'jpeg';
-  throw new Error('Upload a complete JPEG, PNG, or WebP image.');
-}
 
 export async function processEditorialImage(bytes:Uint8Array,altText:string,focalX=0.5,focalY=0.5) {
   if(bytes.byteLength===0||bytes.byteLength>editorialMediaMaxBytes)throw new Error('Image must be 15 MiB or smaller.');
@@ -108,12 +60,15 @@ export async function persistEditorialImage(admin:SupabaseClient<Database>|null,
     if(status.data?.status==='ready')return id;
     if(status.error)throw new Error('The private asset finalization state could not be verified.');
     throw new Error('The private asset could not be finalized.');
-  } catch {
+  } catch(error) {
+    console.error('Image finalization failed',error);
     const status=await admin.from('editorial_assets').select('status').eq('id',id).maybeSingle();
     if(status.data?.status==='ready')return id;
     if(!status.error&&status.data?.status==='pending') {
-      await bucket.remove(paths);
-      await admin.from('editorial_assets').update({status:'failed'}).eq('id',id).eq('status','pending').select('id').maybeSingle();
+      const removed=await bucket.remove(paths);
+      if(removed.error)console.error('Stored files of a failed image could not be removed',removed.error);
+      const marked=await admin.from('editorial_assets').update({status:'failed'}).eq('id',id).eq('status','pending').select('id').maybeSingle();
+      if(marked.error)console.error('A failed image could not be marked failed; it stays pending',marked.error);
     }
     throw new Error('Image upload could not be finalized. The asset remains private and unavailable.');
   }
