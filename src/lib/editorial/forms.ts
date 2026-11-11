@@ -1,6 +1,7 @@
 import type { EditorialKind } from './content';
 import {homepagePerformance,homepageTeaser} from './site-content';
 import {applySiteSettingsForm} from './site-form';
+import {applyArtworkChoice,type MediaChoices} from './media-choices';
 
 export function editorialPickerOptions(selected:string[],options:{id:string;label:string}[]) {
   const known=new Set(options.map(option=>option.id));
@@ -41,7 +42,7 @@ export const editorialFields: Record<EditorialKind,EditorialField[]> = {
   ],
 };
 
-export function applyEditorialForm(kind: EditorialKind, current:Record<string,unknown>, form:URLSearchParams):Record<string,unknown> {
+export function applyEditorialForm(kind: EditorialKind, current:Record<string,unknown>, form:URLSearchParams, media?:MediaChoices):Record<string,unknown> {
   const payload={...current};
   for(const field of editorialFields[kind]) {
     const value=form.get(field.key)?.trim()??'';
@@ -57,6 +58,7 @@ export function applyEditorialForm(kind: EditorialKind, current:Record<string,un
     } else if(!value&&!field.required) delete payload[field.key];
     else payload[field.key]=value;
   }
+  applyArtworkChoice(kind,payload,current,form,media);
   if(kind==='performance'||kind==='youtube-review') payload.artistIds=form.getAll('artistIds').filter(Boolean);
   if(kind==='site') {
     for(const key of ['spotlightPerformanceIds','featuredPerformanceIds','featuredCoverIds','featuredArtistIds']) if(form.has(key)) payload[key]=form.getAll(key).filter(Boolean);

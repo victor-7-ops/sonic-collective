@@ -11,6 +11,10 @@ import { historyPage,historyPageSize,loadRevisionHistory } from '../../../lib/ed
 import { fullTargetIds,loadPerformanceVideoIds,loadReviewRows } from '../../../lib/editorial/inbox';
 import { loadContentFacts } from '../../../lib/editorial/status';
 import { loadReviewFeedback } from '../../../lib/editorial/comments';
+import mediaManifest from '../../../data/media-manifest.json';
+import { mediaManifestEntrySchema } from '../../../lib/schemas';
+import { mediaChoicesFrom,type MediaChoices } from '../../../lib/editorial/media-choices';
+import { readyLibraryChoices } from '../../../lib/editorial/create';
 import type { SiteConfig } from '../../../lib/schemas';
 import { homepagePerformanceOptions,homepageTeaserOptions,resolveSiteContent } from '../../../lib/editorial/site-content';
 export const prerender=false;
@@ -28,6 +32,16 @@ if(revisionResult.error) return new Response('The current revision could not be 
 let payload=revisionResult.data.payload as Record<string,unknown>;
 let message='';let conflict=false;
 let fullChoices:string[]=[];
+// Artwork choices for artists and performances: packaged images plus the library images this member may use.
+let mediaChoices:MediaChoices|undefined;
+let mediaOptions:{path:string;label:string}[]=[];
+if(kind==='artist'||kind==='performance') {
+  const packaged=Object.keys(mediaManifest).filter(path=>mediaManifestEntrySchema.safeParse(mediaManifest[path as keyof typeof mediaManifest]).success);
+  const library=await readyLibraryChoices(client);
+  mediaChoices=mediaChoicesFrom(packaged,library.map(choice=>choice.path));
+  const prefix=kind==='artist'?'/media/artists/':'/media/performances/';
+  mediaOptions=[...packaged.filter(path=>path.startsWith(prefix)).map(path=>({path,label:path.slice(prefix.length)})),...library];
+}
 if(kind==='youtube-review') {
   const [reviews,performanceIds]=await Promise.all([loadReviewRows(client),loadPerformanceVideoIds(client)]);
   if(!reviews||!performanceIds) return new Response('Video references could not be loaded.',{status:503});
@@ -35,7 +49,7 @@ if(kind==='youtube-review') {
 }
 if(Astro.request.method==='POST') {
   try {
-    const result=await applyContentAction(client,item,kind,payload,await readEditorialForm(Astro.request),{fullYoutubeIds:fullChoices});
+    const result=await applyContentAction(client,item,kind,payload,await readEditorialForm(Astro.request),{fullYoutubeIds:fullChoices,media:mediaChoices});
     if('redirect' in result) return Astro.redirect(result.redirect,303);
     payload=result.payload;message=result.message;conflict=result.status===409;
     Astro.response.status=result.status;
@@ -92,6 +106,13 @@ const teaserOptions=editorialPickerOptions(selectedClipId?[selectedClipId]:[],ho
         <small>Choose from existing eligible performances and portrait clips. Artwork, poster and video paths follow the selected record.</small>
       </fieldset>
     </>}
+    {(kind==='artist'||kind==='performance')&&(()=>{
+      const key=kind==='artist'?'portrait':'thumbnail';
+      const current=typeof payload[key]==='string'?payload[key] as string:'';
+      const offered=mediaOptions.some(option=>option.path===current)||!current?mediaOptions:[{path:current,label:`${current} (current)`},...mediaOptions];
+      return <label>{kind==='artist'?'Portrait image':'Artwork image'}<select name={key}>{kind==='artist'&&<option value="" selected={!current}>No portrait</option>}{offered.map(option=><option value={option.path} selected={option.path===current}>{option.label}</option>)}</select></label>;
+    })()}
+    <small>{kind==='artist'?'Choosing a portrait needs a portrait description. ':''}Library images stay private until a release containing them is made live; previews show the page without private images.</small>
     {(kind==='performance'||kind==='youtube-review')&&<EditorialPicker name="artistIds" label="Performing artists" selected={strings('artistIds')} options={options('artist')} />}
     {kind==='site'&&<>{['spotlightPerformanceIds','featuredPerformanceIds','featuredCoverIds','featuredArtistIds'].map(key=><EditorialPicker name={key} label={({spotlightPerformanceIds:'Homepage spotlights (maximum four)',featuredPerformanceIds:'Featured performances',featuredCoverIds:'Featured covers',featuredArtistIds:'Featured artists'})[key]!} selected={strings(key)} options={options(key==='featuredArtistIds'?'artist':'performance')} />)}</>}
     <button disabled={conflict}>Save private draft</button>

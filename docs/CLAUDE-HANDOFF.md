@@ -51,6 +51,8 @@ This section supersedes older checkpoint notes below. The CMS is not complete an
 
 - Cross-owner image guard (Nov 11): migration 20261111060000_editorial_asset_reference_guard.sql adds trigger check_asset_references on content_revisions: any /media/cms/<uuid> in a new revision must exist, be ready, and (for contributors) belong to the author; editors/owners may use any ready image; internal contexts without auth.uid() (seed/restore) are exempt. Apply to hosted Supabase (SQL editor). Closes the review finding about cross-owner references.
 
+- Artwork picker (Nov 11): the content editor now has a Portrait image (artist) / Artwork image (performance) select for EXISTING records, offering packaged images of the right kind plus ready library images the member may use (src/lib/editorial/media-choices.ts). A changed value must be an offered image (refused before the database otherwise), a portrait needs its description, performance artwork cannot be empty, unchanged legacy values stay valid. The database guard still enforces ownership. Previews show private library images only as references, not pixels.
+
 ## Historical checkpoints
 
 The notes below describe earlier snapshots; their local-only, secret-pending and test-count statements are superseded above.

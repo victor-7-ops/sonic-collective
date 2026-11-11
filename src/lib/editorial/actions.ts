@@ -3,6 +3,7 @@ import {ZodError} from 'zod';
 import type {Database,Tables} from './database.types';
 import {parseEditorialPayload,type EditorialKind} from './content';
 import {applyEditorialForm} from './forms';
+import type {MediaChoices} from './media-choices';
 import {checkFullMapping} from './inbox';
 import {mfaRequirementUnmet} from './mfa';
 
@@ -13,7 +14,7 @@ export async function applyContentAction(
   kind:EditorialKind,
   current:Record<string,unknown>,
   form:URLSearchParams,
-  choices?:{fullYoutubeIds:readonly string[]},
+  choices?:{fullYoutubeIds?:readonly string[];media?:MediaChoices},
 ):Promise<Outcome> {
   let payload=current;
   let status:400|409=400;
@@ -44,7 +45,7 @@ export async function applyContentAction(
         if(restored.error||!restored.data) throw new Error('The revision could not be restored.');
         payload=restored.data.payload as Record<string,unknown>;
         restoredFrom=revision;
-      } else payload=applyEditorialForm(kind,payload,form);
+      } else payload=applyEditorialForm(kind,payload,form,choices?.media);
       const validated=parseEditorialPayload(kind,item.stable_id,payload);
       if(kind==='youtube-review'&&action==='save') checkFullMapping(item.stable_id,payload,current,choices?.fullYoutubeIds??[]);
       const expected=Number(form.get('version'));
