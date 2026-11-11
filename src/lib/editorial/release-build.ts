@@ -4,6 +4,8 @@ import {buildReleaseArtifact,parseReleaseArtifact,type ReleaseArtifact} from './
 
 const uuid=/^[a-f\d]{8}-[a-f\d]{4}-[1-8][a-f\d]{3}-[89ab][a-f\d]{3}-[a-f\d]{12}$/i;
 
+export const isReleaseId=(value:string)=>uuid.test(value);
+
 /** CMS_RELEASE_ID selects the immutable release to build; CMS_RELEASE_FILE is the separate local-file path. */
 export function requestedReleaseId(env:Record<string,string|undefined>):string|null {
   const id=env.CMS_RELEASE_ID?.trim();

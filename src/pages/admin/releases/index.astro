@@ -6,6 +6,7 @@ import {mfaRequirementUnmet} from '../../../lib/editorial/mfa';
 import {readLiveRelease,releaseStatus} from '../../../lib/editorial/release-marker';
 import {fetchProductionBuilds,redeployProduction,summarizeBuilds} from '../../../lib/editorial/deployments';
 import {latestLiveChoice} from '../../../lib/editorial/live-release';
+import {isReleaseId} from '../../../lib/editorial/release-build';
 export const prerender=false;
 const member=Astro.locals.editorialMember!;
 if(member.role==='contributor') return new Response('Only active editors and owners can prepare release snapshots.',{status:403});
@@ -19,7 +20,7 @@ if(Astro.request.method==='POST') {
     if(form.get('action')==='go-live') {
       if(member.role!=='owner') throw new Error('Only an owner can make a release live.');
       const target=form.get('releaseId')??'';
-      if(!/^[a-fd]{8}-[a-fd]{4}-[1-8][a-fd]{3}-[89ab][a-fd]{3}-[a-fd]{12}$/i.test(target)) throw new Error('Reload the release page and try again.');
+      if(!isReleaseId(target)) throw new Error('Reload the release page and try again.');
       if(await mfaRequirementUnmet(client)) throw new Error('Verify your authenticator in Account before changing the live release.');
       const chosen=await client.rpc('set_editorial_live_release',{p_release_id:target});
       if(chosen.error) throw new Error('The release could not be chosen. Check that you are an active owner and that the release exists.');

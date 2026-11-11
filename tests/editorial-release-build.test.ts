@@ -6,7 +6,7 @@ import clips from '../src/data/clips.json';
 import series from '../src/data/series.json';
 import site from '../src/data/site.json';
 import overrides from '../src/data/youtube-overrides.json';
-import {loadReleaseArtifact,requestedReleaseId} from '../src/lib/editorial/release-build';
+import {isReleaseId,loadReleaseArtifact,requestedReleaseId} from '../src/lib/editorial/release-build';
 import {buildReleaseArtifact} from '../src/lib/editorial/releases';
 
 const uuid=(n:number)=>`00000000-0000-4000-8000-${String(n).padStart(12,'0')}`;
@@ -19,6 +19,11 @@ function snapshotRecords() {
   return records;
 }
 const client=(row:{id:string;snapshot:unknown}|null,error:unknown=null)=>({from:()=>({select:()=>({eq:()=>({maybeSingle:async()=>({data:row,error})})})})}) as never;
+
+test('release IDs are recognised in every real form, and nothing else',()=>{
+  for(const real of ['ea664a7a-cc56-495c-9c64-38722ad05184','72b9a129-5b3f-4b03-9a3c-92239a7861d8','34865cf1-6132-4aab-96ba-b58e640d3adf',uuid(1)]) assert.equal(isReleaseId(real),true,real);
+  for(const bad of ['','latest','ea664a7a-cc56-495c-9c64-38722ad0518','ea664a7a-cc56-495c-9c64-38722ad05184x','../../etc','ea664a7a-cc56-095c-9c64-38722ad05184']) assert.equal(isReleaseId(bad),false,bad);
+});
 
 test('release selection is explicit, well-formed and unambiguous',()=>{
   assert.equal(requestedReleaseId({}),null);
