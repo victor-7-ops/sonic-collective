@@ -3,13 +3,12 @@
 // and converts every upload. Photos are sent one at a time, each with its own description.
 (function () {
   var root = document.querySelector('[data-gallery-upload]');
-  if (!root) return;
+  if (!root || !window.sonicShrinkPhoto) return;
   var input = root.querySelector('input[type=file]');
   var list = root.querySelector('[data-upload-list]');
   var start = root.querySelector('[data-upload-start]');
   var status = root.querySelector('[data-upload-status]');
-  var MAX_SIDE = 2400;
-  var MAX_BYTES = 3.5 * 1024 * 1024;
+  var MAX_BYTES = window.sonicShrinkLimit || 3.5 * 1024 * 1024;
   var files = [];
 
   function say(text, isError) {
@@ -43,31 +42,7 @@
     say(files.length ? files.length + ' photo' + (files.length === 1 ? '' : 's') + ' selected. Check each description, then upload.' : '', false);
   });
 
-  function shrink(file) {
-    return createImageBitmap(file, { imageOrientation: 'from-image' }).then(function (bitmap) {
-      var scale = Math.min(1, MAX_SIDE / Math.max(bitmap.width, bitmap.height));
-      var width = Math.max(1, Math.round(bitmap.width * scale));
-      var height = Math.max(1, Math.round(bitmap.height * scale));
-      var canvas = document.createElement('canvas');
-      canvas.width = width;
-      canvas.height = height;
-      canvas.getContext('2d').drawImage(bitmap, 0, 0, width, height);
-      if (bitmap.close) bitmap.close();
-      function encode(type, quality) {
-        return new Promise(function (resolve) { canvas.toBlob(resolve, type, quality); });
-      }
-      function attempt(quality) {
-        return encode('image/webp', quality).then(function (blob) {
-          if (!blob || blob.type !== 'image/webp') return encode('image/jpeg', quality);
-          return blob;
-        }).then(function (blob) {
-          if (blob && blob.size > MAX_BYTES && quality > 0.5) return attempt(quality - 0.1);
-          return blob;
-        });
-      }
-      return attempt(0.88);
-    });
-  }
+  var shrink = window.sonicShrinkPhoto;
 
   function upload(file, alt) {
     return shrink(file).then(function (blob) {

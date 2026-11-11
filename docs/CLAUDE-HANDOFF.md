@@ -57,6 +57,8 @@ This section supersedes older checkpoint notes below. The CMS is not complete an
 
 - Small improvements batch 1 (Nov 11): (D1) a refused editor save returns what was typed (actions.submittedValues) and public/restore-form.js puts it back (only for the Save action; hidden fields are not overwritten); (D2) library images are paged 24 at a time with totals (readyLibraryChoices(client,page)); validation uses readyLibraryPaths (up to 1000 ids), so images beyond the newest 50 are no longer unusable.
 
+- Small improvements batch 2 (Nov 11): (G2) the Media page form now shrinks photos in the browser via shared public/photo-shrink.js (also used by gallery-upload.js) and posts to the upload endpoint in JSON mode, then redirects; verified with the real script files in a local harness (11.1 MB photo became a 2.0 MB WebP, alt/focal preserved). Falls back to the plain form post if the browser cannot shrink.
+
 ## Historical checkpoints
 
 The notes below describe earlier snapshots; their local-only, secret-pending and test-count statements are superseded above.

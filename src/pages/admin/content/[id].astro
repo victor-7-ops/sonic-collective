@@ -171,6 +171,7 @@ const teaserOptions=editorialPickerOptions(selectedClipId?[selectedClipId]:[],ho
         <button type="button" class="secondary" data-upload-start hidden>Upload photos</button>
         <p data-upload-status aria-live="polite"></p>
       </div>
+      <script is:inline src="/photo-shrink.js" defer></script>
       <script is:inline src="/gallery-upload.js" defer></script>
     </fieldset>}
     {(kind==='performance'||kind==='youtube-review')&&<EditorialPicker name="artistIds" label="Performing artists" selected={strings('artistIds')} options={options('artist')} />}

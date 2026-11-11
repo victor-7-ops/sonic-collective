@@ -13,13 +13,16 @@ const previews=await Promise.all(assets.map(async asset=>({asset,...(admin&&asse
 if(result.error||previews.some(preview=>preview.error))Astro.response.status=503;
 ---
 <EditorialLayout title="Media library" description="Private image assets for editorial drafts.">
-  {uploadsEnabled?<form action="/api/editorial/media/upload/" method="post" enctype="multipart/form-data" class="panel">
+  {uploadsEnabled?<form action="/api/editorial/media/upload/" method="post" enctype="multipart/form-data" class="panel" data-media-upload>
     <h2>Add a private image</h2>
-    <label>JPEG, PNG, or WebP image (15 MiB maximum)<input type="file" name="file" accept="image/jpeg,image/png,image/webp" required /></label>
+    <label>JPEG, PNG, or WebP image (shrunk in your browser to fit, longest side 2400 px)<input type="file" name="file" accept="image/jpeg,image/png,image/webp" required /></label>
     <label>Image description<input name="altText" maxlength="500" required /></label>
     <label>Horizontal focal point<input type="range" name="focalX" min="0" max="1" step="0.01" value="0.5" /></label>
     <label>Vertical focal point<input type="range" name="focalY" min="0" max="1" step="0.01" value="0.5" /></label>
     <button>Validate and upload privately</button>
+    <p data-media-status aria-live="polite"></p>
+    <script is:inline src="/photo-shrink.js" defer></script>
+    <script is:inline src="/media-upload.js" defer></script>
   </form>:<section class="panel" aria-labelledby="media-status">
     <h2 id="media-status">Image uploads are disabled</h2>
     <p>The server-only Supabase credential is not configured. No asset can be persisted or marked ready without the trusted server upload path.</p>
