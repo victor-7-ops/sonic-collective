@@ -1,11 +1,12 @@
-// Read-only backup of every editorial table, plus private image files, into .local/backups/<timestamp>/.
-// Needs SUPABASE_URL and SUPABASE_SECRET_KEY. Prints counts only, never row contents. The folder is git-ignored
-// and holds team and invitation data: store copies somewhere private. Supabase Auth accounts are NOT included.
+// Read-only backup of every editorial table, the login accounts (no passwords) and private image files into
+// .local/backups/<timestamp>/. Needs SUPABASE_URL and SUPABASE_SECRET_KEY. Prints counts only, never contents.
+// The folder is git-ignored and holds team emails: never store it unencrypted (see pack-backup.ts).
 import {createHash} from 'node:crypto';
 import {mkdir,writeFile} from 'node:fs/promises';
 import {join,resolve} from 'node:path';
 import {createClient} from '@supabase/supabase-js';
 import {backupTables,exportBackup,verifyManifest,type BackupTable,type Row} from '../src/lib/editorial/backup';
+import {authDigest,checkAuthCoverage,exportAuthUsers,referencedAccountIds} from '../src/lib/editorial/auth-backup';
 
 const url=process.env.SUPABASE_URL,secret=process.env.SUPABASE_SECRET_KEY;
 if(!url||!secret) throw new Error('SUPABASE_URL and SUPABASE_SECRET_KEY are required.');
@@ -27,6 +28,15 @@ async function read(table:BackupTable):Promise<Row[]> {
 const {data,manifest}=await exportBackup(read);
 const problems=verifyManifest(data,manifest);
 if(problems.length) throw new Error(`Backup failed its own manifest check: ${problems.join(' ')}`);
+
+// Login accounts (no passwords: the API never exposes them). Every account the CMS refers to must be included.
+const accounts=await exportAuthUsers(async(page,perPage)=>{
+  const listed=await admin.auth.admin.listUsers({page,perPage});
+  if(listed.error) throw new Error('Auth accounts could not be listed: '+listed.error.message);
+  return {users:listed.data.users as never};
+});
+const coverage=checkAuthCoverage(accounts,referencedAccountIds(data));
+if(coverage.length) throw new Error('Auth backup is incomplete: '+coverage.join(' '));
 
 const stamp=manifest.createdAt.replace(/[:.]/g,'-');
 const dir=resolve(process.cwd(),'.local/backups',stamp);
@@ -52,7 +62,9 @@ for(const asset of data.editorial_assets) {
     files++;
   }
 }
-await writeFile(join(dir,'manifest.json'),JSON.stringify({...manifest,files}));
+await writeFile(join(dir,'auth_users.json'),JSON.stringify(accounts));
+await writeFile(join(dir,'manifest.json'),JSON.stringify({...manifest,files,auth:{rows:accounts.length,sha256:authDigest(accounts)}}));
 console.log(`Backup written to ${dir}`);
 for(const table of backupTables) console.log(`  ${table}: ${manifest.tables[table].rows} rows`);
 console.log(`  image files: ${files}`);
+console.log(`  login accounts: ${accounts.length} (no passwords)`);

@@ -7,6 +7,7 @@ import {backupTables,checkIntegrity,exportBackup,restoreBackup,verifyManifest,ty
 import {loadApprovedReleaseRecords,type ApprovedSnapshotReader} from '../src/lib/editorial/release-server';
 import {assembleContent,buildReleaseArtifact} from '../src/lib/editorial/releases';
 import {migratedScratchDb} from './lib/scratch-db';
+import {authDigest,checkAuthCoverage,referencedAccountIds,restoreAuthUsers,type AuthUser} from '../src/lib/editorial/auth-backup';
 
 const base=resolve(process.cwd(),'.local/backups');
 const folder=process.argv[2]?resolve(process.argv[2]):join(base,(await readdir(base)).sort().at(-1)??'');
@@ -18,6 +19,18 @@ const failures:string[]=[];
 const step=(name:string,problems:string[])=>{console.log(`${problems.length?'FAIL':'ok  '}  ${name}${problems.length?`\n        ${problems.join('\n        ')}`:''}`);failures.push(...problems);};
 
 step('backup files match their manifest',verifyManifest(data,manifest));
+
+const authProblems:string[]=[];
+try {
+  const accounts=JSON.parse(await readFile(join(folder,'auth_users.json'),'utf8')) as AuthUser[];
+  const expected=(manifest as unknown as {auth?:{rows:number;sha256:string}}).auth;
+  if(!expected) authProblems.push('The manifest has no login-account section.');
+  else if(accounts.length!==expected.rows||authDigest(accounts)!==expected.sha256) authProblems.push('Login accounts do not match the manifest.');
+  authProblems.push(...checkAuthCoverage(accounts,referencedAccountIds(data)));
+  const plan=await restoreAuthUsers({auth:{admin:{createUser:async()=>({error:null})}}},accounts,{dryRun:true});
+  console.log(`      ${plan.created.length} login account(s) would be recreated with their original IDs (dry run)`);
+} catch(error) {authProblems.push('Login-account backup is unreadable: '+(error instanceof Error?error.message:String(error)));}
+step('login accounts are present and cover every account the CMS refers to',authProblems);
 const db=await migratedScratchDb();
 await restoreBackup(db,data);
 // to_jsonb keeps timestamp microseconds exactly as the hosted API reports them (a JS Date would round them).

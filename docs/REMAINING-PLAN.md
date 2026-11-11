@@ -21,7 +21,7 @@ Artists and performances can each have a photo gallery (max 24, each photo with 
 | # | Item | Owner | Effort | Done when |
 |---|---|---|---|---|
 | G1 | **[DEFERRED]** Add real photos to a real artist, approve, prepare a release, Make live | You (Claude verifies) | 20 min | Photos show in the artist page grid with working enlarge viewer on the public site; the 800px grid copies load, not the 2400px originals. Not yet exercised live: a gallery going through a release |
-| G2 | Resize photos in the browser on the Media page form too | Claude | 1 h | Uploads over 4.5 MB from Media no longer fail on Vercel (only the gallery uploader shrinks today) |
+| G2 | **[DONE]** Resize photos in the browser on the Media page form too | Claude | done | Uploads over 4.5 MB from Media no longer fail on Vercel (only the gallery uploader shrinks today) |
 | G3 | Archive or delete library images (Media page) | Claude | 2 h | Unused test photos can be removed; guards refuse archiving an image still referenced by approved content or a release |
 | G4 | HEIC (iPhone) photos | Claude | 1-2 h | HEIC is converted in the browser or on the server; today the uploader asks for JPEG, PNG or WebP |
 | G5 | Drag to reorder, bulk captions | Claude | 2-3 h | Optional polish; position numbers work today |
@@ -41,8 +41,8 @@ Left in the private library from testing: two photos named Upload test photo one
 
 | # | Item | Owner | Effort | Done when |
 |---|---|---|---|---|
-| C1 | Back up Supabase Auth accounts (emails, factors) | Claude + You (Auth export needs the dashboard or Management API token) | 2–3 h | A backup includes accounts and the restore rehearsal recreates users with their original IDs |
-| C2 | Schedule the CMS backup (weekly) | Claude | 1–2 h | A GitHub Action runs `npm run cms:backup`, stores the result privately (not in git), and fails visibly if the manifest check fails. Needs a private storage choice from you |
+| C1 | **[DONE]** Back up Supabase Auth accounts | Claude | done | Backups now include login accounts (no passwords) and the rehearsal checks every referenced account is present. Recreating accounts in a real second project is untested |
+| C2 | **[BUILT, needs you]** Schedule the CMS backup (weekly) | You add 3 secrets | 10 min | Workflow cms-backup.yml is in place and encrypts before storing (the repo is PUBLIC). Add repository secrets SUPABASE_URL, SUPABASE_SECRET_KEY, BACKUP_PASSPHRASE, then run it once from the Actions tab and confirm an encrypted artifact appears |
 | C3 | Real restore into a second Supabase project | You + Claude | 2 h | Documented, rehearsed once, steps in `docs/CMS-BACKUP.md` |
 | C4 | Supabase plan check | You | 5 min | Know whether your plan includes platform backups (the Free plan has none) |
 
@@ -50,8 +50,8 @@ Left in the private library from testing: two photos named Upload test photo one
 
 | # | Item | Effort |
 |---|---|---|
-| D1 | Keep what you typed after a refused save (portrait choice, reason text, etc.) | 1 h |
-| D2 | Image picker shows only the 50 newest images; add search or paging | 1–2 h |
+| D1 | **[DONE]** Keep what you typed after a refused save (editor form; the review-reason box is not covered) | done |
+| D2 | **[DONE]** Library picker pages 24 at a time; every image stays selectable (search not built) | done |
 | D3 | Clean embedded metadata: 102 older images carry an empty EXIF stub; videos carry the ffmpeg encoder tag | 1–2 h; videos need ffmpeg installed |
 | D4 | Email or notify on a failed production build | 2 h; needs a notification channel from you |
 | D5 | Show which release a pending Make live replaces, and a one-click "previous release" revert | 2 h |

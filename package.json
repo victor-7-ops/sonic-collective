@@ -19,6 +19,8 @@
     "cms:materialize": "tsx scripts/materialize-release-assets.ts",
     "cms:backup": "tsx --env-file=.env.local scripts/backup-editorial.ts",
     "cms:restore-rehearsal": "tsx scripts/restore-rehearsal.ts",
+    "cms:backup:pack": "tsx scripts/pack-backup.ts",
+    "cms:backup:unpack": "tsx scripts/unpack-backup.ts",
     "validate:output": "tsx scripts/validate-build.ts",
     "output:validate": "node scripts/validate-output.mjs",
     "test": "tsx --test tests/*.test.ts"

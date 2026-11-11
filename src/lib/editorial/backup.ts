@@ -84,7 +84,9 @@ export async function checkIntegrity(db:Db):Promise<string[]> {
     ['revisions without an item',"select count(*) n from public.content_revisions r where not exists(select 1 from public.content_items i where i.id=r.item_id)"],
     ['items whose draft revision is missing',"select count(*) n from public.content_items i where i.draft_revision_id is not null and not exists(select 1 from public.content_revisions r where r.id=i.draft_revision_id and r.item_id=i.id)"],
     ['items whose approved revision is missing',"select count(*) n from public.content_items i where i.approved_revision_id is not null and not exists(select 1 from public.content_revisions r where r.id=i.approved_revision_id and r.item_id=i.id)"],
-    ['items whose version does not match their draft revision',"select count(*) n from public.content_items i join public.content_revisions r on r.id=i.draft_revision_id where r.version<>i.version"],
+    // Archiving and restoring bump an item's version without adding a revision, so the item may be ahead of its
+    // draft revision, never behind it.
+    ['items whose version is behind their draft revision',"select count(*) n from public.content_items i join public.content_revisions r on r.id=i.draft_revision_id where i.version<r.version"],
     ['duplicate revision numbers within an item',"select count(*) n from (select item_id,version from public.content_revisions group by 1,2 having count(*)>1) d"],
     ['audit rows pointing at missing items',"select count(*) n from public.editorial_audit a where a.item_id is not null and not exists(select 1 from public.content_items i where i.id=a.item_id)"],
     ['review comments pointing at missing revisions',"select count(*) n from public.editorial_review_comments c where not exists(select 1 from public.content_revisions r where r.id=c.revision_id and r.item_id=c.item_id)"],

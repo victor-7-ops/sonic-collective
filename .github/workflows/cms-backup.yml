@@ -1,0 +1,46 @@
+name: CMS backup
+# Weekly encrypted backup of the editorial data and login accounts. The repository is public, so the backup is
+# encrypted before it is stored and the workflow never prints data. Needs three repository secrets:
+#   SUPABASE_URL, SUPABASE_SECRET_KEY, BACKUP_PASSPHRASE (20+ characters, keep a copy somewhere private).
+on:
+  schedule:
+    - cron: '17 20 * * 0'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: cms-backup
+  cancel-in-progress: false
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+      BACKUP_PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
+    steps:
+      - name: Check required secrets
+        run: |
+          for name in SUPABASE_URL SUPABASE_SECRET_KEY BACKUP_PASSPHRASE; do
+            if [ -z "${!name}" ]; then echo "::error::Repository secret $name is not set. No backup was made."; exit 1; fi
+          done
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.23.4'
+          cache: npm
+      - run: npm ci
+      - name: Export the data
+        run: npx tsx scripts/backup-editorial.ts
+      - name: Prove the backup can be restored
+        run: npx tsx scripts/restore-rehearsal.ts
+      - name: Encrypt (never store the plain folder)
+        run: npx tsx scripts/pack-backup.ts
+      - name: Keep only the encrypted file
+        uses: actions/upload-artifact@v4
+        with:
+          name: cms-backup-encrypted
+          path: .local/backups/*.enc
+          if-no-files-found: error
+          retention-days: 90

@@ -103,6 +103,23 @@ test('damaged or incomplete backups are detected before and after restore',async
   assert.match(problems,/draft revision is missing/);
   assert.match(problems,/approved revision is missing/);
   assert.match(problems,/no active owner/);
+  assert.doesNotMatch(problems,/version is behind/);
+});
+
+test('an item may be ahead of its draft revision (archiving bumps the version) but never behind it',async t=>{
+  const db=await migratedDb();
+  t.after(()=>db.close());
+  await db.query("insert into public.team_members(user_id,role) values($1,'owner')",[owner]);
+  await db.exec(seedSql([{kind:'artist',stableId:artists[0]!.id,payload:artists[0]!}]));
+  assert.deepEqual(await checkIntegrity(db),[]);
+  await db.exec('update public.content_items set version=version+1');
+  assert.deepEqual(await checkIntegrity(db),[]);
+  await db.exec('update public.content_items set version=version+1');
+  assert.deepEqual(await checkIntegrity(db),[]);
+  await db.exec('set session_replication_role = replica');
+  await db.exec('update public.content_items set version=0');
+  await db.exec('set session_replication_role = origin');
+  assert.match((await checkIntegrity(db)).join(' '),/1 items whose version is behind their draft revision/);
 });
 
 test('manifest digests ignore row order but not content',()=>{
