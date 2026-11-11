@@ -1,5 +1,7 @@
 # Sonic Collective — remaining work
 
+> **DEFERRED by Victor (2026-11-11): all real upload testing waits until later.** This covers A1, G1 and any real-photo upload through Media or the gallery editor, up to a release going live. Nothing below in those rows should be started or chased until Victor says to resume. Everything else can proceed.
+
 Written 2026-11-11. The original CMS plan (Packets 0–7) is finished, deployed and rehearsed; this lists only what is left.
 Status of the product: production builds from release `ea664a7a-cc56-495c-9c64-38722ad05184` (chosen with the owner Make live button); 153 automated tests pass.
 Owner column: **You** = needs your account or a decision. **Claude** = can be built and tested without you (some still need you to run one SQL block).
@@ -8,7 +10,7 @@ Owner column: **You** = needs your account or a decision. **Claude** = can be bu
 
 | # | Item | Owner | Effort | Done when |
 |---|---|---|---|---|
-| A1 | Upload a real image at Media, pick it as an artist portrait, approve, prepare a release, Make live | You (Claude verifies after) | 15 min | The image appears on the public artist page; Releases page says Live; marker shows the new release. This is the only path never run live: a library image through a production release |
+| A1 | **[DEFERRED]** Upload a real image at Media, pick it as an artist portrait, approve, prepare a release, Make live | You (Claude verifies after) | 15 min | The image appears on the public artist page; Releases page says Live; marker shows the new release. This is the only path never run live: a library image through a production release |
 | A2 | Invite one real contributor and have them draft and submit something | You | 30 min | Contributor sees only their own items, cannot approve or request changes, and an editor can review their draft |
 | A3 | Make one real content edit end to end (edit, approve, release, Make live) | You | 15 min | Public page shows the change; history, feedback and status boxes all read correctly |
 
@@ -18,7 +20,7 @@ Artists and performances can each have a photo gallery (max 24, each photo with 
 
 | # | Item | Owner | Effort | Done when |
 |---|---|---|---|---|
-| G1 | Add real photos to a real artist, approve, prepare a release, Make live | You (Claude verifies) | 20 min | Photos show in the artist page grid with working enlarge viewer on the public site; the 800px grid copies load, not the 2400px originals. Not yet exercised live: a gallery going through a release |
+| G1 | **[DEFERRED]** Add real photos to a real artist, approve, prepare a release, Make live | You (Claude verifies) | 20 min | Photos show in the artist page grid with working enlarge viewer on the public site; the 800px grid copies load, not the 2400px originals. Not yet exercised live: a gallery going through a release |
 | G2 | Resize photos in the browser on the Media page form too | Claude | 1 h | Uploads over 4.5 MB from Media no longer fail on Vercel (only the gallery uploader shrinks today) |
 | G3 | Archive or delete library images (Media page) | Claude | 2 h | Unused test photos can be removed; guards refuse archiving an image still referenced by approved content or a release |
 | G4 | HEIC (iPhone) photos | Claude | 1-2 h | HEIC is converted in the browser or on the server; today the uploader asks for JPEG, PNG or WebP |
