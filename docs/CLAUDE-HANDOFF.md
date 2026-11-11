@@ -59,6 +59,8 @@ This section supersedes older checkpoint notes below. The CMS is not complete an
 
 - Small improvements batch 2 (Nov 11): (G2) the Media page form now shrinks photos in the browser via shared public/photo-shrink.js (also used by gallery-upload.js) and posts to the upload endpoint in JSON mode, then redirects; verified with the real script files in a local harness (11.1 MB photo became a 2.0 MB WebP, alt/focal preserved). Falls back to the plain form post if the browser cannot shrink.
 
+- Library image archive (Nov 11, committed locally, NOT pushed until migration 20261111070000_editorial_asset_archive.sql is applied to hosted Supabase): RPC archive_editorial_asset (editor/owner or uploader; refuses while any item current draft/approved revision or any prepared release references the image; same authenticator rule; files stay in private storage); Media page Archive image button; assetArchiveError messages. The two test photos (Upload test photo one/two) are still referenced by the archived upload-check-artist draft; to free them: unarchive that record, remove its 2 gallery photos, save, archive again, then archive the images.
+
 ## Historical checkpoints
 
 The notes below describe earlier snapshots; their local-only, secret-pending and test-count statements are superseded above.

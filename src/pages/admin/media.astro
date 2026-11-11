@@ -1,8 +1,27 @@
 ---
 import EditorialLayout from '../../layouts/EditorialLayout.astro';
 import {editorialAdminClient} from '../../lib/editorial/server';
+import {readEditorialForm} from '../../lib/editorial/access';
+import {isReleaseId} from '../../lib/editorial/release-build';
+import {mfaRequirementUnmet} from '../../lib/editorial/mfa';
+import {assetArchiveError} from '../../lib/editorial/asset-archive';
 export const prerender=false;
 const client=Astro.locals.editorialClient!;
+let archiveMessage='';
+if(Astro.request.method==='POST') {
+  try {
+    const form=await readEditorialForm(Astro.request);
+    const assetId=form.get('assetId')??'';
+    if(form.get('action')!=='archive'||!isReleaseId(assetId)) throw new Error('Reload the page and try again.');
+    if(await mfaRequirementUnmet(client)) throw new Error('Verify your authenticator in Account before archiving an image.');
+    const archived=await client.rpc('archive_editorial_asset',{p_asset_id:assetId});
+    if(archived.error) throw new Error(assetArchiveError(archived.error));
+    return Astro.redirect('/admin/media/?archived=1',303);
+  } catch(reason) {
+    archiveMessage=reason instanceof Error?reason.message:'The image could not be archived.';
+    Astro.response.status=400;
+  }
+}
 const admin=editorialAdminClient();
 const uploadsEnabled=admin!==null;
 const result=await client.from('editorial_assets').select('id,derivative_path,alt_text,width,height,created_at').eq('status','ready').order('created_at',{ascending:false}).limit(50);
@@ -27,10 +46,12 @@ if(result.error||previews.some(preview=>preview.error))Astro.response.status=503
     <h2 id="media-status">Image uploads are disabled</h2>
     <p>The server-only Supabase credential is not configured. No asset can be persisted or marked ready without the trusted server upload path.</p>
   </section>}
+  {archiveMessage&&<p class="notice error" role="alert">{archiveMessage}</p>}
+  {Astro.url.searchParams.has('archived')&&<p role="status">Image archived. It can no longer be chosen for content; its private files are kept.</p>}
   {Astro.url.searchParams.has('uploaded')&&<p role="status">Image validated and stored privately. It is available only in the editorial media gallery.</p>}
   <section aria-labelledby="media-gallery"><h2 id="media-gallery">Private gallery</h2>
     <p>Showing the 50 most recent validated images.</p>
-    {result.error?<p class="notice error" role="alert">Media records are unavailable. Apply the media database migration and retry.</p>:previews.length?<div class="table-scroll"><ul class="media-grid">{previews.map(({asset,data,error})=><li>{error||!data?<p role="alert">Private preview could not be opened.</p>:<img src={data.signedUrl} alt={asset.alt_text} width={asset.width} height={asset.height} loading="lazy" />}<p>{asset.alt_text}</p><small>{asset.width} × {asset.height}</small></li>)}</ul></div>:<p>No validated images are available yet.</p>}
+    {result.error?<p class="notice error" role="alert">Media records are unavailable. Apply the media database migration and retry.</p>:previews.length?<div class="table-scroll"><ul class="media-grid">{previews.map(({asset,data,error})=><li>{error||!data?<p role="alert">Private preview could not be opened.</p>:<img src={data.signedUrl} alt={asset.alt_text} width={asset.width} height={asset.height} loading="lazy" />}<p>{asset.alt_text}</p><small>{asset.width} × {asset.height}</small><form method="post" onsubmit="return confirm('Archive this image? It can no longer be chosen for content. Its private files are kept.')"><input type="hidden" name="action" value="archive" /><input type="hidden" name="assetId" value={asset.id} /><button class="secondary">Archive image</button></form></li>)}</ul></div>:<p>No validated images are available yet.</p>}
   </section>
   <p><a href="/admin/content/">← Back to content library</a></p>
 </EditorialLayout>

@@ -484,6 +484,10 @@ export type Database = {
         Args: { p_release_id: string }
         Returns: number
       }
+      archive_editorial_asset: {
+        Args: { p_asset_id: string }
+        Returns: undefined
+      }
       request_editorial_changes: {
         Args: { p_body: string; p_item_id: string; p_revision_id: string }
         Returns: undefined
