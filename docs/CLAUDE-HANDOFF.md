@@ -47,6 +47,8 @@ This section supersedes older checkpoint notes below. The CMS is not complete an
 
 - Build status (Nov 11): /admin/releases/ shows Production builds from the Vercel API (src/lib/editorial/deployments.ts) using Production-only env VERCEL_API_TOKEN (Sensitive) plus plain DEPLOYMENTS_PROJECT_ID and DEPLOYMENTS_TEAM_ID. A failed newest build is shown as failed with the site unchanged; live is confirmed only when the newest ready build commit matches the live marker commit. Missing config or API errors show unconfigured/unavailable, never success. The token can deploy/delete across the whole team; rotate it if exposed.
 
+- Production cutover + Go live (Nov 11): production env CMS_RELEASE_ID=72b9a129-5b3f-4b03-9a3c-92239a7861d8 is set and production is built from that release (verified: marker source=release, Releases page Live, 8 public pages identical to the repository build). New: owner-only Make live button on /admin/releases/ -> RPC set_editorial_live_release (append-only table editorial_live_releases, migration 20261111050000) -> Vercel redeploy via API (redeployProduction). Build precedence: owner choice in DB > CMS_RELEASE_ID env > repository content (resolveReleaseId). Apply migration to hosted Supabase BEFORE pushing the commit (the Vercel build reads the table and fails closed if missing). The CMS_RELEASE_ID env var can stay as the fallback.
+
 ## Historical checkpoints
 
 The notes below describe earlier snapshots; their local-only, secret-pending and test-count statements are superseded above.

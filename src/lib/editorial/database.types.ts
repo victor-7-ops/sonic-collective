@@ -312,6 +312,12 @@ export type Database = {
         }
         Relationships: []
       }
+      editorial_live_releases: {
+        Row: { id: number; release_id: string; set_at: string; set_by: string }
+        Insert: { id?: never; release_id: string; set_at?: string; set_by: string }
+        Update: { id?: never; release_id?: string; set_at?: string; set_by?: string }
+        Relationships: []
+      }
       editorial_releases: {
         Row: {
           created_at: string
@@ -473,6 +479,10 @@ export type Database = {
           error_code: string
           status: string
         }[]
+      }
+      set_editorial_live_release: {
+        Args: { p_release_id: string }
+        Returns: number
       }
       request_editorial_changes: {
         Args: { p_body: string; p_item_id: string; p_revision_id: string }

@@ -4,7 +4,7 @@ import {createHash} from 'node:crypto';
 // order only matters for readability; integrity is proven afterwards by checkIntegrity().
 export const backupTables=[
   'team_members','content_items','content_revisions','editorial_audit','team_audit',
-  'editorial_releases','editorial_assets','editorial_invitations','editorial_invitation_events','editorial_review_comments',
+  'editorial_releases','editorial_assets','editorial_invitations','editorial_invitation_events','editorial_review_comments','editorial_live_releases',
 ] as const;
 export type BackupTable=typeof backupTables[number];
 export type Row=Record<string,unknown>;
@@ -70,7 +70,7 @@ export async function restoreBackup(db:Db,data:BackupData):Promise<void> {
       const list=columns.map(column=>`"${column}"`).join(',');
       await db.query(`insert into public.${table}(${list}) overriding system value select ${list} from jsonb_populate_recordset(null::public.${table},$1::jsonb)`,[JSON.stringify(data[table])]);
     }
-    for(const table of ['editorial_audit','team_audit','editorial_invitation_events'] as const) {
+    for(const table of ['editorial_audit','team_audit','editorial_invitation_events','editorial_live_releases'] as const) {
       await db.query(`select setval(pg_get_serial_sequence('public.${table}','id'),greatest(coalesce((select max(id) from public.${table}),0),1),(select count(*)>0 from public.${table}))`);
     }
   } finally {

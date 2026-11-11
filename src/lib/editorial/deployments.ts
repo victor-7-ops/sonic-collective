@@ -52,3 +52,23 @@ export function summarizeBuilds(builds:BuildInfo[]|null,liveCommit:string|null):
   if(latest.state==='ready'&&liveCommit&&latest.commit&&latest.commit.toLowerCase().startsWith(liveCommit.slice(0,7).toLowerCase())) return {kind:'ok',builds,headline:`The latest production build is live (commit ${short(latest.commit)}).`};
   return {kind:'unverified',builds,headline:`The latest build is ${latest.state} (commit ${short(latest.commit)}), but it is not confirmed live. ${live}`};
 }
+
+/** Starts a new production build of the newest ready deployment, so a changed live-release choice takes effect. */
+export async function redeployProduction(config:DeploymentConfig,fetcher:typeof fetch=fetch):Promise<{ok:true;id:string}|{ok:false;reason:string}> {
+  if(!config.token||!config.projectId||!config.teamId) return {ok:false,reason:'Vercel access is not configured.'};
+  const builds=await fetchProductionBuilds(config,fetcher);
+  const source=builds?.find(build=>build.state==='ready');
+  if(!source) return {ok:false,reason:'No finished production build was found to redeploy.'};
+  try {
+    const url=new URL('https://api.vercel.com/v13/deployments');
+    url.search=new URLSearchParams({teamId:config.teamId,forceNew:'1'}).toString();
+    const response=await fetcher(url,{
+      method:'POST',headers:{authorization:`Bearer ${config.token}`,'content-type':'application/json'},
+      body:JSON.stringify({name:'sonic-collective',project:config.projectId,deploymentId:source.id,target:'production'}),
+      cache:'no-store',signal:AbortSignal.timeout(15000),
+    });
+    if(!response.ok) return {ok:false,reason:`Vercel refused the redeploy (HTTP ${response.status}).`};
+    const body=await response.json() as {id?:unknown};
+    return typeof body.id==='string'?{ok:true,id:body.id}:{ok:false,reason:'Vercel did not return a deployment.'};
+  } catch {return {ok:false,reason:'Vercel could not be reached.'};}
+}
