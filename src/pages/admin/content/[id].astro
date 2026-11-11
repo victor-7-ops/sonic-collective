@@ -68,7 +68,7 @@ const teaserOptions=editorialPickerOptions(selectedClipId?[selectedClipId]:[],ho
     <div><dt>Approved</dt><dd>{facts.approved}</dd></div>
     <div><dt>Live</dt><dd>{facts.live}</dd></div>
   </dl>
-  {facts.draftAhead&&<p class="notice">The draft has changes that are not approved yet. Approving applies only to the saved revision, never to unsaved form fields.</p>}
+  {facts.draftAhead&&!isArchived&&<p class="notice">The draft has changes that are not approved yet. Approving applies only to the saved revision, never to unsaved form fields.</p>}
   {isArchived?<p class="notice">Archived content is read-only and excluded from active references.</p>:<p class="notice">Edits are drafts. Approving records an editorial decision. Content reaches the public site only when a release containing the approved revision is prepared and the production build is pointed at it.</p>}
   {Astro.url.searchParams.has('archived')&&<p role="status">Content archived.</p>}
   {Astro.url.searchParams.has('unarchived')&&<p role="status">Content restored to the active library as a private record.</p>}
