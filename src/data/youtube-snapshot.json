@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "initialized": true,
   "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
-  "contentHash": "e6493f47e42fcec947bcd65bb2ebbb92fe960c22730ec1c07f9d4be670991a71",
-  "validatedAt": "2026-11-19T13:31:50.232Z",
-  "expiresAt": "2026-12-19T13:31:50.232Z",
+  "contentHash": "7b84c3481f085e439d68fd1be45766b9a4e2418db68e741189b1c2c8592acc86",
+  "validatedAt": "2026-11-19T22:17:32.759Z",
+  "expiresAt": "2026-12-19T22:17:32.759Z",
   "videos": [
     {
       "youtubeId": "0GtqbE7pS14",
@@ -359,7 +359,7 @@
     {
       "youtubeId": "g6Kg7I2XSd4",
       "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
-      "title": "Franzel N'D Flayahs  -  Ako Nalang Bi (Live at Sonic Collective)",
+      "title": "Franzel N'D Flayahs  -  Ako Nalang Ka Bi (Live at Sonic Collective)",
       "thumbnailUrl": "https://i.ytimg.com/vi/g6Kg7I2XSd4/maxresdefault.jpg",
       "publishedAt": "2026-08-14T10:05:30Z",
       "durationSeconds": 300,
@@ -849,7 +849,7 @@
     {
       "youtubeId": "ZpCurUqB7dE",
       "channelId": "UCCxO94rfXnMpYf7DH_sd6Bw",
-      "title": "Franzel - Ikaw Nalang Bi (Live at Sonic Collective) #vispop #newmusic #opm #sonata #risingartist",
+      "title": "Franzel - Ikaw Nalang Ka Bi (Live at Sonic Collective) #vispop #newmusic #opm #sonata #risingartist",
       "thumbnailUrl": "https://i.ytimg.com/vi/ZpCurUqB7dE/maxresdefault.jpg",
       "publishedAt": "2026-08-17T06:11:29Z",
       "durationSeconds": 46,
